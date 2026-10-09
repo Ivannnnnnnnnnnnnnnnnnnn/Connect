@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Statut du Réseau - ConnectPlus</title>
+    <link rel="icon" type="image/png" href="/starlink/icons/icon-192.png">
+    <link rel="manifest" href="/starlink/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="ConnectPlus">
+    <link rel="apple-touch-icon" sizes="180x180" href="/starlink/icons/icon-192.png">
+    <script src="/starlink/pwa-install.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="/starlink/brand.css">
+    <style>
+        .card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .package-card { transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+        .package-card:hover { transform: translateY(-4px); box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); }
+    </style>
+</head>
+<body class="cp">
+    <!-- Header -->
+        <!-- Header -->
+    <header class="cp-header">
+        <div class="cp-header__bar">
+            <a href="/starlink/" class="cp-brand">
+                <span class="cp-brand__mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20V8"/></svg>
+                </span>
+                <span>
+                    <span class="cp-brand__name">Connect<em>Plus</em></span>
+                    <span id="header-subtitle" class="cp-brand__sub">RDC</span>
+                </span>
+            </a>
+            <div class="flex items-center gap-3">
+                <button id="langToggle" onclick="toggleLanguage()" class="cp-lang">
+                    <i class="uil uil-globe"></i> <span id="langLabel">EN</span>
+                </button>
+                <nav class="cp-nav">
+                    <a href="/starlink/status.html" class="is-active">
+                        <i class="uil uil-wifi"></i> <span id="nav-status" class="hidden sm:inline">Statut</span>
+                    </a>
+                    <a href="/starlink/">
+                        <i class="uil uil-shopping-bag"></i> <span id="nav-plans" class="hidden sm:inline">Forfaits</span>
+                    </a>
+                    <a href="/starlink/orders.html" class="hidden sm:flex">
+                        <i class="uil uil-list-ul"></i> <span id="nav-orders" class="hidden sm:inline">Commandes</span>
+                    </a>
+                    <div id="auth-nav" class="flex items-center gap-2"></div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="pb-28 space-y-6">
+
+            <div class="cp-card" style="padding:8px">
+                <button onclick="window.location.href='/starlink/'"
+                        class="cp-btn cp-btn--primary cp-btn--block" style="padding:18px">
+                    <i class="uil uil-shopping-bag text-2xl"></i>
+                    <span id="choose-package-btn" class="text-lg uppercase tracking-wider">Choisissez Votre Forfait</span>
+                </button>
+            </div>
+
+            <div class="cp-hero">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p id="service-info-label" class="cp-hero__eyebrow">Informations sur le Service</p>
+                        <h1 id="service-title" class="cp-hero__title">ConnectPlus</h1>
+                    </div>
+                    <div class="cp-hero__chip">
+                        <i class="uil uil-satellite text-4xl sm:text-5xl text-blue-400"></i>
+                    </div>
+                </div>
+                <p id="service-desc" class="cp-hero__desc">Sélectionnez un forfait pour activer votre connexion internet mobile. Achat uniquement avec une ligne Airtel.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                <div class="cp-stat">
+                    <div class="cp-stat__head">
+                        <p id="download-label" class="text-gray-600 text-xs font-bold uppercase tracking-widest">Téléchargement</p>
+                        <i class="uil uil-arrow-down text-blue-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="cp-stat__value" id="download-speed">--</p>
+                    <p class="cp-stat__unit">Mbps</p>
+                </div>
+
+                <div class="cp-stat">
+                    <div class="cp-stat__head">
+                        <p id="upload-label" class="text-gray-600 text-xs font-bold uppercase tracking-widest">Envoi</p>
+                        <i class="uil uil-arrow-up text-green-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="cp-stat__value" id="upload-speed">--</p>
+                    <p class="cp-stat__unit">Mbps</p>
+                </div>
+
+                <div class="cp-stat">
+                    <div class="cp-stat__head">
+                        <p class="text-gray-600 text-xs font-bold uppercase tracking-widest">PING</p>
+                        <i class="uil uil-pulse text-orange-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="cp-stat__value" id="ping">--</p>
+                    <p class="cp-stat__unit">ms</p>
+                </div>
+
+                <div class="cp-stat">
+                    <div class="cp-stat__head">
+                        <p class="text-gray-600 text-xs font-bold uppercase tracking-widest">JITTER</p>
+                        <i class="uil uil-wave text-purple-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="cp-stat__value" id="jitter">--</p>
+                    <p class="cp-stat__unit">ms</p>
+                </div>
+            </div>
+
+            <div class="cp-card" style="padding:24px">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <i class="uil uil-database" style="color:var(--cp-brand);font-size:21px"></i>
+                        <h3 id="data-usage-title" style="font-size:15px;font-weight:800;color:var(--cp-text);margin:0">Utilisation des Données</h3>
+                    </div>
+                    <span class="cp-tag" id="data-percentage">0%</span>
+                </div>
+
+                <div class="w-full bg-gray-200 rounded-full h-3 mb-3 overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-500" id="data-progress" style="width: 0%"></div>
+                </div>
+
+                <div class="flex justify-between text-xs text-gray-600">
+                    <span id="data-used">0 GB</span>
+                    <span id="data-limit">100 GB</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="runSpeedTest()" id="diagnostic-btn" class="cp-btn cp-btn--ghost cp-btn--block">
+                    <i class="uil uil-bolt text-blue-600"></i> <span id="diagnostic-text">Lancer le Test de Diagnostic</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+                <!-- Bottom Navigation -->
+        <nav class="cp-tabbar">
+            <div class="cp-tabbar__inner">
+                <a href="/starlink/status.html" class="is-active">
+                    <i class="uil uil-wifi"></i>
+                    <span id="bottom-status">Statut</span>
+                </a>
+                <a href="/starlink/">
+                    <i class="uil uil-shopping-bag"></i>
+                    <span id="bottom-plans">Forfaits</span>
+                </a>
+                <a href="/starlink/orders.html">
+                    <i class="uil uil-list-ul"></i>
+                    <span id="bottom-orders">Commandes</span>
+                </a>
+                <a href="/starlink/settings.html">
+                    <i class="uil uil-setting"></i>
+                    <span id="bottom-settings">Paramètres</span>
+                </a>
+            </div>
+        </nav>
+    </main>
+
+    <!-- Footer -->
+        <!-- Footer -->
+    <footer class="cp-footer">
+        <div class="cp-shell">
+            <div class="cp-footer__grid">
+                <div>
+                    <div class="cp-footer__brand">
+                        <span class="cp-brand__mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20V8"/></svg>
+                </span>
+                        <h3 id="footer-brand" style="margin:0">ConnectPlus</h3>
+                    </div>
+                    <p id="footer-desc">ConnectPlus — forfaits de données mobiles pour la RDC. Paiements rapides, fiables et sécurisés via Airtel Money.</p>
+                </div>
+                <div>
+                    <h3>Support</h3>
+                    <p>Email: support@connectplus.cd</p>
+                    <p id="footer-support-desc">Disponible 24h/24, 7j/7 pour l'assistance technique.</p>
+                </div>
+                <div>
+                    <h3 id="footer-payment-title">Paiement</h3>
+                    <p id="footer-payment-desc">📲 Achat disponible uniquement avec une ligne Airtel. Payez en toute sécurité avec Airtel Money.</p>
+                </div>
+            </div>
+            <div class="cp-footer__bottom">
+                <p id="footer-copyright">&copy; 2026 ConnectPlus. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Country configurations
+        const COUNTRY_CONFIG = {
+            'CD': { name: 'RDC', lang: 'fr', currency: 'CDF' },
+            'CG': { name: 'Congo', lang: 'fr', currency: 'XAF' },
+            'GA': { name: 'Gabon', lang: 'fr', currency: 'XAF' },
+            'TD': { name: 'Tchad', lang: 'fr', currency: 'XAF' },
+            'NE': { name: 'Niger', lang: 'fr', currency: 'XOF' },
+            'MG': { name: 'Madagascar', lang: 'fr', currency: 'MGA' },
+            'KE': { name: 'Kenya', lang: 'en', currency: 'KES' },
+            'UG': { name: 'Uganda', lang: 'en', currency: 'UGX' },
+            'TZ': { name: 'Tanzania', lang: 'en', currency: 'TZS' },
+            'RW': { name: 'Rwanda', lang: 'en', currency: 'RWF' },
+            'NG': { name: 'Nigeria', lang: 'en', currency: 'NGN' },
+            'GH': { name: 'Ghana', lang: 'en', currency: 'GHS' },
+            'ZM': { name: 'Zambia', lang: 'en', currency: 'ZMW' },
+            'MW': { name: 'Malawi', lang: 'en', currency: 'MWK' },
+            'ZA': { name: 'South Africa', lang: 'en', currency: 'ZAR' },
+            'BW': { name: 'Botswana', lang: 'en', currency: 'BWP' },
+            'NA': { name: 'Namibia', lang: 'en', currency: 'NAD' },
+            'MZ': { name: 'Mozambique', lang: 'en', currency: 'MZN' },
+            'ZW': { name: 'Zimbabwe', lang: 'en', currency: 'ZWL' },
+            'SC': { name: 'Seychelles', lang: 'en', currency: 'SCR' },
+            'SL': { name: 'Sierra Leone', lang: 'en', currency: 'SLE' },
+            'LR': { name: 'Liberia', lang: 'en', currency: 'LRD' },
+            'MM': { name: 'မြန်မာ', lang: 'my', currency: 'MMK' },
+            'BI': { name: 'Burundi', lang: 'rn', currency: 'BIF' },
+            'LS': { name: 'Lesotho', lang: 'st', currency: 'LSL' }
+        };
+
+        const translations = {
+            fr: {
+                pageTitle: 'Statut du Réseau - ConnectPlus',
+                headerSubtitle: 'RDC',
+                navStatus: 'Statut',
+                navPlans: 'Forfaits',
+                navSignup: 'S\'inscrire', navLogout: 'Déconnexion',
+                navOrders: 'Commandes',
+                navSettings: 'Paramètres',
+                choosePackage: 'Choisissez Votre Forfait',
+                serviceInfo: 'Informations sur le Service',
+                serviceDesc: 'Sélectionnez un forfait pour activer votre connexion internet mobile. Achat uniquement avec une ligne Airtel.',
+                download: 'Téléchargement',
+                upload: 'Envoi',
+                dataUsage: 'Utilisation des Données',
+                launchDiagnostic: 'Lancer le Test de Diagnostic',
+                analyzing: 'Analyse en cours...',
+                footerDesc: 'ConnectPlus — forfaits de données mobiles pour la RDC. Paiements rapides, fiables et sécurisés via Airtel Money.',
+                footerSupport: 'Disponible 24h/24, 7j/7 pour l\'assistance technique.',
+                footerPayment: '📲 Achat disponible uniquement avec une ligne Airtel. Payez en toute sécurité avec Airtel Money.',
+                footerCopyright: '© 2026 ConnectPlus. Tous droits réservés.'
+            },
+            en: {
+                pageTitle: 'Network Status - ConnectPlus',
+                headerSubtitle: 'DRC',
+                navStatus: 'Status',
+                navPlans: 'Packages',
+                navSignup: 'Sign up', navLogout: 'Logout',
+                navOrders: 'Orders',
+                navSettings: 'Settings',
+                choosePackage: 'Choose Your Package',
+                serviceInfo: 'Service Information',
+                serviceDesc: 'Select a package to activate your mobile internet connection. Purchase with an Airtel line only.',
+                download: 'Download',
+                upload: 'Upload',
+                dataUsage: 'Data Usage',
+                launchDiagnostic: 'Launch Diagnostic Test',
+                analyzing: 'Analyzing...',
+                footerDesc: 'ConnectPlus — mobile data packages for the DRC. Fast, reliable and secure payments via Airtel Money.',
+                footerSupport: 'Available 24/7 for technical support.',
+                footerPayment: '📲 Purchase available only with an Airtel line. Pay securely with Airtel Money.',
+                footerCopyright: '© 2026 ConnectPlus. All rights reserved.'
+            },
+        };
+
+        // ConnectPlus is a DRC (RDC) service — French is the only default.
+        let currentLang = 'fr';
+        let detectedCountry = 'CD';
+
+        // ConnectPlus is a DRC-only service — the country is pinned, never
+        // inferred from the visitor's IP. This removes a network round-trip
+        // and guarantees the RDC storefront for every visitor.
+        async function detectCountry() {
+            return { country: 'CD' };
+        }
+
+        function renderAuthNav(t) {
+            const authNav = document.getElementById('auth-nav');
+            if (!authNav) return;
+            const user = localStorage.getItem('sl_auth_user');
+            if (user) {
+                try {
+                    const u = JSON.parse(user);
+                    authNav.innerHTML = '<span class="text-gray-300 text-sm hidden sm:inline">' + (u.name || u.phone) + '</span>'
+                        + '<button onclick="doLogout()" class="cp-btn cp-btn--ghost" style="padding:8px 14px;font-size:12.5px">' + (t.navLogout || 'Logout') + '</button>';
+                } catch(e) { authNav.innerHTML = ''; }
+            } else {
+                authNav.innerHTML = '<a href="/starlink/register.html" class="cp-btn cp-btn--primary" style="padding:8px 14px;font-size:12.5px">' + (t.navSignup || 'Sign up') + '</a>';
+            }
+        }
+
+        function doLogout() {
+            localStorage.removeItem('sl_auth_user');
+            window.location.replace('/starlink/login.html');
+        }
+
+        function applyTranslations(lang) {
+            const t = translations[lang] || translations.en;
+            currentLang = lang;
+            const countryName = COUNTRY_CONFIG[detectedCountry]?.name || 'Global';
+            
+            document.getElementById('page-title').textContent = t.pageTitle;
+            document.getElementById('header-subtitle').textContent = t.headerSubtitle + ' ' + countryName;
+            document.getElementById('nav-status').textContent = t.navStatus;
+            document.getElementById('nav-plans').textContent = t.navPlans;
+            document.getElementById('nav-orders').textContent = t.navOrders;
+            renderAuthNav(t);
+            document.getElementById('choose-package-btn').textContent = t.choosePackage;
+            document.getElementById('service-info-label').textContent = t.serviceInfo;
+            document.getElementById('service-title').textContent = 'ConnectPlus ' + countryName;
+            document.getElementById('service-desc').textContent = t.serviceDesc;
+            document.getElementById('download-label').textContent = t.download;
+            document.getElementById('upload-label').textContent = t.upload;
+            document.getElementById('data-usage-title').textContent = t.dataUsage;
+            document.getElementById('diagnostic-text').textContent = t.launchDiagnostic;
+            document.getElementById('bottom-status').textContent = t.navStatus;
+            document.getElementById('bottom-plans').textContent = t.navPlans;
+            document.getElementById('bottom-orders').textContent = t.navOrders;
+            document.getElementById('bottom-settings').textContent = t.navSettings;
+            document.getElementById('footer-brand').textContent = 'CONNECTPLUS';
+            document.getElementById('footer-desc').textContent = t.footerDesc;
+            document.getElementById('footer-support-desc').textContent = t.footerSupport;
+            document.getElementById('footer-payment-desc').textContent = t.footerPayment;
+            document.getElementById('footer-copyright').textContent = t.footerCopyright;
+            document.getElementById('langLabel').textContent = lang === 'fr' ? 'EN' : 'FR';
+            document.documentElement.lang = lang;
+        }
+
+        function toggleLanguage() {
+            // ConnectPlus supports French (default) and English.
+            const newLang = currentLang === 'fr' ? 'en' : 'fr';
+            applyTranslations(newLang);
+            localStorage.setItem('connectplus_user_lang', newLang);
+            localStorage.setItem('connectplus_lang_country', detectedCountry);
+            if (typeof window.updatePWABannerLang === 'function') window.updatePWABannerLang();
+        }
+
+        function generateNetworkStats() {
+            return {
+                download: (Math.random() * 100 + 100).toFixed(2),
+                upload: (Math.random() * 20 + 20).toFixed(2),
+                ping: Math.floor(Math.random() * 40 + 20),
+                jitter: Math.floor(Math.random() * 8 + 2),
+                dataUsed: (Math.random() * 30 + 20).toFixed(1),
+                dataLimit: 100
+            };
+        }
+
+        function updateNetworkStats() {
+            const stats = generateNetworkStats();
+            document.getElementById('download-speed').textContent = stats.download;
+            document.getElementById('upload-speed').textContent = stats.upload;
+            document.getElementById('ping').textContent = stats.ping;
+            document.getElementById('jitter').textContent = stats.jitter;
+            document.getElementById('data-used').textContent = stats.dataUsed + ' GB';
+            document.getElementById('data-limit').textContent = stats.dataLimit + ' GB';
+            const percentage = (stats.dataUsed / stats.dataLimit * 100).toFixed(0);
+            document.getElementById('data-percentage').textContent = percentage + '%';
+            document.getElementById('data-progress').style.width = percentage + '%';
+        }
+
+        function runSpeedTest() {
+            const button = event.target.closest('button');
+            const t = translations[currentLang];
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="uil uil-spinner-alt animate-spin"></i> ' + t.analyzing;
+            button.disabled = true;
+            setTimeout(() => { updateNetworkStats(); button.innerHTML = originalText; button.disabled = false; }, 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            updateNetworkStats();
+            const countryData = await detectCountry();
+            const urlCountry = new URLSearchParams(window.location.search).get('country');
+            detectedCountry = (urlCountry && COUNTRY_CONFIG[urlCountry.toUpperCase()]) ? urlCountry.toUpperCase() : countryData.country;
+            const config = COUNTRY_CONFIG[detectedCountry] || COUNTRY_CONFIG['CD'];
+            const savedLang = localStorage.getItem('connectplus_user_lang');
+            const savedForCountry = localStorage.getItem('connectplus_lang_country');
+            // Only use savedLang if it was set while in the same country, else French (default)
+            const effectiveLang = (savedLang && savedForCountry === detectedCountry && translations[savedLang]) ? savedLang : 'fr';
+            applyTranslations(effectiveLang);
+        });
+    </script>
+</body>
+</html>

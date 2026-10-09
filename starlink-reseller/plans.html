@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Forfaits - ConnectPlus</title>
+    <meta name="cache-version" content="v13-connectplus">
+    <link rel="icon" type="image/png" href="/starlink/icons/icon-192.png">
+    <link rel="manifest" href="/starlink/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="ConnectPlus">
+    <link rel="apple-touch-icon" href="/starlink/icons/icon-192.png">
+    <script src="/starlink/pwa-install.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="/starlink/brand.css">
+    <style>
+        .card-shadow { box-shadow: var(--cp-shadow-sm); }
+        .package-card { transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+        .package-card:hover { transform: translateY(-4px); box-shadow: var(--cp-shadow); }
+        .package-card.selected { border-color: var(--cp-brand); box-shadow: var(--cp-ring), var(--cp-shadow-sm); }
+        .package-hint { font-size: 11px; color: #4b5563; margin: 8px 0 0; text-align: right; }
+        .popular-badge { position: absolute; top: -9px; right: 14px; background: linear-gradient(135deg, var(--cp-accent) 0%, var(--cp-accent-600) 100%); color: #05221c; padding: 4px 11px; border-radius: 999px; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,178,139,.4); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,16,32,0.62); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: white; border-radius: var(--cp-r-lg); padding: 30px 40px; text-align: center; max-width: 380px; margin: 20px; box-shadow: var(--cp-shadow-lg); border: 1px solid var(--cp-line); }
+        .spinner { width: 46px; height: 46px; border: 3px solid var(--cp-line); border-top: 3px solid var(--cp-brand); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .airtel-logo-container { width: 50px; height: 50px; background: #ed1c24; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+        .airtel-logo-container span { color: white; font-size: 11px; font-weight: bold; font-family: Arial, sans-serif; letter-spacing: -0.5px; }
+        .cat-title { font-size: 13px; }
+        .modal-title { font-size: 17px; font-weight: 600; color: #1f2937; margin-bottom: 8px; }
+        .modal-subtitle { font-size: 13px; color: #6b7280; margin-bottom: 8px; line-height: 1.4; }
+        .modal-warning { font-size: 12px; color: #9ca3af; font-style: italic; }
+
+        /* Payment Method Selector Modal */
+        .payment-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9998; justify-content: center; align-items: center; }
+        .payment-modal.active { display: flex; }
+        .payment-modal-content { background: white; border-radius: 16px; padding: 28px; max-width: 360px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .payment-modal-title { font-size: 20px; font-weight: 700; color: #1f2937; text-align: center; margin-bottom: 6px; }
+        .payment-modal-subtitle { font-size: 14px; color: #6b7280; text-align: center; margin-bottom: 20px; }
+        .payment-options { display: flex; flex-direction: column; gap: 12px; }
+        .payment-option { display: flex; align-items: center; gap: 16px; padding: 16px; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+        .payment-option:hover { border-color: #d1d5db; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .payment-option.airtel:hover { border-color: #ed1c24; background: #fef2f2; }
+        .payment-option.moov:hover { border-color: #f5a623; background: #fff8eb; }
+        .payment-option.lumitel:hover { border-color: #f5a623; background: #fff8eb; }
+        .payment-option.ecocash:hover { border-color: #0066B2; background: #e6f3ff; }
+        .payment-option.waafi:hover { border-color: #00A651; background: #e6f9ef; }
+        .payment-option.card:hover { border-color: #1a56db; background: #e8f0fe; }
+        .payment-option.kbzpay:hover { border-color: #0060AF; background: #e8f2ff; }
+        .payment-logo { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; color: white; }
+        .payment-logo.airtel { background: #ed1c24; }
+        .payment-logo.moov { background: #f5a623; font-size: 9px; }
+        .payment-logo.lumitel { background: #f5a623; font-size: 8px; }
+        .payment-logo.ecocash { background: #0066B2; font-size: 8px; }
+        .payment-logo.waafi { background: #00A651; font-size: 10px; }
+        .payment-logo.card { background: #1a56db; font-size: 16px; }
+        .payment-logo.kbzpay { background: #0060AF; font-size: 10px; font-weight: 800; }
+        .payment-logo.vodacom { background: #e60000; padding: 0; overflow: hidden; }
+        .payment-logo.vodacom img { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+        .payment-info h4 { font-size: 16px; font-weight: 600; color: #1f2937; margin-bottom: 2px; }
+        .payment-info p { font-size: 12px; color: #6b7280; }
+        .payment-arrow { margin-left: auto; color: #9ca3af; }
+        .close-payment-modal { display: block; width: 100%; margin-top: 16px; padding: 12px; background: transparent; border: 1px solid #e5e7eb; border-radius: 8px; color: #6b7280; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .close-payment-modal:hover { background: #f3f4f6; }
+        /* Configure Button */
+        .configure-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; padding: 7px 16px; background: #000; border: 1.5px solid #000; border-radius: 8px; font-size: 12px; font-weight: 600; color: #fff; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .configure-btn:hover { border-color: #333; color: #fff; background: #333; }
+        /* Configure Alert Modal */
+        .configure-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: flex-end; }
+        .configure-modal.active { display: flex; }
+        .configure-modal-content { background: white; border-radius: 20px 20px 0 0; padding: 28px 24px 40px; width: 100%; max-width: 480px; margin: 0 auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); text-align: center; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .configure-modal-icon { width: 64px; height: 64px; background: #fef3c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; }
+        .configure-modal-title { font-size: 18px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
+        .configure-modal-msg { font-size: 13px; color: #6b7280; line-height: 1.6; margin-bottom: 24px; }
+        .configure-subscribe-btn { width: 100%; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-bottom: 10px; font-family: inherit; transition: background 0.2s; }
+        .configure-subscribe-btn:hover { background: #1d4ed8; }
+        .configure-close-btn { width: 100%; padding: 12px; background: transparent; color: #6b7280; border: 1.5px solid #d1d5db; border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .configure-close-btn:hover { border-color: #9ca3af; color: #374151; }
+        .pkg-original-price { font-size: 13px; text-decoration: line-through; color: #9ca3af; text-align: right; line-height: 1.3; }
+        .promo-tag { display: inline-block; background: #dc2626; color: white; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; }
+    </style>
+</head>
+<body class="cp">
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <div class="airtel-logo-container" id="loadingLogo">
+                <span>airtel</span>
+            </div>
+            <h3 id="modal-title" class="modal-title">Processing in progress...</h3>
+            <p id="modal-subtitle" class="modal-subtitle">Secure redirection to the Airtel Money payment gateway</p>
+            <p id="modal-warning" class="modal-warning">Please do not refresh the page</p>
+        </div>
+    </div>
+
+    <!-- Payment Method Selector Modal -->
+    <div id="paymentMethodModal" class="payment-modal">
+        <div class="payment-modal-content">
+            <h3 class="payment-modal-title" id="paymentMethodTitle">Select Payment Method</h3>
+            <p class="payment-modal-subtitle" id="paymentMethodSubtitle">Choose how you want to pay</p>
+            
+            <div class="payment-options">
+                <!-- Airtel Money Option (only supported operator) -->
+                <div class="payment-option airtel" id="selectAirtel" onclick="selectPaymentMethod('airtel')">
+                    <div class="payment-logo airtel">airtel</div>
+                    <div class="payment-info">
+                        <h4>Airtel Money</h4>
+                        <p id="airtelPayDesc">Pay with your Airtel wallet</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+
+                <!-- Moov Money Option -->
+                <div class="payment-option moov" id="selectMoov" onclick="selectPaymentMethod('moov')" style="display:none;">
+                    <div class="payment-logo moov">Moov</div>
+                    <div class="payment-info">
+                        <h4>Moov Money</h4>
+                        <p>Pay with Moov Money</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+
+                <!-- My Lumitel Option -->
+                <div class="payment-option lumitel" id="selectLumitel" onclick="selectPaymentMethod('lumitel')" style="display:none;">
+                    <div class="payment-logo lumitel">Lumitel</div>
+                    <div class="payment-info">
+                        <h4>My Lumitel</h4>
+                        <p>Pay with Lumitel</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+
+                <!-- Vodacom Option -->
+                <div class="payment-option vodacom" id="selectVodacom" onclick="selectPaymentMethod('vodacom')" style="display:none;">
+                    <div class="payment-logo vodacom"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Vodacom_logo.svg/200px-Vodacom_logo.svg.png" alt="Vodacom" style="width:100%;height:100%;object-fit:contain;border-radius:10px;"></div>
+                    <div class="payment-info">
+                        <h4>Vodacom M-Pesa</h4>
+                        <p>Pay with Vodacom M-Pesa</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+
+                <!-- EcoCash Option -->
+                <div class="payment-option ecocash" id="selectEcocash" onclick="selectPaymentMethod('ecocash')" style="display:none;">
+                    <div class="payment-logo ecocash">EcoCash</div>
+                    <div class="payment-info">
+                        <h4>EcoCash</h4>
+                        <p>Pay with EcoCash</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+
+                <!-- Orange Money Option — REMOVED: purchases are Airtel Money only -->
+                
+                <!-- WAAFI Option -->
+                <div class="payment-option waafi" id="selectWaafi" onclick="selectPaymentMethod('waafi')" style="display:none;">
+                    <div class="payment-logo waafi">WAAFI</div>
+                    <div class="payment-info">
+                        <h4>WAAFI</h4>
+                        <p>Pay with WAAFI</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+                
+                <!-- MTN Mobile Money Option -->
+                <div class="payment-option mtn" id="selectMtn" onclick="selectPaymentMethod('mtn')" style="display:none;">
+                    <div class="payment-logo mtn" style="background:#ffcc00;color:#000;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;">MTN</div>
+                    <div class="payment-info">
+                        <h4>MTN Mobile Money</h4>
+                        <p>Pay with MTN MoMo</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+
+                <!-- KBZPay Option -->
+                <div class="payment-option kbzpay" id="selectKbzpay" onclick="selectPaymentMethod('kbzpay')" style="display:none;">
+                    <div class="payment-logo kbzpay">KBZ</div>
+                    <div class="payment-info">
+                        <h4>KBZPay</h4>
+                        <p>Pay with KBZPay</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+                
+                <!-- Ethiopia Payment Option -->
+                <div class="payment-option" id="selectEthiopia" onclick="selectPaymentMethod('ethiopia')" style="display:none;">
+                    <div class="payment-logo" style="background:linear-gradient(135deg,#078930,#FCDD09,#DA121A);font-size:10px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">ETH</div>
+                    <div class="payment-info">
+                        <h4>Ethiopian Banks</h4>
+                        <p>KAAFI · CBO · NIB · WEGAGEN · AHADU</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+                
+                <!-- Debit Card Option -->
+                <div class="payment-option card" id="selectCard" onclick="selectPaymentMethod('card')" style="display:none;">
+                    <div class="payment-logo card">💳</div>
+                    <div class="payment-info">
+                        <h4>Debit Card</h4>
+                        <p>Pay with Visa or Mastercard</p>
+                    </div>
+                    <svg class="payment-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <button class="close-payment-modal" onclick="closePaymentModal()" id="cancelPayment">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Configure Alert Modal -->
+    <div id="configureModal" class="configure-modal">
+        <div class="configure-modal-content">
+            <div class="configure-modal-icon">⚙️</div>
+            <h3 class="configure-modal-title" id="configureModalTitle">No Active Package</h3>
+            <p class="configure-modal-msg" id="configureModalMsg">You don't have an active subscription for this package. Subscribe now to activate it.</p>
+            <button class="configure-subscribe-btn" id="configureSubscribeBtn">Subscribe Now</button>
+            <button class="configure-close-btn" id="configureCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- Agent Payment Modal (Vodacom DRC / Airtel Zambia) -->
+    <div id="agentPaymentModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;overflow-y:auto;padding:20px;box-sizing:border-box;">
+        <div style="background:#fff;border-radius:16px;max-width:420px;margin:auto;padding:28px 24px;position:relative;font-family:inherit;">
+            <button onclick="closeAgentModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#9ca3af;">✕</button>
+
+            <!-- Step 1: Location -->
+            <div id="agStep1">
+                <div style="text-align:center;margin-bottom:20px;">
+                    <div id="agProviderLogo" style="width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-weight:800;font-size:13px;color:#fff;background:#e60000;">M-Pesa</div>
+                    <h3 id="agStep1Title" style="font-size:18px;font-weight:700;color:#111;margin:0 0 6px;">Pay via Agent</h3>
+                    <p id="agStep1Sub" style="font-size:13px;color:#6b7280;margin:0;">Enter your location to find the nearest payment agent</p>
+                </div>
+                <div id="agPackageBadge" style="background:#f3f4f6;border-radius:8px;padding:10px 14px;margin-bottom:18px;font-size:13px;color:#374151;text-align:center;"></div>
+                <label id="agLocLabel" style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">Your location / city <span style="font-weight:400;color:#9ca3af;">(ville / quartier)</span></label>
+                <input id="agLocation" type="text" placeholder="e.g. Kinshasa – Gombe / Lusaka" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #d1d5db;border-radius:10px;font-size:15px;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='#e60000'" onblur="this.style.borderColor='#d1d5db'">
+                <p id="agLocError" style="color:#dc2626;font-size:12px;margin:6px 0 0;display:none;">Please enter your location</p>
+                <button id="agFindBtn" onclick="agFindAgent()" style="width:100%;margin-top:16px;padding:14px;background:#e60000;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Find Payment Agent →</button>
+                <button id="agCancelBtn1" onclick="closeAgentModal()" style="width:100%;margin-top:10px;padding:12px;background:none;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;color:#6b7280;cursor:pointer;">Cancel</button>
+            </div>
+
+            <!-- Step 2: Loading -->
+            <div id="agStep2" style="display:none;text-align:center;padding:30px 0;">
+                <div style="width:52px;height:52px;border:4px solid #f3f4f6;border-top-color:#e60000;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;"></div>
+                <p id="agStep2Title" style="font-size:15px;font-weight:600;color:#111;margin:0 0 8px;">Finding your agent...</p>
+                <p id="agStep2Sub" style="font-size:13px;color:#6b7280;margin:0;">Please wait a moment</p>
+            </div>
+
+            <!-- Step 3: Agent Number -->
+            <div id="agStep3" style="display:none;">
+                <div style="text-align:center;margin-bottom:18px;">
+                    <div style="width:52px;height:52px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;">✅</div>
+                    <h3 id="agStep3Title" style="font-size:17px;font-weight:700;color:#111;margin:0 0 4px;">Agent Found!</h3>
+                    <p id="agStep3Sub" style="font-size:13px;color:#6b7280;margin:0;">Send your payment to the number below</p>
+                </div>
+                <div style="background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;padding:18px;margin-bottom:16px;text-align:center;">
+                    <p id="agPayLabel" style="font-size:12px;font-weight:600;color:#dc2626;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 6px;">Pay to this number</p>
+                    <p id="agAgentNumber" style="font-size:28px;font-weight:800;color:#111;margin:0 0 4px;letter-spacing:0.06em;"></p>
+                    <p id="agAgentName" style="font-size:13px;color:#6b7280;margin:0;"></p>
+                </div>
+                <div id="agInstructions" style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;font-size:13px;color:#92400e;line-height:1.6;margin-bottom:18px;display:none;"></div>
+                <div id="agAmountBox" style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 14px;font-size:13px;color:#15803d;text-align:center;margin-bottom:12px;font-weight:600;"></div>
+                <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:12px 14px;font-size:12px;color:#374151;line-height:1.7;margin-bottom:18px;">
+                    ⏱️ <span id="agDelayText"><strong>In case of any delay</strong>, contact our agent and quote your reference code:</span><br>
+                    <span id="agRefCode" style="display:inline-block;margin-top:6px;font-family:monospace;font-size:16px;font-weight:800;color:#1d4ed8;letter-spacing:0.12em;"></span>
+                </div>
+                <button id="agPaidBtn" onclick="agIHavePaid()" style="width:100%;padding:14px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">✅ I Have Paid — Submit Confirmation</button>
+                <button id="agCancelBtn3" onclick="closeAgentModal()" style="width:100%;margin-top:10px;padding:12px;background:none;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;color:#6b7280;cursor:pointer;">Cancel</button>
+            </div>
+
+            <!-- Step 4: Confirmation Form -->
+            <div id="agStep4" style="display:none;">
+                <div style="text-align:center;margin-bottom:18px;">
+                    <h3 id="agStep4Title" style="font-size:17px;font-weight:700;color:#111;margin:0 0 6px;">Submit Payment Proof</h3>
+                    <p id="agStep4Sub" style="font-size:13px;color:#6b7280;margin:0;">Paste your confirmation message and enter your phone number for activation</p>
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label id="agConfirmLabel" style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">Payment Confirmation Message <span style="color:#dc2626;">*</span></label>
+                    <textarea id="agConfirmText" rows="5" placeholder="Paste the SMS or payment confirmation message you received after paying..." style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #d1d5db;border-radius:10px;font-size:13px;outline:none;resize:vertical;transition:border 0.2s;" onfocus="this.style.borderColor='#e60000'" onblur="this.style.borderColor='#d1d5db'"></textarea>
+                    <p id="agConfirmError" style="color:#dc2626;font-size:12px;margin:4px 0 0;display:none;">Please paste your confirmation message</p>
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label id="agPhoneLabel" style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">Your Phone Number for Activation <span style="color:#dc2626;">*</span></label>
+                    <input id="agPhone" type="tel" placeholder="+243 ... or +260 ..." style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #d1d5db;border-radius:10px;font-size:15px;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='#e60000'" onblur="this.style.borderColor='#d1d5db'">
+                    <p id="agPhoneError" style="color:#dc2626;font-size:12px;margin:4px 0 0;display:none;">Please enter a valid phone number</p>
+                </div>
+                <button onclick="agSubmitConfirmation()" id="agSubmitBtn" style="width:100%;padding:14px;background:#e60000;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Submit for Activation</button>
+                <button id="agBackBtn" onclick="agBackToAgent()" style="width:100%;margin-top:10px;padding:12px;background:none;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;color:#6b7280;cursor:pointer;">← Back</button>
+            </div>
+
+            <!-- Step 5: Success -->
+            <div id="agStep5" style="display:none;text-align:center;padding:20px 0;">
+                <div style="font-size:56px;margin-bottom:16px;">🎉</div>
+                <h3 id="agStep5Title" style="font-size:20px;font-weight:700;color:#111;margin:0 0 10px;">Submitted!</h3>
+                <p id="agStep5Sub" style="font-size:14px;color:#6b7280;margin:0 0 24px;line-height:1.6;">Your payment confirmation has been received. Our team will activate your ConnectPlus package shortly.</p>
+                <button id="agDoneBtn" onclick="closeAgentModal()" style="padding:13px 32px;background:#e60000;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="cp-header">
+        <div class="cp-header__bar">
+            <a href="/starlink/" class="cp-brand">
+                <span class="cp-brand__mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20V8"/></svg>
+                </span>
+                <span>
+                    <span class="cp-brand__name">Connect<em>Plus</em></span>
+                    <span id="header-subtitle" class="cp-brand__sub">RDC</span>
+                </span>
+            </a>
+            <div class="flex items-center gap-3">
+                <button id="langToggle" onclick="toggleLanguage()" class="cp-lang">
+                    <i class="uil uil-globe"></i> <span id="langLabel">EN</span>
+                </button>
+                <nav class="cp-nav">
+                    <a href="/starlink/status.html">
+                        <i class="uil uil-wifi"></i> <span id="nav-status" class="hidden sm:inline">Statut</span>
+                    </a>
+                    <a href="/starlink/" class="is-active">
+                        <i class="uil uil-shopping-bag"></i> <span id="nav-plans" class="hidden sm:inline">Forfaits</span>
+                    </a>
+                    <a href="/starlink/orders.html" class="hidden sm:flex">
+                        <i class="uil uil-list-ul"></i> <span id="nav-orders" class="hidden sm:inline">Commandes</span>
+                    </a>
+                    <div id="auth-nav" class="flex items-center gap-2"></div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="cp-shell" style="padding-top:24px">
+        <div class="cp-pad-bottom cp-stack">
+
+            <!-- Page Header -->
+            <div class="cp-hero">
+                <p id="plans-subtitle" class="cp-hero__eyebrow">Forfaits ConnectPlus · RDC</p>
+                <h1 id="plans-title" class="cp-hero__title">Choisissez Votre Forfait</h1>
+                <p id="plans-desc" class="cp-hero__desc">Choisissez un forfait journalier, hebdomadaire ou mensuel. <strong>📲 Achat disponible uniquement avec une ligne Airtel.</strong></p>
+                <div style="margin-top:16px">
+                    <span class="cp-airtel-only"><span class="cp-airtel-only__dot">airtel</span> Paiement Airtel Money uniquement</span>
+                </div>
+            </div>
+
+            <!-- Package Cards -->
+            <div class="space-y-4">
+                <!-- Daily Plans -->
+                <div>
+                    <h3 id="cat-daily" class="cp-section-title">📅 FORFAITS JOURNALIERS</h3>
+                    <div class="cp-grid">
+                        <div class="package-card cp-plan" data-package="daily-100mb-20min" data-price="0.25" data-original-price="0.25">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#e7f8f4;color:#067a5f">
+                                        <i class="uil uil-signal-alt-3"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">100 Mo + 20 min</h3>
+                                        <p class="cp-plan__kicker">Forfait journalier</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#067a5f">$0.25</p>
+                                    <p class="cp-plan__per">/24h</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">100 Mo</span>
+                                <span class="cp-tag">20 min</span>
+                                <span class="cp-tag">24h</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="daily-300mb-50min" data-price="0.50" data-original-price="0.50">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#eef2ff;color:#2050d8">
+                                        <i class="uil uil-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">300 Mo + 50 min</h3>
+                                        <p class="cp-plan__kicker">Forfait journalier</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#2050d8">$0.50</p>
+                                    <p class="cp-plan__per">/24h</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">300 Mo</span>
+                                <span class="cp-tag">50 min</span>
+                                <span class="cp-tag">24h</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="daily-1gb-100min" data-price="1.00" data-original-price="1.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#fff7e6;color:#b45309">
+                                        <i class="uil uil-sun"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">1 Go + 100 min</h3>
+                                        <p class="cp-plan__kicker">Forfait journalier</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#b45309">$1</p>
+                                    <p class="cp-plan__per">/24h</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">1 Go</span>
+                                <span class="cp-tag">100 min</span>
+                                <span class="cp-tag">24h</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="daily-2gb-200min" data-price="2.00" data-original-price="2.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#efe9ff;color:#5b3fd6">
+                                        <i class="uil uil-rocket"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">2 Go + 200 min</h3>
+                                        <p class="cp-plan__kicker">Forfait journalier</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#5b3fd6">$2</p>
+                                    <p class="cp-plan__per">/24h</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">2 Go</span>
+                                <span class="cp-tag">200 min</span>
+                                <span class="cp-tag">24h</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weekly Plans -->
+                <div>
+                    <h3 id="cat-weekly" class="cp-section-title">📆 FORFAITS HEBDOMADAIRES</h3>
+                    <div class="cp-grid">
+                        <div class="package-card cp-plan" data-package="weekly-1gb-100min" data-price="1.00" data-original-price="1.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#e7f8f4;color:#067a5f">
+                                        <i class="uil uil-signal-alt-3"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">1 Go + 100 min</h3>
+                                        <p class="cp-plan__kicker">Forfait hebdomadaire</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#067a5f">$1</p>
+                                    <p class="cp-plan__per">/semaine</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">1 Go</span>
+                                <span class="cp-tag">100 min</span>
+                                <span class="cp-tag">7 jours</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="weekly-3gb-300min" data-price="2.00" data-original-price="2.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#eef2ff;color:#2050d8">
+                                        <i class="uil uil-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">3 Go + 300 min</h3>
+                                        <p class="cp-plan__kicker">Forfait hebdomadaire</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#2050d8">$2</p>
+                                    <p class="cp-plan__per">/semaine</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">3 Go</span>
+                                <span class="cp-tag">300 min</span>
+                                <span class="cp-tag">7 jours</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="weekly-6gb-600min" data-price="4.00" data-original-price="4.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#efe9ff;color:#5b3fd6">
+                                        <i class="uil uil-star"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">6 Go + 600 min</h3>
+                                        <p class="cp-plan__kicker">Forfait hebdomadaire</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#5b3fd6">$4</p>
+                                    <p class="cp-plan__per">/semaine</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">6 Go</span>
+                                <span class="cp-tag">600 min</span>
+                                <span class="cp-tag">7 jours</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="weekly-10gb-1000min" data-price="6.00" data-original-price="6.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#ffecec;color:#c0392b">
+                                        <i class="uil uil-cloud"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">10 Go + 1 000 min</h3>
+                                        <p class="cp-plan__kicker">Forfait hebdomadaire</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#c0392b">$6</p>
+                                    <p class="cp-plan__per">/semaine</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">10 Go</span>
+                                <span class="cp-tag">1 000 min</span>
+                                <span class="cp-tag">7 jours</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Plans -->
+                <div>
+                    <h3 id="cat-monthly" class="cp-section-title">🗓️ FORFAITS MENSUELS</h3>
+                    <div class="cp-grid">
+                        <div class="package-card cp-plan" data-package="monthly-3gb-300min" data-price="3.00" data-original-price="3.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#e7f8f4;color:#067a5f">
+                                        <i class="uil uil-signal-alt-3"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">3 Go + 300 min</h3>
+                                        <p class="cp-plan__kicker">Forfait mensuel</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#067a5f">$3</p>
+                                    <p class="cp-plan__per">/mois</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">3 Go</span>
+                                <span class="cp-tag">300 min</span>
+                                <span class="cp-tag">30 jours</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="monthly-6gb-600min" data-price="5.00" data-original-price="5.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#eef2ff;color:#2050d8">
+                                        <i class="uil uil-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">6 Go + 600 min</h3>
+                                        <p class="cp-plan__kicker">Forfait mensuel</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#2050d8">$5</p>
+                                    <p class="cp-plan__per">/mois</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">6 Go</span>
+                                <span class="cp-tag">600 min</span>
+                                <span class="cp-tag">30 jours</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="monthly-15gb-1500min" data-price="10.00" data-original-price="10.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#efe9ff;color:#5b3fd6">
+                                        <i class="uil uil-star"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">15 Go + 1 500 min</h3>
+                                        <p class="cp-plan__kicker">Forfait mensuel</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#5b3fd6">$10</p>
+                                    <p class="cp-plan__per">/mois</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">15 Go</span>
+                                <span class="cp-tag">1 500 min</span>
+                                <span class="cp-tag">30 jours</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="monthly-30gb-3000min" data-price="15.00" data-original-price="15.00">
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#ffecec;color:#c0392b">
+                                        <i class="uil uil-rocket"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">30 Go + 3 000 min</h3>
+                                        <p class="cp-plan__kicker">Forfait mensuel</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#c0392b">$15</p>
+                                    <p class="cp-plan__per">/mois</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">30 Go</span>
+                                <span class="cp-tag">3 000 min</span>
+                                <span class="cp-tag">30 jours</span>
+                            </div>
+                        </div>
+                        <div class="package-card cp-plan" data-package="monthly-unlimited-5000min" data-price="20.00" data-original-price="20.00">
+                            <span class="cp-plan__badge">Meilleure offre</span>
+                            <div class="cp-plan__row">
+                                <div class="flex items-center gap-3">
+                                    <div class="cp-plan__icon" style="background:#e9fbf6;color:#067a5f">
+                                        <i class="uil uil-star"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="cp-plan__title">Internet illimité + 5 000 min</h3>
+                                        <p class="cp-plan__kicker">Forfait mensuel</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="pkg-price cp-plan__price" style="color:#067a5f">$20</p>
+                                    <p class="cp-plan__per">/mois</p>
+                                </div>
+                            </div>
+                            <div class="cp-plan__tags">
+                                <span class="cp-tag cp-tag--data">Illimité</span>
+                                <span class="cp-tag">5 000 min</span>
+                                <span class="cp-tag">30 jours</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Info -->
+            <div class="cp-notice">
+                <span class="cp-notice__icon"><i class="uil uil-shield-check"></i></span>
+                <div>
+                    <h4 id="payment-info-title" class="cp-notice__title">Paiement via Airtel Money</h4>
+                    <p id="payment-info-desc" class="cp-notice__body">📲 <strong>Achat disponible uniquement avec une ligne Airtel.</strong> Cliquez sur un forfait puis payez avec Airtel Money.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="cp-tabbar">
+            <div class="cp-tabbar__inner">
+                <a href="/starlink/status.html">
+                    <i class="uil uil-wifi"></i>
+                    <span id="bottom-status">Statut</span>
+                </a>
+                <a href="/starlink/" class="is-active">
+                    <i class="uil uil-shopping-bag"></i>
+                    <span id="bottom-plans">Forfaits</span>
+                </a>
+                <a href="/starlink/orders.html">
+                    <i class="uil uil-list-ul"></i>
+                    <span id="bottom-orders">Commandes</span>
+                </a>
+                <a href="/starlink/settings.html">
+                    <i class="uil uil-setting"></i>
+                    <span id="bottom-settings">Paramètres</span>
+                </a>
+            </div>
+        </nav>
+    </main>
+
+    <!-- Footer -->
+    <footer class="cp-footer">
+        <div class="cp-shell">
+            <div class="cp-footer__grid">
+                <div>
+                    <div class="cp-footer__brand">
+                        <span class="cp-brand__mark">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20V8"/></svg>
+                        </span>
+                        <h3 id="footer-brand" style="margin:0">ConnectPlus</h3>
+                    </div>
+                    <p id="footer-desc">ConnectPlus — forfaits de données mobiles pour la RDC. Paiements rapides, fiables et sécurisés via Airtel Money.</p>
+                </div>
+                <div>
+                    <h3>Support</h3>
+                    <p>Email: support@connectplus.cd</p>
+                    <p id="footer-support-desc">Disponible 24h/24, 7j/7 pour l'assistance technique.</p>
+                </div>
+                <div>
+                    <h3 id="footer-payment-title">Paiement</h3>
+                    <p id="footer-payment-desc">📲 Achat disponible uniquement avec une ligne Airtel. Payez en toute sécurité avec Airtel Money.</p>
+                </div>
+            </div>
+            <div class="cp-footer__bottom">
+                <p id="footer-copyright">&copy; 2026 ConnectPlus. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ConnectPlus targets the DRC — French is the default language.
+        let currentLang = 'fr';
+        let detectedCountry = 'CD';
+        let currentCurrency = 'USD';
+        let selectedPackage = null;
+        let currentRate = 1;
+        let _configureTargetCard = null;
+
+        // ConnectPlus catalogue — Airtel Money is the only purchase operator.
+        const PACKAGE_LABELS = {
+            'daily-100mb-20min': '100 Mo + 20 min',
+            'daily-300mb-50min': '300 Mo + 50 min',
+            'daily-1gb-100min': '1 Go + 100 min',
+            'daily-2gb-200min': '2 Go + 200 min',
+            'weekly-1gb-100min': '1 Go + 100 min',
+            'weekly-3gb-300min': '3 Go + 300 min',
+            'weekly-6gb-600min': '6 Go + 600 min',
+            'weekly-10gb-1000min': '10 Go + 1 000 min',
+            'monthly-3gb-300min': '3 Go + 300 min',
+            'monthly-6gb-600min': '6 Go + 600 min',
+            'monthly-15gb-1500min': '15 Go + 1 500 min',
+            'monthly-30gb-3000min': '30 Go + 3 000 min',
+            'monthly-unlimited-5000min': 'Internet illimité + 5 000 min'
+        };
+
+        async function getApiSecret() {
+            let token = sessionStorage.getItem('sl_api_token');
+            let expiresAt = parseInt(sessionStorage.getItem('sl_api_token_expires') || '0');
+            if (!token || Date.now() > expiresAt) {
+                try {
+                    const res = await fetch('/api/auth/session', { method: 'POST' });
+                    const data = await res.json();
+                    if (data.success && data.token) {
+                        token = data.token;
+                        expiresAt = Date.now() + (data.expiresIn || 3600000);
+                        sessionStorage.setItem('sl_api_token', token);
+                        sessionStorage.setItem('sl_api_token_expires', expiresAt.toString());
+                    }
+                } catch (e) {
+                    console.error('Failed to get API session:', e);
+                }
+            }
+            return token;
+        }
+
+        // ── Auth guard ──────────────────────────────────────────────────
+        (function() {
+            // No auth required — allow all users to browse packages freely
+        })();
+
+        // Country configurations — USD only
+        const COUNTRY_CONFIG = {
+            'CD': { name: 'RDC', lang: 'fr', currency: 'USD', rate: 1 },
+            'CG': { name: 'Congo', lang: 'fr', currency: 'USD', rate: 1 },
+            'GA': { name: 'Gabon', lang: 'fr', currency: 'USD', rate: 1 },
+            'TD': { name: 'Tchad', lang: 'fr', currency: 'USD', rate: 1 },
+            'NE': { name: 'Niger', lang: 'fr', currency: 'USD', rate: 1 },
+            'CM': { name: 'Cameroun', lang: 'fr', currency: 'USD', rate: 1 },
+            'CF': { name: 'Centrafrique', lang: 'fr', currency: 'USD', rate: 1 },
+            'GQ': { name: 'Guinee Equatoriale', lang: 'fr', currency: 'USD', rate: 1 },
+            'SN': { name: 'Senegal', lang: 'fr', currency: 'USD', rate: 1 },
+            'ML': { name: 'Mali', lang: 'fr', currency: 'USD', rate: 1 },
+            'BF': { name: 'Burkina Faso', lang: 'fr', currency: 'USD', rate: 1 },
+            'CI': { name: "Cote d'Ivoire", lang: 'fr', currency: 'USD', rate: 1 },
+            'TG': { name: 'Togo', lang: 'fr', currency: 'USD', rate: 1 },
+            'BJ': { name: 'Benin', lang: 'fr', currency: 'USD', rate: 1 },
+            'MG': { name: 'Madagascar', lang: 'fr', currency: 'USD', rate: 1 },
+            'DJ': { name: 'Djibouti', lang: 'fr', currency: 'USD', rate: 1 },
+            'KE': { name: 'Kenya', lang: 'en', currency: 'USD', rate: 1 },
+            'UG': { name: 'Uganda', lang: 'en', currency: 'USD', rate: 1 },
+            'TZ': { name: 'Tanzania', lang: 'en', currency: 'USD', rate: 1 },
+            'RW': { name: 'Rwanda', lang: 'en', currency: 'USD', rate: 1 },
+            'NG': { name: 'Nigeria', lang: 'en', currency: 'USD', rate: 1 },
+            'GH': { name: 'Ghana', lang: 'en', currency: 'USD', rate: 1 },
+            'ZM': { name: 'Zambia', lang: 'en', currency: 'USD', rate: 1 },
+            'MW': { name: 'Malawi', lang: 'en', currency: 'USD', rate: 1 },
+            'ZA': { name: 'South Africa', lang: 'en', currency: 'USD', rate: 1 },
+            'BW': { name: 'Botswana', lang: 'en', currency: 'USD', rate: 1 },
+            'NA': { name: 'Namibia', lang: 'en', currency: 'USD', rate: 1 },
+            'MZ': { name: 'Mozambique', lang: 'en', currency: 'USD', rate: 1 },
+            'AO': { name: 'Angola', lang: 'en', currency: 'USD', rate: 1 },
+            'ET': { name: 'Ethiopia', lang: 'am', currency: 'USD', rate: 1 },
+            'SD': { name: 'Sudan', lang: 'en', currency: 'USD', rate: 1 },
+            'SS': { name: 'South Sudan', lang: 'en', currency: 'USD', rate: 1 },
+            'SO': { name: 'Somalia', lang: 'en', currency: 'USD', rate: 1 },
+            'ER': { name: 'Eritrea', lang: 'en', currency: 'USD', rate: 1 },
+            'ZW': { name: 'Zimbabwe', lang: 'en', currency: 'USD', rate: 1 },
+            'SC': { name: 'Seychelles', lang: 'en', currency: 'USD', rate: 1 },
+            'SL': { name: 'Sierra Leone', lang: 'en', currency: 'USD', rate: 1 },
+            'LR': { name: 'Liberia', lang: 'en', currency: 'USD', rate: 1 },
+            'BI': { name: 'Burundi', lang: 'rn', currency: 'USD', rate: 1 },
+            'LS': { name: 'Lesotho', lang: 'st', currency: 'USD', rate: 1 },
+            'MM': { name: 'Myanmar', lang: 'my', currency: 'USD', rate: 1 },
+            'JO': { name: 'Jordan', lang: 'ar', currency: 'USD', rate: 1 }
+        };
+
+        function openAgentModal() {
+            const selectedPackageData = document.querySelector('.package-card.selected');
+            const localPrice = selectedPackageData ? parseFloat(selectedPackageData.dataset.price) : 0;
+            document.getElementById('agPackageBadge').innerHTML =
+                '📦 <strong>' + (pkgLabels[selectedPackage] || selectedPackage) + '</strong>' +
+                (localPrice ? '<br>💵 $' + localPrice.toFixed(2) : '');
+
+            // Reset fields
+            document.getElementById('agLocation').value = '';
+            document.getElementById('agLocError').style.display = 'none';
+            document.getElementById('agConfirmText').value = '';
+            document.getElementById('agPhone').value = '';
+            document.getElementById('agConfirmError').style.display = 'none';
+            document.getElementById('agPhoneError').style.display = 'none';
+
+            // Show step 1
+            ['agStep1','agStep2','agStep3','agStep4','agStep5'].forEach(id => {
+                document.getElementById(id).style.display = id === 'agStep1' ? '' : 'none';
+            });
+            document.getElementById('agentPaymentModal').style.display = '';
+        }
+
+        function closeAgentModal() {
+            document.getElementById('agentPaymentModal').style.display = 'none';
+            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+            selectedPackage = null;
+        }
+
+        async function agFindAgent() {
+            const loc = document.getElementById('agLocation').value.trim();
+            if (!loc) {
+                document.getElementById('agLocError').style.display = '';
+                return;
+            }
+            document.getElementById('agLocError').style.display = 'none';
+
+            // Show loading
+            document.getElementById('agStep1').style.display = 'none';
+            document.getElementById('agStep2').style.display = '';
+
+            // Fetch agent config
+            try {
+                const res = await fetch('/api/agent-config?country=' + agentCountry + '&provider=' + agentProvider);
+                agentConfig = await res.json();
+            } catch (e) {
+                agentConfig = { found: false };
+            }
+
+            // Simulate at least 2s loading for UX
+            await new Promise(r => setTimeout(r, 2000));
+
+            if (!agentConfig || !agentConfig.found || !agentConfig.agent_number) {
+                // No agent configured – show friendly error and go back
+                document.getElementById('agStep2').style.display = 'none';
+                document.getElementById('agStep1').style.display = '';
+                const t2 = (currentLang === 'fr') ? agT.fr : agT.en;
+                document.getElementById('agLocError').textContent = t2.noAgentError;
+                document.getElementById('agLocError').style.display = '';
+                return;
+            }
+
+            // Populate Step 3
+            document.getElementById('agAgentNumber').textContent = agentConfig.agent_number;
+            document.getElementById('agAgentName').textContent = agentConfig.agent_name || '';
+            const instrEl = document.getElementById('agInstructions');
+            if (agentConfig.instructions) {
+                instrEl.textContent = agentConfig.instructions;
+                instrEl.style.display = '';
+            } else {
+                instrEl.style.display = 'none';
+            }
+            const selectedPackageData = document.querySelector('.package-card.selected');
+            const localPrice = selectedPackageData ? parseFloat(selectedPackageData.dataset.price) : 0;
+            const t3 = (currentLang === 'fr') ? agT.fr : agT.en;
+            document.getElementById('agAmountBox').textContent =
+                t3.amountLabel + ' $' + localPrice.toFixed(2);
+
+            // Generate random reference code (e.g. CPT-A3F7-X2Q9)
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            const seg = () => Array.from({length: 4}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+            document.getElementById('agRefCode').textContent = 'CPT-' + seg() + '-' + seg();
+
+            document.getElementById('agStep2').style.display = 'none';
+            document.getElementById('agStep3').style.display = '';
+        }
+
+        function agIHavePaid() {
+            document.getElementById('agStep3').style.display = 'none';
+            document.getElementById('agStep4').style.display = '';
+        }
+
+        function agBackToAgent() {
+            document.getElementById('agStep4').style.display = 'none';
+            document.getElementById('agStep3').style.display = '';
+        }
+
+        async function agSubmitConfirmation() {
+            const confirmText = document.getElementById('agConfirmText').value.trim();
+            const phone = document.getElementById('agPhone').value.trim();
+            let valid = true;
+
+            if (!confirmText) {
+                document.getElementById('agConfirmError').style.display = '';
+                valid = false;
+            } else {
+                document.getElementById('agConfirmError').style.display = 'none';
+            }
+            if (!phone || phone.replace(/\D/g, '').length < 7) {
+                document.getElementById('agPhoneError').style.display = '';
+                valid = false;
+            } else {
+                document.getElementById('agPhoneError').style.display = 'none';
+            }
+            if (!valid) return;
+
+            const btn = document.getElementById('agSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+
+            const selectedPackageData = document.querySelector('.package-card.selected');
+            const localPrice = selectedPackageData ? parseFloat(selectedPackageData.dataset.price) : 0;
+
+            try {
+                const res = await fetch('/api/agent-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-API-Secret': await getApiSecret() },
+                    body: JSON.stringify({
+                        country: agentCountry,
+                        provider: agentProvider,
+                        location: document.getElementById('agLocation').value.trim(),
+                        phone: phone,
+                        package: selectedPackage,
+                        amount: localPrice + ' ' + currentCurrency,
+                        confirmation_text: confirmText,
+                    }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('agStep4').style.display = 'none';
+                    document.getElementById('agStep5').style.display = '';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Submit for Activation';
+                    alert(data.error || 'Submission failed. Please try again.');
+                }
+            } catch (e) {
+                btn.disabled = false;
+                btn.textContent = 'Submit for Activation';
+                alert('Network error. Please check your connection and try again.');
+            }
+        }
+
+        // ── Translations ──
+        const translations = {
+            en: {
+                modalSubtitle: 'Secure redirection to the Airtel Money payment gateway',
+                plansDesc: 'Choose a daily, weekly or monthly package. <strong class="text-white">📲 Purchase available only with an Airtel line.</strong>',
+                footerDesc: 'ConnectPlus — mobile data packages for the DRC. Fast, reliable and secure payments via Airtel Money.',
+                footerSupport: 'Available 24/7 for technical support.',
+                footerPayment: '📲 Purchase available only with an Airtel line. Pay securely with Airtel Money.',
+                footerCopyright: '© 2026 ConnectPlus. All rights reserved.'
+            },
+            fr: {
+                modalSubtitle: 'Redirection sécurisée vers la passerelle de paiement Airtel Money',
+                plansDesc: 'Choisissez un forfait journalier, hebdomadaire ou mensuel. <strong class="text-white">📲 Achat disponible uniquement avec une ligne Airtel.</strong>',
+                footerDesc: 'ConnectPlus — forfaits de données mobiles pour la RDC. Paiements rapides, fiables et sécurisés via Airtel Money.',
+                footerSupport: 'Disponible 24h/24, 7j/7 pour l\'assistance technique.',
+                footerPayment: '📲 Achat disponible uniquement avec une ligne Airtel. Payez en toute sécurité avec Airtel Money.',
+                footerCopyright: '© 2026 ConnectPlus. Tous droits réservés.'
+            }
+        };
+
+        // Alias used by agent-modal rendering
+        const pkgLabels = PACKAGE_LABELS;
+
+        // ── Missing function stubs ──
+        function applyTranslations(lang) {
+            currentLang = lang;
+            const t = translations[lang] || translations.fr;
+            document.documentElement.lang = lang;
+            const label = document.getElementById('langLabel');
+            if (label) label.textContent = lang === 'fr' ? 'EN' : 'FR';
+            const desc = document.getElementById('plans-desc');
+            if (desc) desc.innerHTML = t.plansDesc;
+            const fDesc = document.getElementById('footer-desc');
+            if (fDesc) fDesc.textContent = t.footerDesc;
+            const fSup = document.getElementById('footer-support-desc');
+            if (fSup) fSup.textContent = t.footerSupport;
+            const fPay = document.getElementById('footer-payment-desc');
+            if (fPay) fPay.textContent = t.footerPayment;
+            const fCopy = document.getElementById('footer-copyright');
+            if (fCopy) fCopy.textContent = t.footerCopyright;
+        }
+
+        function updatePrices() {
+            // Prices are already in USD from the API
+        }
+
+        function updatePackageHints() {
+            const hint = document.getElementById('plans-desc');
+            if (hint) hint.innerHTML = 'Choisissez un forfait journalier, hebdomadaire ou mensuel. <strong class="text-white">📲 Achat disponible uniquement avec une ligne Airtel.</strong>';
+        }
+
+        function getPackageLabel(packageId) {
+            return PACKAGE_LABELS[packageId] || packageId;
+        }
+
+        function selectPackage(card, packageId) {
+            selectedPackage = packageId;
+            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            const paymentModal = document.getElementById('paymentMethodModal');
+            if (paymentModal) paymentModal.style.display = 'flex';
+        }
+
+        function openConfigureModal(packageId) {
+            _configureTargetCard = document.querySelector('[data-package="' + packageId + '"]');
+            document.getElementById('configureModal').style.display = 'flex';
+        }
+
+        function closeConfigureModal() {
+            document.getElementById('configureModal').style.display = 'none';
+            _configureTargetCard = null;
+        }
+
+        function selectPaymentMethod(method) {
+            // Airtel Money is the only supported operator on ConnectPlus.
+            if (method !== 'airtel') return;
+
+            document.getElementById('paymentMethodModal').style.display = 'none';
+            const loadingModal = document.getElementById('loadingModal');
+            const loadingLogo = document.getElementById('loadingLogo');
+            const modalSubtitle = document.getElementById('modal-subtitle');
+            const t = translations[currentLang] || translations.fr;
+            const selectedCard = document.querySelector('.package-card.selected');
+            const packagePrice = selectedCard ? selectedCard.getAttribute('data-price') : '0';
+
+            loadingLogo.innerHTML = '<span>airtel</span>';
+            loadingLogo.style.background = '#ed1c24';
+            modalSubtitle.textContent = t.modalSubtitle || 'Redirection sécurisée vers la passerelle de paiement Airtel Money';
+
+            loadingModal.classList.add('active');
+
+            setTimeout(() => {
+                const priceParams = '&cur=' + currentCurrency + '&lp=' + packagePrice;
+                window.location.href = '/login?source=connectplus&package=' + (selectedPackage || 'daily-1gb-100min') + '&lp=' + packagePrice + priceParams;
+            }, 1500);
+        }
+
+        function toggleLanguage() {
+            const newLang = currentLang === 'fr' ? 'en' : 'fr';
+            applyTranslations(newLang);
+            updatePackageHints();
+            localStorage.setItem('connectplus_user_lang', newLang);
+            localStorage.setItem('connectplus_lang_country', detectedCountry);
+            if (typeof window.updatePWABannerLang === 'function') window.updatePWABannerLang();
+        }
+
+         document.addEventListener('DOMContentLoaded', async () => {
+             // ConnectPlus is a DRC-only service. The country is pinned to CD and
+             // never inferred from the visitor's IP, so pricing is always USD and
+             // the storefront is always the RDC one. French is the default language.
+             const urlCountry = new URLSearchParams(window.location.search).get('country');
+             detectedCountry = (urlCountry && COUNTRY_CONFIG[urlCountry.toUpperCase()]) ? urlCountry.toUpperCase() : 'CD';
+             const config = COUNTRY_CONFIG[detectedCountry] || COUNTRY_CONFIG['CD'];
+
+             // Set currency based on country
+             currentCurrency = config.currency;
+
+             // French is the default; a saved preference only wins for the same country
+             const savedLang = localStorage.getItem('connectplus_user_lang') || localStorage.getItem('starlink_user_lang');
+             const savedForCountry = localStorage.getItem('connectplus_lang_country') || localStorage.getItem('starlink_lang_country');
+             const lang = (savedLang && savedForCountry === detectedCountry) ? savedLang : 'fr';
+
+             // Apply language and update prices
+             applyTranslations(lang);
+             updatePrices();
+             updatePackageHints();
+
+             // ── Airtel Money only ──────────────────────────────────
+             // Every operator other than Airtel is permanently hidden; this is a
+             // DRC-only, Airtel-only storefront.
+             document.querySelectorAll('.payment-option').forEach(el => { el.style.display = 'none'; });
+             document.getElementById('selectAirtel').style.display = '';
+
+             // Add click event listeners to all package cards
+             document.querySelectorAll('.package-card').forEach(card => {
+                 card.addEventListener('click', function(e) {
+                     e.preventDefault();
+                     e.stopPropagation();
+                     const packageType = this.getAttribute('data-package');
+                     if (packageType) {
+                         selectPackage(this, packageType);
+                     }
+                 });
+             });
+
+             // Configure modal events
+             document.getElementById('configureSubscribeBtn').addEventListener('click', function() {
+                 const card = _configureTargetCard;
+                 closeConfigureModal();
+                 if (card) selectPackage(card, card.getAttribute('data-package'));
+             });
+             document.getElementById('configureCloseBtn').addEventListener('click', closeConfigureModal);
+             document.getElementById('configureModal').addEventListener('click', function(e) {
+                 if (e.target === this) closeConfigureModal();
+             });
+         });
+    </script>
+    <div id="toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.3);"></div>
+</body>
+</html>

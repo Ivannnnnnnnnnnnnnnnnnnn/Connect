@@ -1,0 +1,320 @@
+/* ============================================================
+   ConnectPlus — Brand System
+   One stylesheet, loaded by every page, so the shell (header,
+   nav, footer, cards, buttons, badges) is consistent everywhere.
+
+   Palette  : deep navy → electric indigo, with a signal-teal accent
+   Type     : system stack, tight tracking on display text
+   ============================================================ */
+
+:root {
+    /* Core */
+    --cp-ink:        #0b1020;   /* near-black navy  */
+    --cp-ink-2:      #141b33;   /* raised surface   */
+    --cp-ink-3:      #1e2745;   /* borders on dark  */
+
+    /* Brand */
+    --cp-brand:      #2f6bff;   /* primary indigo   */
+    --cp-brand-600:  #2050d8;
+    --cp-brand-700:  #183fb0;
+    --cp-accent:     #00d4a6;   /* signal teal      */
+    --cp-accent-600: #00b18b;
+
+    /* Neutrals */
+    --cp-bg:         #f4f6fb;
+    --cp-surface:    #ffffff;
+    --cp-line:       #e4e8f2;
+    --cp-muted:      #6b7590;
+    --cp-text:       #101425;
+
+    /* Status */
+    --cp-warn:       #f59e0b;
+    --cp-danger:     #e5484d;
+    --cp-ok:         #16a34a;
+
+    /* Shape */
+    --cp-r-sm: 10px;
+    --cp-r:    14px;
+    --cp-r-lg: 20px;
+    --cp-r-xl: 26px;
+    --cp-shadow-sm: 0 1px 2px rgba(16, 20, 37, .06), 0 1px 3px rgba(16, 20, 37, .04);
+    --cp-shadow:    0 4px 16px rgba(16, 20, 37, .08);
+    --cp-shadow-lg: 0 18px 40px rgba(16, 20, 37, .14);
+    --cp-ring:      0 0 0 3px rgba(47, 107, 255, .28);
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+body.cp {
+    background: var(--cp-bg);
+    color: var(--cp-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.cp-shell { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+/* ── Header ───────────────────────────────────────────────── */
+.cp-header {
+    background: linear-gradient(135deg, var(--cp-ink) 0%, var(--cp-ink-2) 100%);
+    border-bottom: 1px solid var(--cp-ink-3);
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 20px rgba(11, 16, 32, .35);
+}
+.cp-header__bar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 12px 16px; max-width: 1120px; margin: 0 auto;
+}
+.cp-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.cp-brand__mark {
+    width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--cp-brand) 0%, var(--cp-accent) 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(47, 107, 255, .45);
+}
+.cp-brand__mark svg { width: 20px; height: 20px; display: block; }
+.cp-brand__name {
+    font-weight: 800; letter-spacing: .02em; font-size: 17px; color: #fff;
+    line-height: 1;
+}
+.cp-brand__name em { font-style: normal; color: var(--cp-accent); }
+.cp-brand__sub {
+    font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--cp-accent); margin-top: 3px; display: block;
+}
+
+/* ── Nav ──────────────────────────────────────────────────── */
+.cp-nav { display: flex; align-items: center; gap: 4px; }
+.cp-nav a {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 12px; border-radius: var(--cp-r-sm);
+    font-size: 13px; font-weight: 600; color: #b9c2dc; text-decoration: none;
+    transition: background .16s, color .16s;
+}
+.cp-nav a:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+.cp-nav a.is-active { color: #fff; background: rgba(47, 107, 255, .28); }
+.cp-lang {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 12px; border-radius: 999px; cursor: pointer;
+    background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .14);
+    color: #fff; font-size: 12px; font-weight: 700; font-family: inherit;
+    transition: background .16s;
+}
+.cp-lang:hover { background: rgba(255, 255, 255, .16); }
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.cp-hero {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--cp-ink) 0%, #17204a 60%, #1b2a63 100%);
+    border-radius: var(--cp-r-xl); padding: 26px 24px; color: #fff;
+    box-shadow: var(--cp-shadow-lg);
+}
+.cp-hero::after {
+    content: ''; position: absolute; right: -60px; top: -60px;
+    width: 240px; height: 240px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 166, .28) 0%, transparent 68%);
+    pointer-events: none;
+}
+.cp-hero__eyebrow {
+    font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--cp-accent);
+}
+.cp-hero__title { font-size: 25px; font-weight: 900; margin: 8px 0 0; letter-spacing: -.02em; line-height: 1.15; }
+.cp-hero__desc { color: #b9c2dc; font-size: 13.5px; margin-top: 10px; line-height: 1.55; max-width: 60ch; }
+.cp-hero__desc strong { color: #fff; }
+
+/* ── Section / category headers ───────────────────────────── */
+.cp-section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--cp-muted); margin: 0 0 12px;
+}
+.cp-section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--cp-line);
+}
+
+/* ── Cards ────────────────────────────────────────────────── */
+.cp-card {
+    background: var(--cp-surface); border: 1px solid var(--cp-line);
+    border-radius: var(--cp-r-lg); box-shadow: var(--cp-shadow-sm);
+}
+.cp-plan {
+    position: relative; background: var(--cp-surface);
+    border: 1.5px solid var(--cp-line); border-radius: var(--cp-r-lg);
+    padding: 18px; cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.cp-plan:hover { transform: translateY(-3px); box-shadow: var(--cp-shadow); border-color: #cfd8ef; }
+.cp-plan.is-selected {
+    border-color: var(--cp-brand); box-shadow: var(--cp-ring), var(--cp-shadow);
+    background: linear-gradient(180deg, #f7f9ff 0%, #fff 60%);
+}
+.cp-plan__row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.cp-plan__icon {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 19px;
+}
+.cp-plan__title { font-size: 16px; font-weight: 800; letter-spacing: -.01em; color: var(--cp-text); }
+.cp-plan__kicker { font-size: 11.5px; color: var(--cp-muted); margin-top: 2px; }
+.cp-plan__price { font-size: 25px; font-weight: 900; letter-spacing: -.02em; line-height: 1; text-align: right; }
+.cp-plan__per { font-size: 11px; color: var(--cp-muted); text-align: right; margin-top: 3px; }
+.cp-plan__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.cp-tag {
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+    background: #eef2ff; color: var(--cp-brand-700);
+}
+.cp-tag--data { background: #e7f8f4; color: #067a5f; }
+.cp-plan__badge {
+    position: absolute; top: -9px; right: 14px;
+    background: linear-gradient(135deg, var(--cp-accent) 0%, var(--cp-accent-600) 100%);
+    color: #05221c; font-size: 10px; font-weight: 900; letter-spacing: .08em;
+    text-transform: uppercase; padding: 4px 11px; border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(0, 178, 139, .4);
+}
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.cp-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 18px; border-radius: var(--cp-r); border: none; cursor: pointer;
+    font-family: inherit; font-size: 14.5px; font-weight: 800; letter-spacing: .01em;
+    transition: transform .16s, box-shadow .16s, background .16s;
+}
+.cp-btn--primary {
+    background: linear-gradient(135deg, var(--cp-brand) 0%, var(--cp-brand-700) 100%);
+    color: #fff; box-shadow: 0 8px 20px rgba(47, 107, 255, .32);
+}
+.cp-btn--primary:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(47, 107, 255, .4); }
+.cp-btn--ghost {
+    background: transparent; color: var(--cp-muted);
+    border: 1.5px solid var(--cp-line);
+}
+.cp-btn--ghost:hover { border-color: #c8d1e8; color: var(--cp-text); }
+.cp-btn--block { width: 100%; }
+.cp-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+/* ── Notice / alert ───────────────────────────────────────── */
+.cp-notice {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: linear-gradient(135deg, #eef4ff 0%, #e9fbf6 100%);
+    border: 1px solid #d3e0f7; border-radius: var(--cp-r-lg); padding: 16px 18px;
+}
+.cp-notice__icon {
+    width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+    background: var(--cp-brand); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+.cp-notice__title { font-weight: 800; font-size: 14px; color: var(--cp-text); }
+.cp-notice__body { font-size: 13px; color: #4a5470; margin-top: 3px; line-height: 1.55; }
+.cp-notice__body strong { color: var(--cp-brand-700); }
+
+/* Airtel-only pill */
+.cp-airtel-only {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #fff; border: 1px solid #f3c9cb; border-radius: 999px;
+    padding: 5px 12px 5px 6px; font-size: 11.5px; font-weight: 700; color: #8a1f24;
+}
+.cp-airtel-only__dot {
+    width: 18px; height: 18px; border-radius: 50%; background: #ed1c24;
+    color: #fff; font-size: 8px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Bottom nav (mobile) ──────────────────────────────────── */
+.cp-tabbar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 45;
+    background: rgba(255, 255, 255, .96); backdrop-filter: blur(10px);
+    border-top: 1px solid var(--cp-line);
+    box-shadow: 0 -6px 24px rgba(16, 20, 37, .08);
+}
+.cp-tabbar__inner {
+    max-width: 1120px; margin: 0 auto;
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 8px 8px 10px;
+}
+.cp-tabbar a {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 10.5px; font-weight: 700; color: var(--cp-muted);
+    text-decoration: none; padding: 4px 12px; border-radius: var(--cp-r-sm);
+    transition: color .16s, background .16s;
+}
+.cp-tabbar a i { font-size: 21px; }
+.cp-tabbar a:hover { color: var(--cp-brand-600); background: #f2f5ff; }
+.cp-tabbar a.is-active { color: var(--cp-brand-600); }
+
+/* ── Footer ───────────────────────────────────────────────── */
+.cp-footer {
+    background: linear-gradient(135deg, var(--cp-ink) 0%, var(--cp-ink-2) 100%);
+    color: #96a1c0; padding: 40px 0 28px; margin-top: 40px;
+}
+.cp-footer__grid { display: grid; grid-template-columns: 1fr; gap: 26px; }
+@media (min-width: 768px) { .cp-footer__grid { grid-template-columns: repeat(3, 1fr); } }
+.cp-footer h3 {
+    color: #fff; font-size: 12px; font-weight: 800;
+    letter-spacing: .12em; text-transform: uppercase; margin: 0 0 12px;
+}
+.cp-footer p { font-size: 13px; line-height: 1.6; margin: 0 0 6px; }
+.cp-footer__brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cp-footer__bottom {
+    border-top: 1px solid var(--cp-ink-3); margin-top: 30px; padding-top: 20px;
+    text-align: center; font-size: 12px;
+}
+
+/* ── Utility ──────────────────────────────────────────────── */
+.cp-stack { display: flex; flex-direction: column; gap: 18px; }
+.cp-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .cp-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .cp-grid { grid-template-columns: repeat(3, 1fr); } }
+.cp-pad-bottom { padding-bottom: 108px; }
+.cp-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ── Hero icon chip ───────────────────────────────────────── */
+.cp-hero__chip {
+    width: 62px; height: 62px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(47, 107, 255, .22); color: var(--cp-accent);
+    display: flex; align-items: center; justify-content: center; font-size: 27px;
+}
+
+/* ── Inputs ───────────────────────────────────────────────── */
+.cp-input {
+    width: 100%; box-sizing: border-box;
+    padding: 12px 14px; border: 1.5px solid var(--cp-line); border-radius: var(--cp-r);
+    font-size: 14px; font-family: inherit; color: var(--cp-text);
+    background: var(--cp-surface); outline: none;
+    transition: border-color .16s, box-shadow .16s;
+}
+.cp-input:focus { border-color: var(--cp-brand); box-shadow: var(--cp-ring); }
+.cp-input::placeholder { color: #a2abc4; }
+
+/* ── List card internals ──────────────────────────────────── */
+.cp-card__head {
+    padding: 15px 20px; border-bottom: 1px solid var(--cp-line);
+    font-weight: 800; font-size: 14px; color: var(--cp-text);
+}
+.cp-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px 20px; text-decoration: none; color: inherit;
+    border-bottom: 1px solid var(--cp-line);
+    transition: background .16s;
+}
+.cp-row:last-child { border-bottom: none; }
+.cp-row:hover { background: #f8faff; }
+.cp-row__label { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.cp-row__label i { font-size: 19px; color: var(--cp-muted); }
+
+/* ── Stat tile ────────────────────────────────────────────── */
+.cp-stat { background: var(--cp-surface); border: 1px solid var(--cp-line); border-radius: var(--cp-r-lg); padding: 18px; box-shadow: var(--cp-shadow-sm); }
+.cp-stat__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cp-stat__label { font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--cp-muted); }
+.cp-stat__value { font-size: 26px; font-weight: 900; letter-spacing: -.02em; color: var(--cp-text); line-height: 1; }
+.cp-stat__unit { font-size: 11px; color: var(--cp-muted); margin-top: 4px; }
+
+/* ── Progress ─────────────────────────────────────────────── */
+.cp-progress { width: 100%; height: 10px; border-radius: 999px; background: var(--cp-line); overflow: hidden; }
+.cp-progress__bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--cp-brand) 0%, var(--cp-accent) 100%); transition: width .5s ease; }
+
+/* ── Empty state ──────────────────────────────────────────── */
+.cp-empty { text-align: center; padding: 34px 16px; }
+.cp-empty__icon {
+    width: 68px; height: 68px; border-radius: 50%; margin: 0 auto 14px;
+    background: #eef2ff; color: var(--cp-brand); font-size: 28px;
+    display: flex; align-items: center; justify-content: center;
+}

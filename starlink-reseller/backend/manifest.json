@@ -1,0 +1,44 @@
+{
+  "short_name": "Airtel Lite",
+  "name": "Airtel Lite",
+  "icons": [
+    {
+      "src": "airtel_icon_x48.svg",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "airtel_icon_x72.svg",
+      "sizes": "72x72",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "airtel_icon_x96.svg",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "airtel_icon_x128.svg",
+      "type": "image/png",
+      "sizes": "128x128",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "airtel_icon_x384.svg",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "airtel_icon_x512.svg",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "description": "Airtel Lite is a fully-featured web app that is designed to be faster, lighter and simpler to use. It helps you manage GSM and Airtel Money wallets. It allows you to make an Airtel prepaid recharge, Buy Bundle, Send money and check your balances effortlessly.",
+  "dir": "ltr",
+  "lang": "en-US"
+}

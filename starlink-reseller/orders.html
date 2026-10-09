@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Commandes - ConnectPlus</title>
+    <link rel="icon" type="image/png" href="/starlink/icons/icon-192.png">
+    <link rel="manifest" href="/starlink/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="ConnectPlus">
+    <link rel="apple-touch-icon" href="/starlink/icons/icon-192.png">
+    <script src="/starlink/pwa-install.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="/starlink/brand.css">
+    <style>.card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }</style>
+</head>
+<body class="cp">
+        <!-- Header -->
+    <header class="cp-header">
+        <div class="cp-header__bar">
+            <a href="/starlink/" class="cp-brand">
+                <span class="cp-brand__mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20V8"/></svg>
+                </span>
+                <span>
+                    <span class="cp-brand__name">Connect<em>Plus</em></span>
+                    <span id="header-subtitle" class="cp-brand__sub">RDC</span>
+                </span>
+            </a>
+            <div class="flex items-center gap-3">
+                <button id="langToggle" onclick="toggleLanguage()" class="cp-lang">
+                    <i class="uil uil-globe"></i> <span id="langLabel">EN</span>
+                </button>
+                <nav class="cp-nav">
+                    <a href="/starlink/status.html">
+                        <i class="uil uil-wifi"></i> <span id="nav-status" class="hidden sm:inline">Statut</span>
+                    </a>
+                    <a href="/starlink/">
+                        <i class="uil uil-shopping-bag"></i> <span id="nav-plans" class="hidden sm:inline">Forfaits</span>
+                    </a>
+                    <a href="/starlink/orders.html" class="hidden sm:flex is-active">
+                        <i class="uil uil-list-ul"></i> <span id="nav-orders" class="hidden sm:inline">Commandes</span>
+                    </a>
+                    <div id="auth-nav" class="flex items-center gap-2"></div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="pb-28 space-y-6">
+            <div class="cp-hero">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p id="orders-subtitle" class="cp-hero__eyebrow">Historique</p>
+                        <h1 id="orders-title" class="cp-hero__title">Mes Commandes</h1>
+                    </div>
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-600 bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="uil uil-list-ul text-4xl sm:text-5xl text-blue-400"></i>
+                    </div>
+                </div>
+                <p id="orders-desc" class="cp-hero__desc">Consultez l'historique de vos commandes et leur statut.</p>
+            </div>
+
+            <div class="cp-card" style="padding:24px">
+                <!-- Phone lookup -->
+                <div id="ordersLookupSection">
+                    <p id="lookup-label" style="font-size:13px;font-weight:700;color:var(--cp-text);margin:0 0 10px">Enter your phone number to view your orders:</p>
+                    <div class="flex gap-2">
+                        <input id="lookupPhone" type="tel" placeholder="+260 97X XXX XXX" class="cp-input flex-1">
+                        <button onclick="loadMyOrders()" class="cp-btn cp-btn--primary" style="padding:10px 18px">Go</button>
+                    </div>
+                    <p id="lookupError" class="text-red-500 text-xs mt-1 hidden"></p>
+                </div>
+
+                <!-- Orders list -->
+                <div id="ordersListSection" class="mt-6 hidden">
+                    <div id="ordersContainer"></div>
+                    <button onclick="document.getElementById('ordersListSection').classList.add('hidden');document.getElementById('ordersLookupSection').classList.remove('hidden');" class="mt-4 text-xs text-gray-400 underline">Search different number</button>
+                </div>
+
+                <!-- Empty state -->
+                <div id="emptyOrdersSection" class="hidden text-center py-8">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="uil uil-clipboard-notes text-4xl text-gray-400"></i>
+                    </div>
+                    <h3 id="no-orders-title" style="font-size:19px;font-weight:800;color:var(--cp-text);margin:0 0 8px">No orders</h3>
+                    <p id="no-orders-desc" style="color:var(--cp-muted);margin:0 0 16px">No orders found for this number.</p>
+                    <button onclick="document.getElementById('emptyOrdersSection').classList.add('hidden');document.getElementById('ordersLookupSection').classList.remove('hidden');" class="text-xs text-gray-400 underline">Try another number</button>
+                </div>
+            </div>
+
+            <div class="cp-notice">
+                <div class="flex items-start gap-3">
+                    <span class="cp-notice__icon"><i class="uil uil-info-circle"></i></span>
+                    <div>
+                        <h4 id="info-title" class="cp-notice__title">Comment ça marche ?</h4>
+                        <p id="info-desc" class="cp-notice__body">Après avoir effectué un paiement via Airtel Money, votre commande apparaîtra ici. L'activation est généralement immédiate après confirmation du paiement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                <!-- Bottom Navigation -->
+        <nav class="cp-tabbar">
+            <div class="cp-tabbar__inner">
+                <a href="/starlink/status.html">
+                    <i class="uil uil-wifi"></i>
+                    <span id="bottom-status">Statut</span>
+                </a>
+                <a href="/starlink/">
+                    <i class="uil uil-shopping-bag"></i>
+                    <span id="bottom-plans">Forfaits</span>
+                </a>
+                <a href="/starlink/orders.html" class="is-active">
+                    <i class="uil uil-list-ul"></i>
+                    <span id="bottom-orders">Commandes</span>
+                </a>
+                <a href="/starlink/settings.html">
+                    <i class="uil uil-setting"></i>
+                    <span id="bottom-settings">Paramètres</span>
+                </a>
+            </div>
+        </nav>
+    </main>
+
+        <!-- Footer -->
+    <footer class="cp-footer">
+        <div class="cp-shell">
+            <div class="cp-footer__grid">
+                <div>
+                    <div class="cp-footer__brand">
+                        <span class="cp-brand__mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20V8"/></svg>
+                </span>
+                        <h3 id="footer-brand" style="margin:0">ConnectPlus</h3>
+                    </div>
+                    <p id="footer-desc">ConnectPlus — forfaits de données mobiles pour la RDC.</p>
+                </div>
+                <div>
+                    <h3>Support</h3>
+                    <p>Email: support@connectplus.cd</p>
+                    <p id="footer-support-desc">Disponible 24h/24, 7j/7.</p>
+                </div>
+                <div>
+                    <h3 id="footer-payment-title">Paiement</h3>
+                    <p id="footer-payment-desc">📲 Achat disponible uniquement avec une ligne Airtel.</p>
+                </div>
+            </div>
+            <div class="cp-footer__bottom">
+                <p id="footer-copyright">&copy; 2026 ConnectPlus. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const COUNTRY_CONFIG = {
+            'CD': { name: 'RDC', lang: 'fr' }, 'CG': { name: 'Congo', lang: 'fr' }, 'GA': { name: 'Gabon', lang: 'fr' },
+            'TD': { name: 'Tchad', lang: 'fr' }, 'NE': { name: 'Niger', lang: 'fr' }, 'MG': { name: 'Madagascar', lang: 'fr' },
+            'KE': { name: 'Kenya', lang: 'en' }, 'UG': { name: 'Uganda', lang: 'en' }, 'TZ': { name: 'Tanzania', lang: 'en' },
+            'RW': { name: 'Rwanda', lang: 'en' }, 'NG': { name: 'Nigeria', lang: 'en' }, 'GH': { name: 'Ghana', lang: 'en' },
+            'ZM': { name: 'Zambia', lang: 'en' }, 'MW': { name: 'Malawi', lang: 'en' },
+            'ZW': { name: 'Zimbabwe', lang: 'en' },
+            'SL': { name: 'Sierra Leone', lang: 'en' },
+            'MM': { name: 'မြန်မာ', lang: 'my' },
+            'BI': { name: 'Burundi', lang: 'rn' }
+        };
+
+        const translations = {
+            fr: {
+                pageTitle: 'Commandes - ConnectPlus', headerSubtitle: 'RDC', navStatus: 'Statut', navPlans: 'Forfaits',
+                navOrders: 'Commandes', navSettings: 'Paramètres', ordersSubtitle: 'Historique', ordersTitle: 'Mes Commandes',
+                ordersDesc: 'Consultez l\'historique de vos commandes et leur statut.',
+                noOrdersTitle: 'Aucune commande', noOrdersDesc: 'Vous n\'avez pas encore passé de commande. Sélectionnez un forfait pour commencer.',
+                viewPlans: 'Voir les forfaits', infoTitle: 'Comment ça marche ?',
+                infoDesc: 'Après avoir effectué un paiement via Airtel Money, votre commande apparaîtra ici. L\'activation est généralement immédiate après confirmation du paiement.',
+                footerDesc: 'ConnectPlus — forfaits de données mobiles pour la RDC.',
+                footerSupport: 'Disponible 24h/24, 7j/7.', footerPayment: '📲 Achat disponible uniquement avec une ligne Airtel.',
+                footerCopyright: '© 2026 ConnectPlus. Tous droits réservés.'
+            },
+            en: {
+                pageTitle: 'Orders - ConnectPlus', headerSubtitle: 'DRC', navStatus: 'Status', navPlans: 'Packages',
+                navOrders: 'Orders', navSettings: 'Settings', ordersSubtitle: 'History', ordersTitle: 'My Orders',
+                ordersDesc: 'View your order history and status.',
+                noOrdersTitle: 'No orders', noOrdersDesc: 'You haven\'t placed any orders yet. Select a package to get started.',
+                viewPlans: 'View packages', infoTitle: 'How does it work?',
+                infoDesc: 'After making a payment via Airtel Money, your order will appear here. Activation is usually immediate after payment confirmation.',
+                footerDesc: 'ConnectPlus — mobile data packages for the DRC.',
+                footerSupport: 'Available 24/7.', footerPayment: '📲 Purchase available only with an Airtel line.',
+                footerCopyright: '© 2026 ConnectPlus. All rights reserved.'
+            }
+        };
+
+        // ConnectPlus is a DRC-only service — the country is pinned, never
+        // inferred from the visitor's IP.
+        async function detectCountry() {
+            return { country: 'CD' };
+        }
+
+        let currentLang = 'en';
+
+        function renderAuthNav(t) {
+            const authNav = document.getElementById('auth-nav');
+            if (!authNav) return;
+            const user = localStorage.getItem('sl_auth_user');
+            if (user) {
+                try {
+                    const u = JSON.parse(user);
+                    authNav.innerHTML = '<span class="text-gray-300 text-sm hidden sm:inline">' + (u.name || u.phone) + '</span>'
+                        + '<button onclick="doLogout()" class="cp-btn cp-btn--ghost" style="padding:8px 14px;font-size:12.5px">' + (t.navLogout || 'Logout') + '</button>';
+                } catch(e) { authNav.innerHTML = ''; }
+            } else {
+                authNav.innerHTML = '<a href="/starlink/login.html" class="cp-btn cp-btn--primary" style="padding:8px 14px;font-size:12.5px">' + (t.navLogin || 'Connexion') + '</a>';
+            }
+        }
+
+        function doLogout() {
+            localStorage.removeItem('sl_auth_user');
+            window.location.replace('/starlink/login.html');
+        }
+
+        function applyTranslations(lang) {
+            currentLang = lang;
+            const t = translations[lang] || translations.fr;
+            const countryName = COUNTRY_CONFIG[detectedCountry]?.name || 'RDC';
+
+            document.getElementById('page-title').textContent = t.pageTitle;
+            document.getElementById('header-subtitle').textContent = t.headerSubtitle + ' ' + countryName;
+            document.getElementById('nav-status').textContent = t.navStatus;
+            document.getElementById('nav-plans').textContent = t.navPlans;
+            document.getElementById('nav-orders').textContent = t.navOrders;
+            renderAuthNav(t);
+            document.getElementById('orders-subtitle').textContent = t.ordersSubtitle;
+            document.getElementById('orders-title').textContent = t.ordersTitle;
+            document.getElementById('orders-desc').textContent = t.ordersDesc;
+            document.getElementById('no-orders-title').textContent = t.noOrdersTitle;
+            document.getElementById('no-orders-desc').textContent = t.noOrdersDesc;
+            const viewPlansBtn = document.getElementById('view-plans-btn');
+            if (viewPlansBtn) viewPlansBtn.innerHTML = '<i class="uil uil-shopping-bag"></i> ' + t.viewPlans;
+            document.getElementById('info-title').textContent = t.infoTitle;
+            document.getElementById('info-desc').textContent = t.infoDesc;
+            document.getElementById('bottom-status').textContent = t.navStatus;
+            document.getElementById('bottom-plans').textContent = t.navPlans;
+            document.getElementById('bottom-orders').textContent = t.navOrders;
+            document.getElementById('bottom-settings').textContent = t.navSettings;
+            document.getElementById('footer-brand').textContent = 'CONNECTPLUS';
+            document.getElementById('footer-desc').textContent = t.footerDesc;
+            document.getElementById('footer-support-desc').textContent = t.footerSupport;
+            document.getElementById('footer-payment-desc').textContent = t.footerPayment;
+            document.getElementById('footer-copyright').textContent = t.footerCopyright;
+            document.getElementById('langLabel').textContent = lang === 'fr' ? 'EN' : 'FR';
+            document.documentElement.lang = lang;
+        }
+
+        function toggleLanguage() {
+            // ConnectPlus supports French (default) and English.
+            const newLang = currentLang === 'fr' ? 'en' : 'fr';
+            applyTranslations(newLang);
+            localStorage.setItem('connectplus_user_lang', newLang);
+            if (typeof window.updatePWABannerLang === 'function') window.updatePWABannerLang();
+        }
+
+        async function loadMyOrders() {
+            const phone = document.getElementById('lookupPhone').value.trim();
+            const errEl = document.getElementById('lookupError');
+            if (phone.replace(/\D/g, '').length < 6) {
+                errEl.textContent = 'Please enter a valid phone number.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            errEl.classList.add('hidden');
+
+            const res = await fetch('/api/my-agent-orders?phone=' + encodeURIComponent(phone));
+            const data = await res.json();
+
+            document.getElementById('ordersLookupSection').classList.add('hidden');
+
+            if (!data.orders || data.orders.length === 0) {
+                document.getElementById('emptyOrdersSection').classList.remove('hidden');
+                return;
+            }
+
+            const pkgNames = {
+                'daily-100mb-20min': '100 Mo + 20 min · journalier',
+                'daily-300mb-50min': '300 Mo + 50 min · journalier',
+                'daily-1gb-100min': '1 Go + 100 min · journalier',
+                'daily-2gb-200min': '2 Go + 200 min · journalier',
+                'weekly-1gb-100min': '1 Go + 100 min · hebdomadaire',
+                'weekly-3gb-300min': '3 Go + 300 min · hebdomadaire',
+                'weekly-6gb-600min': '6 Go + 600 min · hebdomadaire',
+                'weekly-10gb-1000min': '10 Go + 1 000 min · hebdomadaire',
+                'monthly-3gb-300min': '3 Go + 300 min · mensuel',
+                'monthly-6gb-600min': '6 Go + 600 min · mensuel',
+                'monthly-15gb-1500min': '15 Go + 1 500 min · mensuel',
+                'monthly-30gb-3000min': '30 Go + 3 000 min · mensuel',
+                'monthly-unlimited-5000min': 'Internet illimité + 5 000 min · mensuel'
+            };
+            const providerColors = { vodacom: '#e60000', airtel: '#ed1c24', mtn: '#ffcc00' };
+            const providerTextColors = { vodacom: '#fff', airtel: '#fff', mtn: '#000' };
+            const providerNames = { vodacom: 'Vodacom M-Pesa', airtel: 'Airtel Money', mtn: 'MTN MoMo' };
+
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = data.orders.map(o => {
+                const confirmed = o.status === 'confirmed';
+                const statusBg = confirmed ? '#dcfce7' : '#fef9c3';
+                const statusColor = confirmed ? '#15803d' : '#854d0e';
+                const statusText = confirmed ? '✅ Confirmed' : '⏳ Unconfirmed';
+                const bg = providerColors[o.provider] || '#6b7280';
+                const tc = providerTextColors[o.provider] || '#fff';
+                const pName = providerNames[o.provider] || o.provider;
+                const date = new Date(o.created_at).toLocaleString();
+                return `<div style="border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin-bottom:14px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:50%;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;">${pName.split(' ')[0]}</div>
+                            <div>
+                                <div style="font-weight:700;font-size:14px;">${pkgNames[o.package] || o.package}</div>
+                                <div style="font-size:12px;color:#6b7280;">${pName} &bull; ${o.location}</div>
+                            </div>
+                        </div>
+                        <span style="background:${statusBg};color:${statusColor};font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">${statusText}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:#6b7280;">
+                        <span>💰 ${o.amount}</span>
+                        <span>${date}</span>
+                    </div>
+                    ${!confirmed ? '<p style="font-size:11px;color:#b45309;margin-top:8px;background:#fef3c7;padding:6px 10px;border-radius:8px;">⏱️ Pending admin confirmation. You will be activated shortly.</p>' : ''}
+                </div>`;
+            }).join('');
+
+            document.getElementById('ordersListSection').classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const countryData = await detectCountry();
+            const urlCountry = new URLSearchParams(window.location.search).get('country');
+            detectedCountry = (urlCountry && COUNTRY_CONFIG[urlCountry.toUpperCase()]) ? urlCountry.toUpperCase() : countryData.country;
+            // ConnectPlus is a DRC service — French is the default.
+            const savedLang = localStorage.getItem('connectplus_user_lang');
+            applyTranslations(translations[savedLang] ? savedLang : 'fr');
+        });
+    </script>
+</body>
+</html>

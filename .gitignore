@@ -1,0 +1,24 @@
+node_modules/
+.env
+.playwright-mcp/
+logs/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+test_approve.js
+
+# Temporary test / scratch scripts
+backend/qa-*.mjs
+backend/qa-*.cjs
+shots-qa/
+starlink-reseller/backend/shots.js
+starlink-reseller/backend/reskin-inner.js
+starlink-reseller/backend/reskin-inner2.js
+starlink-reseller/backend/reskin-inner3.js
+starlink-reseller/backend/reskin-inner4.js
+starlink-reseller/backend/reskin-plans.js
+starlink-reseller/backend/reskin-plans2.js
+starlink-reseller/backend/reskin-plans3.js
+starlink-reseller/backend/reskin-shell.js
