@@ -957,10 +957,10 @@
               // Set currency based on country
               currentCurrency = config.currency;
 
-              // Use saved language preference only if it was set for the same country
+              // Use saved language preference only if it was set for the same country; English is the default
               const savedLang = localStorage.getItem('starlink_user_lang');
               const savedForCountry = localStorage.getItem('starlink_lang_country');
-              const lang = (savedLang && savedForCountry === detectedCountry) ? savedLang : config.lang;
+              const lang = (savedLang && savedForCountry === detectedCountry) ? savedLang : 'en';
 
  // Apply language and update prices
               applyTranslations(lang);

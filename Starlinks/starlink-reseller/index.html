@@ -440,8 +440,8 @@
             const config = COUNTRY_CONFIG[detectedCountry] || COUNTRY_CONFIG['CD'];
             const savedLang = localStorage.getItem('starlink_user_lang');
             const savedForCountry = localStorage.getItem('starlink_lang_country');
-            // Only use savedLang if it was set while in the same country, else use country default
-            const effectiveLang = (savedLang && savedForCountry === detectedCountry) ? savedLang : config.lang;
+            // English is the default; only a saved preference for this country overrides it
+            const effectiveLang = (savedLang && savedForCountry === detectedCountry) ? savedLang : 'en';
             applyTranslations(effectiveLang);
         });
     </script>

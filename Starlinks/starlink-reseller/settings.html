@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -281,7 +281,7 @@
             currentLang = lang;
             const t = translations[lang] || translations.fr;
             const countryName = COUNTRY_CONFIG[detectedCountry]?.name || 'RDC';
-            
+
             document.getElementById('page-title').textContent = t.pageTitle;
             document.getElementById('header-subtitle').textContent = t.headerSubtitle + ' ' + countryName;
             document.getElementById('nav-status').textContent = t.navStatus;
@@ -327,7 +327,8 @@
             detectedCountry = (urlCountry && COUNTRY_CONFIG[urlCountry.toUpperCase()]) ? urlCountry.toUpperCase() : countryData.country;
             const config = COUNTRY_CONFIG[detectedCountry] || COUNTRY_CONFIG['CD'];
             const savedLang = localStorage.getItem('starlink_user_lang');
-            applyTranslations(savedLang || config.lang);
+            // English is the default; only a saved preference overrides it
+            applyTranslations(savedLang || 'en');
         });
     </script>
 </body>

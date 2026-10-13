@@ -59,7 +59,7 @@
             </a>
             <div class="flex items-center gap-2 sm:gap-4">
                 <button id="langToggle" onclick="toggleLanguage()" class="flex items-center gap-1 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full transition">
-                    <i class="uil uil-globe"></i> <span id="langLabel">FR</span>
+                    <i class="uil uil-globe"></i> <span id="langLabel">EN</span>
                 </button>
                 <nav class="flex gap-2 sm:gap-4 items-center">
                     <a href="/starlink/status.html" class="text-gray-300 hover:text-white flex items-center gap-1 text-sm">
@@ -199,7 +199,7 @@
         let currentLang = localStorage.getItem('starlink_user_lang') || 'en';
 
         function applyLang(lang) {
-            const t = T[lang] || T.fr;
+            const t = T[lang] || T.en;
             currentLang = lang;
             localStorage.setItem('starlink_user_lang', lang);
             document.getElementById('page-title').textContent = t.pageTitle;
@@ -249,7 +249,7 @@
         async function handleLogin(e) {
             e.preventDefault();
             hideError();
-            const t = T[currentLang] || T.fr;
+            const t = T[currentLang] || T.en;
             const phone = document.getElementById('phone').value.trim();
             const password = document.getElementById('password').value;
 
