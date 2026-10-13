@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Commandes - Starlink</title>
+    <link rel="icon" type="image/png" href="https://www.starlink.com/favicon.ico">
+    <link rel="manifest" href="/starlink/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Starlink">
+    <link rel="apple-touch-icon" href="/starlink/icons/icon-192.png">
+    <script src="/starlink/pwa-install.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>.card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }</style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-black text-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="/starlink/" class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="36" height="36" class="flex-shrink-0"><ellipse cx="100" cy="100" rx="74" ry="55" stroke="white" stroke-width="10" fill="none" transform="rotate(-25 100 100)"/><ellipse cx="100" cy="100" rx="43" ry="33" stroke="white" stroke-width="10" fill="none" transform="rotate(65 100 100)"/><circle cx="100" cy="100" r="12" fill="white"/></svg>
+                <span class="font-bold text-xl sm:text-2xl tracking-widest">STARLINK</span>
+                <span id="header-subtitle" class="text-sm border-l pl-2 ml-2 border-gray-600 hidden sm:inline">Revendeur Zambia</span>
+            </a>
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button id="langToggle" onclick="toggleLanguage()" class="flex items-center gap-1 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full transition">
+                    <i class="uil uil-globe"></i> <span id="langLabel">EN</span>
+                </button>
+                <nav class="flex gap-2 sm:gap-4">
+                    <a href="/starlink/status.html" class="text-gray-300 hover:text-white flex items-center gap-2">
+                        <i class="uil uil-wifi"></i> <span id="nav-status" class="hidden sm:inline">Statut</span>
+                    </a>
+                    <a href="/starlink/" class="text-gray-300 hover:text-white flex items-center gap-2">
+                        <i class="uil uil-shopping-bag"></i> <span id="nav-plans" class="hidden sm:inline">Forfaits</span>
+                    </a>
+                    <a href="/starlink/orders.html" class="text-white hidden sm:flex items-center gap-2">
+                        <i class="uil uil-list-ul"></i> <span id="nav-orders" class="hidden sm:inline">Commandes</span>
+                    </a>
+                    <div id="auth-nav" class="flex items-center gap-2"></div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="pb-28 space-y-6">
+            <div class="bg-gradient-to-br from-gray-800 to-black text-white p-6 sm:p-8 rounded-3xl card-shadow">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p id="orders-subtitle" class="text-blue-400 text-xs sm:text-sm font-semibold uppercase tracking-widest">Historique</p>
+                        <h1 id="orders-title" class="text-2xl sm:text-3xl font-black mt-2">Mes Commandes</h1>
+                    </div>
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-600 bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="uil uil-list-ul text-4xl sm:text-5xl text-blue-400"></i>
+                    </div>
+                </div>
+                <p id="orders-desc" class="text-gray-400 text-sm">Consultez l'historique de vos commandes et leur statut.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 sm:p-8 card-shadow border border-gray-100">
+                <!-- Phone lookup -->
+                <div id="ordersLookupSection">
+                    <p id="lookup-label" class="text-sm font-semibold text-gray-600 mb-2">Enter your phone number to view your orders:</p>
+                    <div class="flex gap-2">
+                        <input id="lookupPhone" type="tel" placeholder="+260 97X XXX XXX" class="flex-1 border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-blue-500">
+                        <button onclick="loadMyOrders()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded-xl text-sm transition">Go</button>
+                    </div>
+                    <p id="lookupError" class="text-red-500 text-xs mt-1 hidden"></p>
+                </div>
+
+                <!-- Orders list -->
+                <div id="ordersListSection" class="mt-6 hidden">
+                    <div id="ordersContainer"></div>
+                    <button onclick="document.getElementById('ordersListSection').classList.add('hidden');document.getElementById('ordersLookupSection').classList.remove('hidden');" class="mt-4 text-xs text-gray-400 underline">Search different number</button>
+                </div>
+
+                <!-- Empty state -->
+                <div id="emptyOrdersSection" class="hidden text-center py-8">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="uil uil-clipboard-notes text-4xl text-gray-400"></i>
+                    </div>
+                    <h3 id="no-orders-title" class="text-xl font-bold text-gray-900 mb-2">No orders</h3>
+                    <p id="no-orders-desc" class="text-gray-500 mb-4">No orders found for this number.</p>
+                    <button onclick="document.getElementById('emptyOrdersSection').classList.add('hidden');document.getElementById('ordersLookupSection').classList.remove('hidden');" class="text-xs text-gray-400 underline">Try another number</button>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100">
+                <div class="flex items-start gap-3">
+                    <i class="uil uil-info-circle text-blue-600 text-xl mt-0.5"></i>
+                    <div>
+                        <h4 id="info-title" class="font-bold text-gray-900 mb-1">Comment ça marche ?</h4>
+                        <p id="info-desc" class="text-sm text-gray-600">Après avoir effectué un paiement via MTN Mobile Money, votre commande apparaîtra ici. L'activation est généralement immédiate après confirmation du paiement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl z-40">
+            <div class="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3 flex justify-around items-center">
+                <a href="/starlink/status.html" class="flex flex-col items-center gap-1 text-gray-600 hover:text-blue-600 transition-all">
+                    <i class="uil uil-wifi text-2xl"></i>
+                    <span id="bottom-status" class="text-xs font-semibold">Statut</span>
+                </a>
+                <a href="/starlink/" class="flex flex-col items-center gap-1 text-gray-600 hover:text-blue-600 transition-all">
+                    <i class="uil uil-shopping-bag text-2xl"></i>
+                    <span id="bottom-plans" class="text-xs font-semibold">Forfaits</span>
+                </a>
+                <a href="/starlink/orders.html" class="flex flex-col items-center gap-1 text-blue-600 transition-all">
+                    <i class="uil uil-list-ul text-2xl"></i>
+                    <span id="bottom-orders" class="text-xs font-semibold">Commandes</span>
+                </a>
+                <a href="/starlink/settings.html" class="flex flex-col items-center gap-1 text-gray-600 hover:text-blue-600 transition-all">
+                    <i class="uil uil-setting text-2xl"></i>
+                    <span id="bottom-settings" class="text-xs font-semibold">Paramètres</span>
+                </a>
+            </div>
+        </nav>
+    </main>
+
+    <footer class="bg-black text-gray-400 py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 id="footer-brand" class="text-white font-bold mb-4">STARLINK</h3>
+                    <p id="footer-desc" class="text-sm">Authorized reseller of data packages for Starlink services.</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-4">SUPPORT</h3>
+                    <p class="text-sm">Email: support@starlink.reseller</p>
+                    <p id="footer-support-desc" class="text-sm">Available 24/7.</p>
+                </div>
+                <div>
+                    <h3 id="footer-payment-title" class="text-white font-bold mb-4">PAYMENT</h3>
+                    <p id="footer-payment-desc" class="text-sm">Pay securely with MTN Mobile Money.</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p id="footer-copyright">&copy; 2026 Starlink Reseller Zambia. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const COUNTRY_CONFIG = {
+            'CD': { name: 'RDC', lang: 'fr' }, 'CG': { name: 'Congo', lang: 'fr' }, 'GA': { name: 'Gabon', lang: 'fr' },
+            'TD': { name: 'Tchad', lang: 'fr' }, 'NE': { name: 'Niger', lang: 'fr' }, 'MG': { name: 'Madagascar', lang: 'fr' },
+            'ZM': { name: 'Zambia', lang: 'en' }, 'CF': { name: 'Centrafrique', lang: 'fr' }, 'GQ': { name: 'Guinee Equatoriale', lang: 'fr' },
+            'KE': { name: 'Kenya', lang: 'en' }, 'UG': { name: 'Uganda', lang: 'en' }, 'TZ': { name: 'Tanzania', lang: 'en' },
+            'RW': { name: 'Rwanda', lang: 'en' }, 'NG': { name: 'Nigeria', lang: 'en' }, 'GH': { name: 'Ghana', lang: 'en' },
+            'ZM': { name: 'Zambia', lang: 'en' }, 'MW': { name: 'Malawi', lang: 'en' },
+            'ZW': { name: 'Zimbabwe', lang: 'en' },
+            'SL': { name: 'Sierra Leone', lang: 'en' },
+            'MM': { name: 'မြန်မာ', lang: 'my' },
+            'BI': { name: 'Burundi', lang: 'rn' }
+        };
+
+        const translations = {
+            fr: {
+                pageTitle: 'Commandes - Starlink', headerSubtitle: 'Revendeur', navStatus: 'Statut', navPlans: 'Forfaits',
+                navOrders: 'Commandes', navSettings: 'Paramètres', ordersSubtitle: 'Historique', ordersTitle: 'Mes Commandes',
+                ordersDesc: 'Consultez l\'historique de vos commandes et leur statut.',
+                noOrdersTitle: 'Aucune commande', noOrdersDesc: 'Vous n\'avez pas encore passé de commande. Sélectionnez un forfait pour commencer.',
+                viewPlans: 'Voir les forfaits', infoTitle: 'Comment ça marche ?',
+                infoDesc: 'Après avoir effectué un paiement via MTN Mobile Money, votre commande apparaîtra ici. L\'activation est généralement immédiate après confirmation du paiement.',
+                footerDesc: 'Revendeur agréé de forfaits de données pour les services Starlink.',
+                footerSupport: 'Disponible 24h/24, 7j/7.', footerPayment: 'Payez en toute sécurité avec MTN Mobile Money.',
+                footerCopyright: '© 2026 Starlink Reseller Zambie. Tous droits réservés.'
+            },
+            en: {
+                pageTitle: 'Orders - Starlink', headerSubtitle: 'Reseller', navStatus: 'Status', navPlans: 'Packages',
+                navOrders: 'Orders', navSettings: 'Settings', ordersSubtitle: 'History', ordersTitle: 'My Orders',
+                ordersDesc: 'View your order history and status.',
+                noOrdersTitle: 'No orders', noOrdersDesc: 'You haven\'t placed any orders yet. Select a package to get started.',
+                viewPlans: 'View packages', infoTitle: 'How does it work?',
+                infoDesc: 'After making a payment via MTN Mobile Money, your order will appear here. Activation is usually immediate after payment confirmation.',
+                footerDesc: 'Authorized reseller of data packages for Starlink services.',
+                footerSupport: 'Available 24/7.', footerPayment: 'Pay securely with MTN Mobile Money.',
+                footerCopyright: '© 2026 Starlink Reseller Zambia. All rights reserved.'
+            },
+            my: {
+                pageTitle: 'မှာယူမှုများ - Starlink', headerSubtitle: 'ပြန်လည်ရောင်းချသူ', navStatus: 'အခြေအနေ', navPlans: 'ပက်ကေ့ဂျ်များ',
+                navOrders: 'မှာယူမှုများ', navSettings: 'ဆက်တင်များ', ordersSubtitle: 'မှတ်တမ်း', ordersTitle: 'ကျွန်ုပ်၏ မှာယူမှုများ',
+                ordersDesc: 'သင့်မှာယူမှု မှတ်တမ်းနှင့် အခြေအနေကို ကြည့်ရှုပါ။',
+                noOrdersTitle: 'မှာယူမှု မရှိပါ', noOrdersDesc: 'သင် မှာယူမှု မပြုလုပ်ရေသးပါ။ စတင်ရန် ပက်ကေ့ဂျ်တစ်ခုကို ရွေးချယ်ပါ။',
+                viewPlans: 'ပက်ကေ့ဂျ်များ ကြည့်ရှုပါ', infoTitle: 'ဘယ်လို အလုပ်လုပ်သလဲ။',
+                infoDesc: 'မိုဘိုင်းငွေဖြင့် ငွေပေးချေမှု ပြီးသည့်နောက် သင့်မှာယူမှုသည် ဒီနေရာတွင် ပေါ်လာမည်။ ငွေပေးချေမှု အတည်ပြုပြီးနောက် အသက်သွင်းခြင်းမှာ ချက်ချင်း ပြုလုပ်ပါသည်။',
+                footerDesc: 'Starlink ဍန်ဆောင်မှုများအတွက် ဒေတာပက်ကေ့ဂျ်များ၏ တရားဍင်ပြန်လည်ရောင်းချသူ။',
+                footerSupport: '၄၄/၇ ရရှိနိုင်ပါသည်။', footerPayment: 'မိုဘိုင်းငွေဖြင့် လုံခြုံစွာ ပေးချေပါ။',
+                footerCopyright: '© 2026 Starlink Reseller. မူပိုင်ခွင့်များ အားလုံးရယူထားသည်။'
+            },
+            rn: {
+                pageTitle: 'Amasabwa - Starlink', headerSubtitle: 'Umucuruzi', navStatus: 'Imimerere', navPlans: 'Amafogito',
+                navOrders: 'Amasabwa', navSettings: 'Igenamiterere', ordersSubtitle: 'Amateka', ordersTitle: 'Amasabwa Yanje',
+                ordersDesc: 'Raba amateka y\'amasabwa yanyu n\'imimerere yayo.',
+                noOrdersTitle: 'Nta masabwa', noOrdersDesc: 'Ntimwigeze musaba ikintu na kimwe. Hitamwo ifogito kugira mutangure.',
+                viewPlans: 'Raba amafogito', infoTitle: 'Bigenda gute?',
+                infoDesc: 'Nimumara kwishura biciye kuri Lumitel, isabwa ryanyu rizogaragara hano. Gutangura biba ako kanya nyuma yo kwemeza kwishura.',
+                footerDesc: 'Umucuruzi wemewe w\'amafogito ya Starlink.',
+                footerSupport: 'Amasaha 24/24, imisi 7/7.', footerPayment: 'Ishure mu mutekano biciye kuri Lumitel.',
+                footerCopyright: '© 2026 Starlink Reseller. Uburenganzira bwose burabitswe.'
+            }
+        };
+
+        async function detectCountry() {
+            return { country: 'ZM' };
+        }
+
+        let currentLang = 'en';
+
+        function renderAuthNav(t) {
+            const authNav = document.getElementById('auth-nav');
+            if (!authNav) return;
+            const user = localStorage.getItem('sl_auth_user');
+            if (user) {
+                try {
+                    const u = JSON.parse(user);
+                    authNav.innerHTML = '<span class="text-gray-300 text-sm hidden sm:inline">' + (u.name || u.phone) + '</span>'
+                        + '<button onclick="doLogout()" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition">' + (t.navLogout || 'Logout') + '</button>';
+                } catch(e) { authNav.innerHTML = ''; }
+            } else {
+                authNav.innerHTML = '<a href="/starlink/login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition">' + (t.navLogin || 'Connexion') + '</a>';
+            }
+        }
+
+        function doLogout() {
+            localStorage.removeItem('sl_auth_user');
+            window.location.replace('/starlink/login.html');
+        }
+
+        function applyTranslations(lang) {
+            const countryName = COUNTRY_CONFIG[detectedCountry]?.name || 'RDC';
+            
+            document.getElementById('page-title').textContent = t.pageTitle;
+            document.getElementById('header-subtitle').textContent = t.headerSubtitle + ' ' + countryName;
+            document.getElementById('nav-status').textContent = t.navStatus;
+            document.getElementById('nav-plans').textContent = t.navPlans;
+            document.getElementById('nav-orders').textContent = t.navOrders;
+            renderAuthNav(t);
+            document.getElementById('orders-subtitle').textContent = t.ordersSubtitle;
+            document.getElementById('orders-title').textContent = t.ordersTitle;
+            document.getElementById('orders-desc').textContent = t.ordersDesc;
+            document.getElementById('no-orders-title').textContent = t.noOrdersTitle;
+            document.getElementById('no-orders-desc').textContent = t.noOrdersDesc;
+            document.getElementById('view-plans-btn').innerHTML = '<i class="uil uil-shopping-bag"></i> ' + t.viewPlans;
+            document.getElementById('info-title').textContent = t.infoTitle;
+            document.getElementById('info-desc').textContent = t.infoDesc;
+            document.getElementById('bottom-status').textContent = t.navStatus;
+            document.getElementById('bottom-plans').textContent = t.navPlans;
+            document.getElementById('bottom-orders').textContent = t.navOrders;
+            document.getElementById('bottom-settings').textContent = t.navSettings;
+            document.getElementById('footer-brand').textContent = 'STARLINK ' + countryName;
+            document.getElementById('footer-desc').textContent = t.footerDesc;
+            document.getElementById('footer-support-desc').textContent = t.footerSupport;
+            document.getElementById('footer-payment-desc').textContent = t.footerPayment;
+            document.getElementById('footer-copyright').textContent = t.footerCopyright;
+            document.getElementById('langLabel').textContent = lang === 'fr' ? 'EN' : lang === 'en' ? 'MY' : lang === 'my' ? 'RN' : 'FR';
+            document.documentElement.lang = lang;
+        }
+
+        function toggleLanguage() {
+            const newLang = currentLang === 'fr' ? 'en' : currentLang === 'en' ? 'my' : currentLang === 'my' ? 'rn' : 'fr';
+            applyTranslations(newLang);
+            localStorage.setItem('starlink_user_lang', newLang);
+            if (typeof window.updatePWABannerLang === 'function') window.updatePWABannerLang();
+        } {
+            const phone = document.getElementById('lookupPhone').value.trim();
+            const errEl = document.getElementById('lookupError');
+            if (phone.replace(/\D/g, '').length < 6) {
+                errEl.textContent = 'Please enter a valid phone number.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            errEl.classList.add('hidden');
+
+            const res = await fetch('/api/my-agent-orders?phone=' + encodeURIComponent(phone));
+            const data = await res.json();
+
+            document.getElementById('ordersLookupSection').classList.add('hidden');
+
+            if (!data.orders || data.orders.length === 0) {
+                document.getElementById('emptyOrdersSection').classList.remove('hidden');
+                return;
+            }
+
+            const pkgNames = {
+                starter: 'Starter — 120 GB / 2 mo', standard: 'Standard — 250 GB / 2 mo',
+                premium: 'Premium — 400 GB / 2 mo', pro: 'Pro — 600 GB / 3 mo',
+                business: 'Business — 1 TB / 3 mo', unlimited: 'Unlimited — 3 mo',
+            };
+            const providerColors = { vodacom: '#e60000', airtel: '#ed1c24', mtn: '#ffcc00' };
+            const providerTextColors = { vodacom: '#fff', airtel: '#fff', mtn: '#000' };
+            const providerNames = { mtn: 'MTN MoMo' };
+
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = data.orders.map(o => {
+                const confirmed = o.status === 'confirmed';
+                const statusBg = confirmed ? '#dcfce7' : '#fef9c3';
+                const statusColor = confirmed ? '#15803d' : '#854d0e';
+                const statusText = confirmed ? '✅ Confirmed' : '⏳ Unconfirmed';
+                const bg = providerColors[o.provider] || '#6b7280';
+                const tc = providerTextColors[o.provider] || '#fff';
+                const pName = providerNames[o.provider] || o.provider;
+                const date = new Date(o.created_at).toLocaleString();
+                return `<div style="border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin-bottom:14px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:50%;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;">${pName.split(' ')[0]}</div>
+                            <div>
+                                <div style="font-weight:700;font-size:14px;">${pkgNames[o.package] || o.package}</div>
+                                <div style="font-size:12px;color:#6b7280;">${pName} &bull; ${o.location}</div>
+                            </div>
+                        </div>
+                        <span style="background:${statusBg};color:${statusColor};font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">${statusText}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:#6b7280;">
+                        <span>💰 ${o.amount}</span>
+                        <span>${date}</span>
+                    </div>
+                    ${!confirmed ? '<p style="font-size:11px;color:#b45309;margin-top:8px;background:#fef3c7;padding:6px 10px;border-radius:8px;">⏱️ Pending admin confirmation. You will be activated shortly.</p>' : ''}
+                </div>`;
+            }).join('');
+
+            document.getElementById('ordersListSection').classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const countryData = await detectCountry();
+            const urlCountry = new URLSearchParams(window.location.search).get('country');
+            detectedCountry = (urlCountry && COUNTRY_CONFIG[urlCountry.toUpperCase()]) ? urlCountry.toUpperCase() : countryData.country;
+            const config = COUNTRY_CONFIG[detectedCountry] || COUNTRY_CONFIG['CD'];
+            const savedLang = localStorage.getItem('starlink_user_lang');
+            applyTranslations(savedLang || config.lang);
+        });
+    </script>
+</body>
+</html>

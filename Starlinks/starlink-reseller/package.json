@@ -1,0 +1,29 @@
+{
+  "name": "starlink-reseller",
+  "version": "1.0.0",
+  "description": "Starlink Internet Plans Reseller Platform with Telegram Bot Integration",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "starlink",
+    "reseller",
+    "telegram-bot",
+    "payment-approval"
+  ],
+  "author": "Starlink Reseller",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "node-telegram-bot-api": "^1.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

