@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: starlink-reseller
+    runtime: node
+    rootDir: Starlinks/starlink-reseller
+    buildCommand: npm install
+    startCommand: npm start
