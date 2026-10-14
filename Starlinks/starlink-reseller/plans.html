@@ -264,7 +264,7 @@
             <div class="space-y-4">
                 <!-- Quotidien Limité -->
                 <div>
-                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Quotidien Limité</h3>
+                    <h3 id="plans-heading-daily" class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Quotidien Limité</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="package-card bg-white rounded-2xl p-6 card-shadow border border-gray-100 relative" data-package="daily-1gb" data-price="1" data-original-price="2" data-limit="limited">
                             <div class="flex items-center justify-between">
@@ -476,7 +476,7 @@
 
                 <!-- Mensuel Limité -->
                 <div>
-                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Mensuel Limité</h3>
+                    <h3 id="plans-heading-monthly" class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Mensuel Limité</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div class="package-card bg-white rounded-2xl p-6 card-shadow border border-gray-100 relative" data-package="monthly-10gb" data-price="15" data-original-price="30" data-limit="limited">
                             <div class="flex items-center justify-between">
@@ -808,7 +808,9 @@
                 footerPayment: 'Payez en toute sécurité avec MTN Mobile Money. Assurez-vous d\'avoir un solde suffisant pour le forfait sélectionné.',
                 footerCopyright: '© 2026 Starlink Reseller Zambie. Tous droits réservés.',
                 limitedData: 'Données limitées',
-                unlimitedData: 'Données illimitées'
+                unlimitedData: 'Données illimitées',
+                headingDaily: 'Quotidien Limité',
+                headingMonthly: 'Mensuel Limité'
             },
             en: {
                 modalSubtitle: 'Secure redirection to the MTN Mobile Money payment gateway',
@@ -820,7 +822,9 @@
                 footerPayment: 'Pay securely with MTN Mobile Money. Make sure you have sufficient balance for the selected package.',
                 footerCopyright: '© 2026 Starlink Reseller Zambia. All rights reserved.',
                 limitedData: 'Limited data',
-                unlimitedData: 'Unlimited data'
+                unlimitedData: 'Unlimited data',
+                headingDaily: 'Daily Limited',
+                headingMonthly: 'Monthly Limited'
             }
         };
 
@@ -850,6 +854,8 @@
             if (document.getElementById('footer-payment-desc')) document.getElementById('footer-payment-desc').textContent = t.footerPayment;
             if (document.getElementById('footer-copyright')) document.getElementById('footer-copyright').textContent = t.footerCopyright;
             if (document.getElementById('page-title')) document.getElementById('page-title').textContent = lang === 'fr' ? 'Forfaits - Starlink Zambia' : 'Packages - Starlink Zambia';
+            if (document.getElementById('plans-heading-daily')) document.getElementById('plans-heading-daily').textContent = t.headingDaily;
+            if (document.getElementById('plans-heading-monthly')) document.getElementById('plans-heading-monthly').textContent = t.headingMonthly;
             updatePackageLimits();
         }
 

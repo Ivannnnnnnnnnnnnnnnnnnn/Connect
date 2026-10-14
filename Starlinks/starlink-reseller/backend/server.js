@@ -79,19 +79,19 @@ app.get('/api/health', (req, res) => {
 // Get all packages
 app.get('/api/packages', (req, res) => {
     const packages = [
-        // Quotidien Limité
+        // Daily Limited
         { id: 'daily-1gb', name: '1 GB / 24h', data: '1 GB', duration: '24 hours', price: 1, originalPrice: 2, type: 'daily', limit: 'limited', currency: 'ZMW', features: ['1 GB data', 'Validity 24h', 'Instant activation'] },
         { id: 'daily-3gb', name: '3 GB / 24h', data: '3 GB', duration: '24 hours', price: 2, originalPrice: 4, type: 'daily', limit: 'limited', currency: 'ZMW', features: ['3 GB data', 'Validity 24h', 'Instant activation'] },
         { id: 'daily-7gb', name: '7 GB / 24h', data: '7 GB', duration: '24 hours', price: 4, originalPrice: 8, type: 'daily', limit: 'limited', currency: 'ZMW', features: ['7 GB data', 'Validity 24h', 'Instant activation'] },
         { id: 'daily-15gb', name: '15 GB / 7 days', data: '15 GB', duration: '7 days', price: 8, originalPrice: 16, type: 'daily', limit: 'limited', currency: 'ZMW', features: ['15 GB data', 'Validity 7 days', 'Instant activation'] },
-        // Planifié (Extended)
+        // Extended (Planned)
         { id: 'daily-30gb', name: '30 GB / 7 days', data: '30 GB', duration: '7 days', price: 12, originalPrice: 24, type: 'weekly', limit: 'limited', currency: 'ZMW', features: ['30 GB data', 'Validity 7 days', 'Streaming HD'] },
         { id: 'daily-50gb', name: '50 GB / 15 days', data: '50 GB', duration: '15 days', price: 20, originalPrice: 40, type: 'weekly', limit: 'limited', currency: 'ZMW', features: ['50 GB data', 'Validity 15 days', 'Streaming HD', 'Priority support'] },
-        // Illimité
+        // Unlimited
         { id: 'daily-unlimited', name: 'Unlimited / 3 days', data: 'Unlimited', duration: '3 days', price: 10, originalPrice: 20, type: 'daily', limit: 'unlimited', currency: 'ZMW', features: ['Unlimited data', 'Validity 3 days', 'Instant activation'] },
         { id: 'weekly-unlimited', name: 'Unlimited / 7 days', data: 'Unlimited', duration: '7 days', price: 20, originalPrice: 40, type: 'weekly', limit: 'unlimited', currency: 'ZMW', features: ['Unlimited data', 'Validity 7 days', 'Streaming HD'] },
         { id: 'monthly-unlimited', name: 'Unlimited / 30 days', data: 'Unlimited', duration: '30 days', price: 50, originalPrice: 100, type: 'monthly', limit: 'unlimited', currency: 'ZMW', features: ['Unlimited data', 'Validity 30 days', 'Streaming 4K', 'Priority support', 'Static IP'] },
-        // Mensuel Limité
+        // Monthly Limited
         { id: 'monthly-10gb', name: '10 GB / 30 days', data: '10 GB', duration: '30 days', price: 15, originalPrice: 30, type: 'monthly', limit: 'limited', currency: 'ZMW', features: ['10 GB data', 'Validity 30 days', 'Streaming HD'] },
         { id: 'monthly-50gb', name: '50 GB / 30 days', data: '50 GB', duration: '30 days', price: 30, originalPrice: 60, type: 'monthly', limit: 'limited', currency: 'ZMW', features: ['50 GB data', 'Validity 30 days', 'Streaming 4K', 'Priority support'] },
         { id: 'monthly-100gb', name: '100 GB / 30 days', data: '100 GB', duration: '30 days', price: 40, originalPrice: 80, type: 'monthly', limit: 'limited', currency: 'ZMW', features: ['100 GB data', 'Validity 30 days', 'Streaming 4K', 'Priority support', 'Static IP'] }
